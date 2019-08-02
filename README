@@ -1,0 +1,5 @@
+ビルドの開始
+　npm run watch
+ 
+ デバッグの開始
+  node dist/js/server.js
