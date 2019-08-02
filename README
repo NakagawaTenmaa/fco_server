@@ -1,3 +1,6 @@
+起動前にしてほしいもの
+ npm install
+
 ビルドの開始
 　npm run watch
  
