@@ -1,0 +1,21 @@
+{
+  "name": "fco_server",
+  "version": "1.0.0",
+  "private": true,
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
+    "watch": "tsc -w"
+  },
+  "dependencies": {
+    "@types/bcrypt": "^3.0.0",
+    "@types/mysql": "^2.15.6",
+    "@types/socket.io-client": "^1.4.32",
+    "@types/ws": "^6.0.1",
+    "bcrypt": "^3.0.6",
+    "mysql": "^2.17.1",
+    "socket.io-client": "^2.2.0",
+    "ws": "^7.1.1"
+  }
+}
