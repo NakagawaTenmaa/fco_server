@@ -16,9 +16,12 @@ export function CreateUserModel(name: string, hash: string, salt: string, callba
 }
 
 // ユーザーのログアウト
-export function LogoutUserModel(){
-
-}
+export function LogoutUserModel(id: any, callback: (err: any) => void){
+    connection.query('update `users`set `status` = "' + 0 + '" where `id` = "' + id + '"', (err: any) => {
+        if(err) callback(err);
+        else callback(null);
+    }) 
+};
 
 // ユーザー名からの検索
 export function SelectNameModel(name: string, callback: (data: any) => void){
