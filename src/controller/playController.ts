@@ -4,7 +4,7 @@ import {NewUser, PositionData} from './../model/packet';
 import {Player} from './object/playerClass';
 
 const wss: Server = new Server({port: 8001});
-let players: {[key: number]: Player};
+let players: {[key: string]: Player};
 
 // サーバー間のやり取り用更新
 export function serverSocUpdate(){
@@ -15,6 +15,7 @@ export function serverSocUpdate(){
         socket.on('user_login', (data: any) => {
             console.log("data : " + data);
             players[data.user_id] = new Player(data.id);
+            console.log(players[data.user_id]);
         })
     })
 }
@@ -43,7 +44,7 @@ export function playUpdate(){
 // プレイヤーの移動
 function playersMove(data: any){
     let id = data.user_id;
-    if(!players[id]){
+    if(typeof players[id] == 'undefined'){
         console.log('not user');
         return;
     }

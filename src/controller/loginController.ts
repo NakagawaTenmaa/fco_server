@@ -2,7 +2,7 @@ import {SelectNameModel, CreateUserModel} from './../model/userModel';
 import {CreateHash, CreateSalt} from './utility/hash';
 import {Server} from 'ws';
 import io from 'socket.io-client';
-import {IsThere, MakeOk, DuplicateLogin, NotUser, LoginOK} from './../model/packet';
+import {IsThere, MakeOk, DuplicateLogin, NotUser, LoginOK, UserData} from './../model/packet';
 
 const socket: SocketIOClient.Socket = io('http://localhost:10001');
 const wss: Server = new Server({port: 8000});
@@ -10,7 +10,7 @@ const wss: Server = new Server({port: 8000});
 // 更新
 export function loginUpdate(){
     console.log("login server open");
-        //socket.on('connect', () => {
+    socket.on('connect', () => {
         wss.on('connection', (ws) => {
             ws.on('message', (msg: any) => {
                 let json = JSON.parse(msg);
@@ -22,7 +22,7 @@ export function loginUpdate(){
                 }
             })  
         })
-    //})
+    })
 }
 
 // ユーザーの作成
@@ -44,7 +44,7 @@ function ReultCreateUser(result: number, ws: any){
         const res = new MakeOk();
         console.log(res);
         ws.send(JSON.stringify(res));
-        SendPlayServer(res);
+        SendPlayServer(res, result);
     }
     else if(result === -1) {
         const res = new IsThere();
@@ -64,7 +64,7 @@ function ResuktLoginUser(result: number, ws: any){
     } else {
         const res = new LoginOK();
         ws.send(JSON.stringify(res));
-        SendPlayServer(res);
+        SendPlayServer(res, result);
     }
 }
 
@@ -79,14 +79,18 @@ function LoginUser(data: any, callback: (result: number) => void){
                 if(modelData[0].status === 0){
                     callback(modelData[0].user_id);
                     return;
+                } else {
+                    callback(-1);
                 }
-                callback(-1);
             }
         }
     });
 }
 
 // プレイサーバーに伝達
-function SendPlayServer(id: MakeOk){
-
+function SendPlayServer(req: any, userId: number){
+    const user_data  = new UserData();
+    user_data.user_id = req.user_id;
+    user_data.id = userId;				
+    socket.emit("user_login", user_data);
 }
