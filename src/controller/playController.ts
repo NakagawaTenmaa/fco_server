@@ -75,9 +75,18 @@ function logoutUser(json: any){
 }
 
 // TODO: プレイヤーの状態共有
+function statusUpdate(data: any){
+
+}
+
+// TODO: インベントリ
+function inventoryUpdate(data: any){
+    
+}
 
 // プレイヤーの装備
 function weaponPlayer(data: any){
     const id = data.user_id;    
-    players[id];
+    // 装備の変更
+    players[id].weapon.weaponSet(data.head, data.body, data.hand);
 }
