@@ -4,6 +4,10 @@ import {Server} from 'ws';
 import io from 'socket.io-client';
 import {IsThere, MakeOk, DuplicateLogin, NotUser, LoginOK, UserData} from './../model/packet';
 
+//import * as  player from ''
+
+
+
 const socket: SocketIOClient.Socket = io('http://localhost:10001');
 const wss: Server = new Server({port: 8000});
 

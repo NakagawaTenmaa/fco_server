@@ -34,6 +34,8 @@ export function playUpdate(){
                 case 203: initUser(json); break;
                 // ステータス共有
                 case 205: break;
+                // 装備の変更
+                case 999: weaponPlayer(json); break;
                 // ログアウト
                 case 701: break;
             }
@@ -73,3 +75,9 @@ function logoutUser(json: any){
 }
 
 // TODO: プレイヤーの状態共有
+
+// プレイヤーの装備
+function weaponPlayer(data: any){
+    const id = data.user_id;    
+    players[id];
+}
