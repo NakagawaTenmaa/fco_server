@@ -93,3 +93,8 @@ export class InventoryUpdateOk{
 export class InventoryUpdateError{
     command: number = 303;
 }
+
+// 装備の変更完了
+export class ChangeWeapon{
+    command: number = 307;
+}
