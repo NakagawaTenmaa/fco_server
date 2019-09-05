@@ -36,6 +36,7 @@ export function playUpdate(){
                 case 205: break;
                 // インベントリの更新
                 case 301: inventoryUpdate(json, ws); break;
+                // 装備の更新
                 case 306: weaponUpdate(json, ws); break;
                 // アイテム一覧の取得
                 case 702: inventoryList(json, ws); break;               
@@ -103,7 +104,7 @@ function inventoryList(data: any, ws: any){
     ws.send(JSON.stringify(res));
 }
 
-// プレイヤーの装備
+// プレイヤーの装備変更
 function weaponUpdate(data: any, ws: any){
     const id = data.user_id;    
     // 装備の変更
