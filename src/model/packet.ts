@@ -67,9 +67,29 @@ export class PlayerStatus{
 }
 
 export class NewUser{
-    comand: number = 204;
+    command: number = 204;
     user_id: number;
 	constructor(_id: number){
 		this.user_id = _id;
 	}
+}
+
+// インベントリの取得OK
+export class GetInventory{
+    command: number = 704;
+    items: {[key: number]: number } = {};
+
+    constructor(items: {[key: number]: number }){
+        this.items = items;
+    }
+}
+
+// インベントリの更新
+export class InventoryUpdateOk{
+    command: number = 302;
+}
+
+// インベの更新エラー
+export class InventoryUpdateError{
+    command: number = 303;
 }

@@ -12,7 +12,7 @@ export class Inventory{
     }
 
     // 一覧の取得
-    public getItems(): {[key: number]: number }{
+    public getItemList(): {[key: number]: number }{
         return this.items;
     }    
 
@@ -39,6 +39,8 @@ export class Inventory{
 
     // アイテムのお削除
     private deleteItem(id: number, num: number): boolean{
+        // アイテムがない 
+        if(!this.items[id]) return false;
         this.items[id] -= num;
         // なくなった時に削除
         if(this.items[id] <= 0) delete this.items[id];

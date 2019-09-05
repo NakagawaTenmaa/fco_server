@@ -1,6 +1,6 @@
 import {Server} from 'ws';
 import {listen} from 'socket.io';
-import {NewUser, PositionData} from './../model/packet';
+import {NewUser, PositionData, GetInventory, InventoryUpdateOk, InventoryUpdateError} from './../model/packet';
 import {Player} from './object/playerClass';
 
 const wss: Server = new Server({port: 8001});
@@ -34,8 +34,10 @@ export function playUpdate(){
                 case 203: initUser(json); break;
                 // ステータス共有
                 case 205: break;
-                // 装備の変更
-                case 999: weaponPlayer(json); break;
+                // インベントリの更新
+                case 301: inventoryUpdate(json, ws); break;
+                // アイテム一覧の取得
+                case 702: inventoryList(json, ws); break;               
                 // ログアウト
                 case 701: break;
             }
@@ -79,9 +81,25 @@ function statusUpdate(data: any){
 
 }
 
-// TODO: インベントリ
-function inventoryUpdate(data: any){
-    
+// アイテムの取得
+function inventoryUpdate(data: any, ws: any){
+    const id = data.user_id;
+    const inventory = players[id].inventory.getItemList();
+
+    const res = new GetInventory(inventory);
+    ws.send(JSON.stringify(res));
+}
+
+// アイテム一覧の取得
+function inventoryList(data: any, ws: any){
+    const id = data.user_id;
+    const result = players[id].inventory.changeItem(data.itemId, data.num, data.type);
+
+    let res;
+    if(result) res = new InventoryUpdateOk();
+    else res = new InventoryUpdateError();
+
+    ws.send(JSON.stringify(res));
 }
 
 // プレイヤーの装備
