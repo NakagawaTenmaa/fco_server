@@ -1,6 +1,6 @@
 import {Server} from 'ws';
 import {listen} from 'socket.io';
-import {NewUser, PositionData, GetInventory, InventoryUpdateOk, InventoryUpdateError, ChangeWeapon, InitPlayer} from './../model/packet';
+import {NewUser, PositionData, GetInventory, InventoryUpdateOk, InventoryUpdateError, ChangeWeapon, InitPlayer, Vec3} from './../model/packet';
 import {Player} from './object/playerClass';
 import { PlayerWeapon } from './object/playerWeapon';
 
@@ -15,7 +15,6 @@ export function serverSocUpdate(){
         console.log('connect');
         socket.on('user_login', (data: any) => {
             console.log("data : " + data);
-            //if(!players[data.user_id]) players[data.user_id] = ;
             players[data.user_id] = new Player(data.id);
             console.log(players[data.user_id]);
         })
@@ -75,7 +74,8 @@ function initUser(data: any, ws: any){
     })
     // TODO: 値がデバッグ
     const weapon = new PlayerWeapon(2,3,4,5,6,7,8);
-    const playerRes = new InitPlayer(weapon, 10, 10);
+    const pos = new Vec3(10,10,10);
+    const playerRes = new InitPlayer(weapon, pos, 1, 10);
     ws.send(JSON.stringify(playerRes));
 }
 

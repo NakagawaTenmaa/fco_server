@@ -108,13 +108,28 @@ export class InitPlayer{
     // 装備
     public weapon: PlayerWeapon;
     // 位置
-    public posX: number;
-    public posY: number;
-
+    public position: Vec3;
+    // レベル
+    public lv: number;
+    // 経験値
+    public exp: number;
     // コンストラクタ
-    constructor(weapon: PlayerWeapon, posX: number, posY: number){
+    constructor(weapon: PlayerWeapon, position: Vec3, lv: number, exp: number){
         this.weapon = weapon;
-        this.posX = posX;
-        this.posY = posY;
+        this.position = position;
+        this.lv = lv;
+        this.exp = exp;
+    }
+}
+
+export class Vec3{
+    public x: number = 0;
+    public y: number = 0;
+    public z: number = 0;
+
+    constructor(x: number, y: number, z: number){
+        this.x = x;
+        this.y = y;
+        this.z = z; 
     }
 }
