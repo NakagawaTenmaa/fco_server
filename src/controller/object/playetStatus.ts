@@ -18,4 +18,3 @@ export class Status{
     public pizon: number = 1;
     public mahi : number = 2;
 }
-z

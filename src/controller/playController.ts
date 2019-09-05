@@ -5,7 +5,7 @@ import {Player} from './object/playerClass';
 import { PlayerWeapon } from './object/playerWeapon';
 
 const wss: Server = new Server({port: 8001});
-let players: {[key: string]: Player};
+let players: {[key: string]: Player} = {};
 
 // サーバー間のやり取り用更新
 export function serverSocUpdate(){
@@ -15,6 +15,7 @@ export function serverSocUpdate(){
         console.log('connect');
         socket.on('user_login', (data: any) => {
             console.log("data : " + data);
+            //if(!players[data.user_id]) players[data.user_id] = ;
             players[data.user_id] = new Player(data.id);
             console.log(players[data.user_id]);
         })

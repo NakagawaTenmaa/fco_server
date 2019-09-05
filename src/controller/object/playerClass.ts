@@ -25,7 +25,7 @@ export class Player
         this.x = 0;
         this.y = 0;
         this.z = 0;
-        this.weapon = new PlayerWeapon(0, 0, 0);
+        this.weapon = new PlayerWeapon(0, 0, 0,0,0,0,0);
         this.status = new PlayerStatus();
         this.inventory = new Inventory();
     }
