@@ -1,3 +1,5 @@
+import { PlayerWeapon } from './../controller/object/playerWeapon'
+
 //ログイン失敗
 export class NotUser{
     command: number = 104;
@@ -97,4 +99,22 @@ export class InventoryUpdateError{
 // 装備の変更完了
 export class ChangeWeapon{
     command: number = 307;
+}
+
+// セーブデータの読み込み
+export class InitPlayer{
+    // コマンド
+    public command: number = 210;
+    // 装備
+    public weapon: PlayerWeapon;
+    // 位置
+    public posX: number;
+    public posY: number;
+
+    // コンストラクタ
+    constructor(weapon: PlayerWeapon, posX: number, posY: number){
+        this.weapon = weapon;
+        this.posX = posX;
+        this.posY = posY;
+    }
 }

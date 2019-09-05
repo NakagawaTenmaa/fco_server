@@ -1,7 +1,8 @@
 import {Server} from 'ws';
 import {listen} from 'socket.io';
-import {NewUser, PositionData, GetInventory, InventoryUpdateOk, InventoryUpdateError, ChangeWeapon} from './../model/packet';
+import {NewUser, PositionData, GetInventory, InventoryUpdateOk, InventoryUpdateError, ChangeWeapon, InitPlayer} from './../model/packet';
 import {Player} from './object/playerClass';
+import { PlayerWeapon } from './object/playerWeapon';
 
 const wss: Server = new Server({port: 8001});
 let players: {[key: string]: Player};
@@ -31,7 +32,7 @@ export function playUpdate(){
                 // 位置同期
                 case 201: playersMove(json); break;
                 // 初回IN
-                case 203: initUser(json); break;
+                case 203: initUser(json, ws); break;
                 // ステータス共有
                 case 205: break;
                 // インベントリの更新
@@ -66,11 +67,15 @@ function playersMove(data: any){
 }
 
 // プレイヤーの初期化
-function initUser(data: any){
+function initUser(data: any, ws: any){
     const res = new NewUser(data.user_id);
     wss.clients.forEach(client => {
         client.send(JSON.stringify(res));
     })
+    // TODO: 値がデバッグ
+    const weapon = new PlayerWeapon(2,3,4,5,6,7,8);
+    const playerRes = new InitPlayer(weapon, 10, 10);
+    ws.send(JSON.stringify(playerRes));
 }
 
 // ログアウト
