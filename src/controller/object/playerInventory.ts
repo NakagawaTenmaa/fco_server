@@ -1,3 +1,4 @@
+import { getInventoryModel} from './../../model/inventoryModel'
 
 // アイテムの最大数
 export const itemMax: number = 30;
@@ -15,6 +16,13 @@ export class Inventory{
     public getItemList(): {[key: number]: number }{
         return this.items;
     }    
+
+    // 一覧をDBから取得
+    public getItemListBD(userId: number, callback: (data: any) => void){
+        getInventoryModel(userId, (data: any) => {
+            callback(data);
+        });
+    }
 
     // アイテムの追加
     // type (1: 追加) (2 削除)
