@@ -1,8 +1,8 @@
-import {SelectNameModel, CreateUserModel} from './../model/userModel';
-import {CreateHash, CreateSalt} from './utility/hash';
-import {Server} from 'ws';
+import {findUsersByName, createUserModel} from './../model/userModel';
+import { Server } from 'ws';
 import io from 'socket.io-client';
 import {IsThere, MakeOk, DuplicateLogin, NotUser, LoginOK, UserData} from './../model/packet';
+import { createHash } from './utility/hash';
 
 //import * as  player from ''
 
@@ -20,9 +20,9 @@ export function loginUpdate(){
                 let json = JSON.parse(msg);
                 switch(json.command){
                     // ユーザーの作成
-                    case 101: CreateUser(json, (result: number) => { ReultCreateUser(result, ws) }); break;
+                    case 101: ReultCreateUser(json, ws); break;
                     // ユーザーのログイン
-                    case 102: LoginUser(json, (result: any) => { ResuktLoginUser(result, ws) }); break;
+                    case 102: ResuktLoginUser(json, ws); break;
                 }
             })  
         })
@@ -30,20 +30,20 @@ export function loginUpdate(){
 }
 
 // ユーザーの作成
-async function CreateUser(data: any, callback: (result: number) => void){
+async function CreateUser(data: any): Promise<number>{
     try {
-        const salt = await CreateSalt();
-        const hash = await CreateHash(data.pass, salt);
-        CreateUserModel(data.user_name, hash, salt,(err: any) => {
-           callback(err);
-        });
-    } catch {
-        callback(-1);
+        const model = await createUserModel(data.user_name, data.pass);
+        console.log(model);
+        return 0;
+    } catch (e){
+        console.log(e);
+        return -1;
     }
 }
 
 // 作成の結果報告
-function ReultCreateUser(result: number, ws: any){   
+async function ReultCreateUser(data: any, ws: any){   
+    const result = await CreateUser(data);
     if(result === 0) {
         const res = new MakeOk();
         console.log(res);
@@ -58,14 +58,11 @@ function ReultCreateUser(result: number, ws: any){
 }
 
 // ログインの結果報告
-function ResuktLoginUser(result: number, ws: any){
-    if(result === -1) {
-        const res = new DuplicateLogin();
-        ws.send(JSON.stringify(res));
-    } else if(result === -2){
-        const res = new NotUser();
-        ws.send(JSON.stringify(res));
-    } else {
+async function ResuktLoginUser(data: any, ws: any){
+    const result = await LoginUser(data);
+    if(result === -1) ws.send(JSON.stringify(new DuplicateLogin()));
+    else if(result === -2) ws.send(JSON.stringify(new NotUser()));
+    else {
         const res = new LoginOK();
         ws.send(JSON.stringify(res));
         SendPlayServer(res, result);
@@ -73,22 +70,14 @@ function ResuktLoginUser(result: number, ws: any){
 }
 
 // ユーザーのログイン (ユーザーID : 正常終了) (-1 : 重複ログイン) (-2 : 間違えてまっせ)
-function LoginUser(data: any, callback: (result: number) => void){
-    SelectNameModel(data.user_name, async (modelData) => {
-        if(modelData.length === 0){
-            callback(-2);
-        } else {
-            const hash = await CreateHash(data.pass,modelData[0].salt);
-            if(hash === modelData[0].hash) {
-                if(modelData[0].status === 0){
-                    callback(modelData[0].user_id);
-                    return;
-                } else {
-                    callback(-1);
-                }
-            }
-        }
-    });
+async function LoginUser(data: any): Promise<number>{
+    const userData = await findUsersByName(data.user_name);
+    const user = userData[0];
+    if(user){
+        const hash = await createHash(data.pass, user.salt);
+        if(hash === user.hash) return user.id;
+        return -1;
+    } return -2;
 }
 
 // プレイサーバーに伝達

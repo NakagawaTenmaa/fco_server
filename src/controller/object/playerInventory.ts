@@ -1,4 +1,4 @@
-import { getInventoryModel} from './../../model/inventoryModel'
+import { findInventoryById } from './../../model/inventoryModel'
 
 // アイテムの最大数
 export const itemMax: number = 30;
@@ -18,10 +18,8 @@ export class Inventory{
     }    
 
     // 一覧をDBから取得
-    public getItemListBD(userId: number, callback: (data: any) => void){
-        getInventoryModel(userId, (data: any) => {
-            callback(data);
-        });
+    public async getItemListBD(userId: number){
+        return await findInventoryById(userId);
     }
 
     // アイテムの追加

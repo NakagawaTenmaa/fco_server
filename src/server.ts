@@ -4,7 +4,8 @@ import {playUpdate, serverSocUpdate} from './controller/playController';
 import { chatUpdate } from './controller/chatController'
 
 // DBの接続
-connection.connect();
+//const conn = connection().connect();
+//connection.connect();
 
 // 更新処理
 // ログインサーバー
@@ -18,7 +19,8 @@ serverSocUpdate();
 chatUpdate();
 
 // 終了処理
-process.on("SIGINT", () => {
-    connection.end();
+process.on("SIGINT", async () => {
+    const conn = await connection();
+    await conn.end();
     process.exit(0);
 })
