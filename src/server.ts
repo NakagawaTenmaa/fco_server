@@ -1,17 +1,15 @@
 import {connection} from './model/setting';
-import {loginUpdate} from './router/loginController';
-import {playUpdate, serverSocUpdate} from './router/playController';
-import { chatUpdate } from './router/chatController'
+import { loginRouter } from './router/loginRouter';
+import {playUpdate, serverSocUpdate} from './router/playRouter';
+import { chatUpdate } from './router/chatRouter'
 
-// 更新処理
-// ログインサーバー
-loginUpdate();
+// ルートの作成
+const login: loginRouter = new loginRouter();
 
-// プレイサーバー
+// サーバーの処理
+login.loginUpdate();
 playUpdate();
 serverSocUpdate();
-
-// チャット
 chatUpdate();
 
 // 終了処理

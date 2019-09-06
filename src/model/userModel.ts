@@ -4,7 +4,7 @@ import { createHash, createSalt } from './../controller/utility/hash'
 // ユーザーの作成
 export async function createUserModel(name: string, pass: string): Promise<any>{
     // 重複チェック
-    if(await isDuplicateUser(name)) return false;
+    if(await isDuplicateUser(name)) return null;
     // ハッシュ化
     const salt = await createSalt();
     const hash = await createHash(pass, salt);
@@ -14,10 +14,10 @@ export async function createUserModel(name: string, pass: string): Promise<any>{
     return await conn.query("insert into `users` set ?", { name: name, hash: hash, salt: salt, status: 0 });
 }
 
-// 重複確認 trueある　falseなす
+// 重複確認 trueあり　falseなし
 export async function isDuplicateUser(name: string): Promise<boolean>{
     const data = await findUsersByName(name);
-    return (data.length == 0);
+    return (data.length !== 0);
 }
 
 // ユーザー名の検索
