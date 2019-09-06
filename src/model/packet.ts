@@ -1,4 +1,5 @@
 import { PlayerWeapon } from './../controller/object/playerWeapon'
+import { Vec3 } from './../controller/utility/vec3';
 
 //ログイン失敗
 export class NotUser{
@@ -119,17 +120,5 @@ export class InitPlayer{
         this.position = position;
         this.lv = lv;
         this.exp = exp;
-    }
-}
-
-export class Vec3{
-    public x: number = 0;
-    public y: number = 0;
-    public z: number = 0;
-
-    constructor(x: number, y: number, z: number){
-        this.x = x;
-        this.y = y;
-        this.z = z; 
     }
 }

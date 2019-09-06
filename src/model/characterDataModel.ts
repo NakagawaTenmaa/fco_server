@@ -1,4 +1,4 @@
-import { Vec3 } from './packet'
+import { Vec3 } from './../controller/utility/vec3'
 import { PlayerWeapon } from './../controller/object/playerWeapon'
 import { connection } from './setting';
 

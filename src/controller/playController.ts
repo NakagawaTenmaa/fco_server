@@ -1,9 +1,10 @@
 import {Server} from 'ws';
 import {listen} from 'socket.io';
-import {NewUser, PositionData, GetInventory, InventoryUpdateOk, InventoryUpdateError, ChangeWeapon, InitPlayer, Vec3} from './../model/packet';
+import {NewUser, PositionData, GetInventory, InventoryUpdateOk, InventoryUpdateError, ChangeWeapon, InitPlayer} from './../model/packet';
 import {Player} from './object/playerClass';
 import { PlayerWeapon } from './object/playerWeapon';
 import { userSaveModel } from './../model/characterDataModel'
+import { Vec3 } from './utility/vec3';
 
 const wss: Server = new Server({port: 8001});
 let players: {[key: string]: Player} = {};
@@ -51,15 +52,17 @@ export function playUpdate(){
 
 // プレイヤーの移動
 function playersMove(data: any){
-    let id = data.user_id;
-    if(typeof players[id] == 'undefined'){
+    const id = data.user_id;
+    const player = players[id];
+    if(typeof player == 'undefined'){
         console.log('not user');
         return;
     }
 
-    players[id].x = data.x;
-    players[id].y = data.y;
-    players[id].z = data.z;
+    player.x = data.x;
+    player.y = data.y;
+    player.z = data.z;
+    player.setPosition(data.x, data.y, data.z);
 
     const res = new PositionData(data.user_id, data.x, data.y, data.z, data.dir);
     wss.clients.forEach((client) => {
