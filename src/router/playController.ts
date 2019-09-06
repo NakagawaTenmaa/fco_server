@@ -1,10 +1,10 @@
 import {Server} from 'ws';
 import {listen} from 'socket.io';
-import {NewUser, PositionData, GetInventory, InventoryUpdateOk, InventoryUpdateError, ChangeWeapon, InitPlayer} from './../model/packet';
-import {Player} from './object/playerClass';
-import { PlayerWeapon } from './object/playerWeapon';
-import { userSaveModel } from './../model/characterDataModel'
-import { Vec3 } from './utility/vec3';
+import {NewUser, PositionData, GetInventory, InventoryUpdateOk, InventoryUpdateError, ChangeWeapon, InitPlayer} from '../model/packet';
+import {Player} from '../controller/object/playerClass';
+import { PlayerWeapon } from '../controller/object/playerWeapon';
+import { userSaveModel } from '../model/characterDataModel'
+import { Vec3 } from '../controller/utility/vec3';
 
 const wss: Server = new Server({port: 8001});
 let players: {[key: string]: Player} = {};

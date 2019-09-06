@@ -1,8 +1,8 @@
-import {findUsersByName, createUserModel} from './../model/userModel';
+import {findUsersByName, createUserModel} from '../model/userModel';
 import { Server } from 'ws';
 import io from 'socket.io-client';
-import {IsThere, MakeOk, DuplicateLogin, NotUser, LoginOK, UserData} from './../model/packet';
-import { createHash } from './utility/hash';
+import {IsThere, MakeOk, DuplicateLogin, NotUser, LoginOK, UserData} from '../model/packet';
+import { createHash } from '../controller/utility/hash';
 
 //import * as  player from ''
 

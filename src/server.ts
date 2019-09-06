@@ -1,11 +1,7 @@
 import {connection} from './model/setting';
-import {loginUpdate} from './controller/loginController';
-import {playUpdate, serverSocUpdate} from './controller/playController';
-import { chatUpdate } from './controller/chatController'
-
-// DBの接続
-//const conn = connection().connect();
-//connection.connect();
+import {loginUpdate} from './router/loginController';
+import {playUpdate, serverSocUpdate} from './router/playController';
+import { chatUpdate } from './router/chatController'
 
 // 更新処理
 // ログインサーバー
