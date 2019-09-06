@@ -1,126 +1,95 @@
 import {Server} from 'ws';
 import {listen} from 'socket.io';
-import {NewUser, PositionData, GetInventory, InventoryUpdateOk, InventoryUpdateError, ChangeWeapon, InitPlayer} from '../model/packet';
 import {Player} from '../controller/object/playerClass';
-import { PlayerWeapon } from '../controller/object/playerWeapon';
-import { userSaveModel } from '../model/characterDataModel'
-import { Vec3 } from '../controller/utility/vec3';
+import { playController } from './../controller/playController';
 
-const wss: Server = new Server({port: 8001});
-let players: {[key: string]: Player} = {};
 
-// サーバー間のやり取り用更新
-export function serverSocUpdate(){
-    let io = listen(10001);
-    console.log('start socket.io server');
-    io.sockets.on('connection', (socket: any) => {
-        console.log('connect');
-        socket.on('user_login', (data: any) => {
-            console.log("data : " + data);
-            players[data.user_id] = new Player(data.id);
-            console.log(players[data.user_id]);
+
+export class playRouter{
+    controller: playController = new playController();
+    wss: Server;
+
+    // コンストラクタ
+    constructor(){
+        this.wss = new Server({port: 8001});
+    }
+    
+    // 更新
+    public playUpdate(){
+        this.wss.on('connection', (ws: any) => {
+            console.log("client_connection");
+            ws.on('message', (msg: any) => {
+                console.log('msg : ' + msg);
+                let json = JSON.parse(msg);
+                switch(json.command){
+                    // 位置同期
+                    case 201: this.playersMove(json); break;
+                    // 初回IN
+                    case 203: this.initUser(json, ws); break;
+                    // ステータス共有
+                    case 205: break;
+                    // インベントリの更新
+                    case 301: this.inventoryUpdate(json, ws); break;
+                    // 装備の更新
+                    case 306: this.weaponUpdate(json, ws); break;
+                    // アイテム一覧の取得
+                    case 702: this.inventoryList(json, ws); break;               
+                    // ログアウト
+                    case 701: this.controller.logoutUser(json); break;
+                }
+            })
         })
-    })
-}
-
-// 更新
-export function playUpdate(){
-    wss.on('connection', (ws: any) => {
-        console.log("client_connection");
-        ws.on('message', (msg: any) => {
-            console.log('msg : ' + msg);
-            let json = JSON.parse(msg);
-            switch(json.command){
-                // 位置同期
-                case 201: playersMove(json); break;
-                // 初回IN
-                case 203: initUser(json, ws); break;
-                // ステータス共有
-                case 205: break;
-                // インベントリの更新
-                case 301: inventoryUpdate(json, ws); break;
-                // 装備の更新
-                case 306: weaponUpdate(json, ws); break;
-                // アイテム一覧の取得
-                case 702: inventoryList(json, ws); break;               
-                // ログアウト
-                case 701: logoutUser(json); break;
-            }
-        })
-    })
-}
-
-// プレイヤーの移動
-function playersMove(data: any){
-    const id = data.user_id;
-    const player = players[id];
-    if(typeof player == 'undefined'){
-        console.log('not user');
-        return;
+        this.serverSocUpdate();
     }
 
-    player.x = data.x;
-    player.y = data.y;
-    player.z = data.z;
-    player.setPosition(data.x, data.y, data.z);
+    // 移動201
+    private playersMove(data: any){
+        const res = this.controller.playersMove(data);
+        this.wss.clients.forEach((client) => {
+            client.send(JSON.stringify(res));
+        });
+    }
 
-    const res = new PositionData(data.user_id, data.x, data.y, data.z, data.dir);
-    wss.clients.forEach((client) => {
-        client.send(JSON.stringify(res));
-    });
-}
+    // プレイヤーのログイン203
+    private initUser(data: any, ws: any){
+        const res = this.controller.initUser(data.user_id);
+        this.wss.clients.forEach(client => {
+            if(ws === client) {
+                ws.send(JSON.stringify(this.controller.loadPlayer(data.user_id)));
+            } else client.send(JSON.stringify(res));
+        })
+    }
 
-// プレイヤーの初期化
-function initUser(data: any, ws: any){
-    const res = new NewUser(data.user_id);
-    wss.clients.forEach(client => {
-        if(ws === client) {
-            // セーブデータの読み込み
-            // TODO: 値がデバッグ
-            const weapon = new PlayerWeapon(2,3,4,5,6,7,8);
-            const pos = new Vec3(10,10,10);
-            const playerRes = new InitPlayer(weapon, pos, 1, 10);
-            ws.send(JSON.stringify(playerRes));
-        } else client.send(JSON.stringify(res));
-    })
-}
+    // サーバー間のやり取り用更新
+    private serverSocUpdate(){
+        let io = listen(10001);
+        console.log('start socket.io server');
+        io.sockets.on('connection', (socket: any) => {
+            console.log('connect');
+            socket.on('user_login', (data: any) => {
+                console.log("data : " + data);
+                this.controller.addPlayer(data);
+            })
+        })
+    }
 
-// ログアウト
-async function logoutUser(json: any){
-    const player = players[json.user_id];
-    await userSaveModel(player.id, new Vec3(player.x, player.y, player.z), player.weapon, player.lv, player.exp);
-}
+    // TODO: プレイヤーの状態共有
+    private statusUpdate(data: any){
 
-// TODO: プレイヤーの状態共有
-function statusUpdate(data: any){
+    }
 
-}
+    // インベントリの更新
+    private inventoryUpdate(data: any, ws: any){
+        ws.send(JSON.stringify(this.controller.inventoryUpdate(data)));
+    }
 
-// アイテムの取得
-function inventoryUpdate(data: any, ws: any){
-    const id = data.user_id;
-    const inventory = players[id].inventory.getItemList();
+    // インベントリ一覧取得
+    private inventoryList(data: any, ws: any){
+        ws.send(JSON.stringify(this.controller.inventoryList(data)));
+    }
 
-    const res = new GetInventory(inventory);
-    ws.send(JSON.stringify(res));
-}
-
-// アイテム一覧の取得
-function inventoryList(data: any, ws: any){
-    const id = data.user_id;
-    const result = players[id].inventory.changeItem(data.itemId, data.num, data.type);
-
-    let res;
-    if(result) res = new InventoryUpdateOk();
-    else res = new InventoryUpdateError();
-
-    ws.send(JSON.stringify(res));
-}
-
-// プレイヤーの装備変更
-function weaponUpdate(data: any, ws: any){
-    const id = data.user_id;    
-    // 装備の変更
-    players[id].weapon.weaponSet(data.weapon, data.head, data.body, data.hand, data.leg, data.accessoryL, data.accessoryR);
-    ws.send(JSON.stringify(new ChangeWeapon()));
+    // 装備の更新
+    public weaponUpdate(data: any, ws: any){
+        ws.send(JSON.stringify(this.controller.weaponUpdate(data)));
+    }
 }

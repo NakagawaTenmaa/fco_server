@@ -1,15 +1,15 @@
 import {connection} from './model/setting';
 import { loginRouter } from './router/loginRouter';
-import {playUpdate, serverSocUpdate} from './router/playRouter';
+import { playRouter } from './router/playRouter';
 import { chatUpdate } from './router/chatRouter'
 
 // ルートの作成
 const login: loginRouter = new loginRouter();
+const play: playRouter = new playRouter();
 
 // サーバーの処理
 login.loginUpdate();
-playUpdate();
-serverSocUpdate();
+play.playUpdate();
 chatUpdate();
 
 // 終了処理
