@@ -1,16 +1,17 @@
 import { connection } from './setting';
+import { createHash, createSalt } from './../controller/utility/hash'
 
 // ユーザーの作成
 export async function createUserModel(name: string, pass: string): Promise<any>{
     // 重複チェック
     if(await isDuplicateUser(name)) return false;
     // ハッシュ化
-    const hash = "";
-    const salt = "";
+    const salt = await createSalt();
+    const hash = await createHash(pass, salt);
     // 作成
     const conn = await connection();
     // 作成
-    return await conn.query("insert into `user` set ?", { name: name, hash: hash, salt: salt, status: 0 });
+    return await conn.query("insert into `users` set ?", { name: name, hash: hash, salt: salt, status: 0 });
 }
 
 // 重複確認 trueある　falseなす

@@ -3,7 +3,8 @@ import {loginUpdate} from './controller/loginController';
 import {playUpdate, serverSocUpdate} from './controller/playController';
 
 // DBの接続
-connection.connect();
+//const conn = connection().connect();
+//connection.connect();
 
 // 更新処理
 // ログインサーバー
@@ -14,7 +15,8 @@ playUpdate();
 serverSocUpdate();
 
 // 終了処理
-process.on("SIGINT", () => {
-    connection.end();
+process.on("SIGINT", async () => {
+    const conn = await connection();
+    await conn.end();
     process.exit(0);
 })
