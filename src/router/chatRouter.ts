@@ -3,7 +3,7 @@
 //
 
 import {Server} from 'ws';
-import {ChatData} from './../model/packet';
+import {ChatData} from '../model/packet';
 
 const wss: Server = new Server({port: 8009});
 

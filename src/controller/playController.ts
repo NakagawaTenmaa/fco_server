@@ -1,126 +1,79 @@
-import {Server} from 'ws';
-import {listen} from 'socket.io';
-import {NewUser, PositionData, GetInventory, InventoryUpdateOk, InventoryUpdateError, ChangeWeapon, InitPlayer} from './../model/packet';
-import {Player} from './object/playerClass';
+import { Player } from './object/playerClass';
+import { PositionData, NewUser, InitPlayer, GetInventory, InventoryUpdateOk, InventoryUpdateError, ChangeWeapon } from '../model/packet';
 import { PlayerWeapon } from './object/playerWeapon';
-import { userSaveModel } from './../model/characterDataModel'
 import { Vec3 } from './utility/vec3';
+import { userSaveModel } from '../model/characterDataModel';
 
-const wss: Server = new Server({port: 8001});
-let players: {[key: string]: Player} = {};
+// プレイの処理
+export class playController{
+    players: {[key: string]: Player} = {};
 
-// サーバー間のやり取り用更新
-export function serverSocUpdate(){
-    let io = listen(10001);
-    console.log('start socket.io server');
-    io.sockets.on('connection', (socket: any) => {
-        console.log('connect');
-        socket.on('user_login', (data: any) => {
-            console.log("data : " + data);
-            players[data.user_id] = new Player(data.id);
-            console.log(players[data.user_id]);
-        })
-    })
-}
+    // プレイヤーの移動
+    public playersMove(data: any){
+        const id = data.user_id;
+        const player = this.players[id];
+        if(typeof player == 'undefined'){
+            console.log('not user');
+            return;
+        }
 
-// 更新
-export function playUpdate(){
-    wss.on('connection', (ws: any) => {
-        console.log("client_connection");
-        ws.on('message', (msg: any) => {
-            console.log('msg : ' + msg);
-            let json = JSON.parse(msg);
-            switch(json.command){
-                // 位置同期
-                case 201: playersMove(json); break;
-                // 初回IN
-                case 203: initUser(json, ws); break;
-                // ステータス共有
-                case 205: break;
-                // インベントリの更新
-                case 301: inventoryUpdate(json, ws); break;
-                // 装備の更新
-                case 306: weaponUpdate(json, ws); break;
-                // アイテム一覧の取得
-                case 702: inventoryList(json, ws); break;               
-                // ログアウト
-                case 701: logoutUser(json); break;
-            }
-        })
-    })
-}
+        player.x = data.x;
+        player.y = data.y;
+        player.z = data.z;
+        player.setPosition(data.x, data.y, data.z);
 
-// プレイヤーの移動
-function playersMove(data: any){
-    const id = data.user_id;
-    const player = players[id];
-    if(typeof player == 'undefined'){
-        console.log('not user');
-        return;
+        return new PositionData(data.user_id, data.x, data.y, data.z, data.dir);
     }
 
-    player.x = data.x;
-    player.y = data.y;
-    player.z = data.z;
-    player.setPosition(data.x, data.y, data.z);
+    // プレイヤーの初期化
+    public initUser(id: number){
+        return new NewUser(id);
+    }
 
-    const res = new PositionData(data.user_id, data.x, data.y, data.z, data.dir);
-    wss.clients.forEach((client) => {
-        client.send(JSON.stringify(res));
-    });
-}
+    // プレイヤーのロード
+    public loadPlayer(id: number){
+        // セーブデータの読み込み
+        // TODO: 値がデバッグ
+        const weapon = new PlayerWeapon(2,3,4,5,6,7,8);
+        const pos = new Vec3(10,10,10);
+        return new InitPlayer(weapon, pos, 1, 10);
+    }
 
-// プレイヤーの初期化
-function initUser(data: any, ws: any){
-    const res = new NewUser(data.user_id);
-    wss.clients.forEach(client => {
-        if(ws === client) {
-            // セーブデータの読み込み
-            // TODO: 値がデバッグ
-            const weapon = new PlayerWeapon(2,3,4,5,6,7,8);
-            const pos = new Vec3(10,10,10);
-            const playerRes = new InitPlayer(weapon, pos, 1, 10);
-            ws.send(JSON.stringify(playerRes));
-        } else client.send(JSON.stringify(res));
-    })
-}
+    // ログアウト
+    public async logoutUser(data: any){
+        const player = this.players[data.user_id];
+        await userSaveModel(player.id, new Vec3(player.x, player.y, player.z), player.weapon, player.lv, player.exp);
+    }
 
-// ログアウト
-async function logoutUser(json: any){
-    const player = players[json.user_id];
-    await userSaveModel(player.id, new Vec3(player.x, player.y, player.z), player.weapon, player.lv, player.exp);
-}
+    // アイテムの取得
+    public inventoryUpdate(data: any){
+        const id = data.user_id;
+        const inventory = this.players[id].inventory.getItemList();
 
-// TODO: プレイヤーの状態共有
-function statusUpdate(data: any){
+        return new GetInventory(inventory);
+    }
 
-}
+    // アイテム一覧の取得
+    public inventoryList(data: any){
+        const id = data.user_id;
+        const result = this.players[id].inventory.changeItem(data.itemId, data.num, data.type);
 
-// アイテムの取得
-function inventoryUpdate(data: any, ws: any){
-    const id = data.user_id;
-    const inventory = players[id].inventory.getItemList();
+        let res;
+        if(result) res = new InventoryUpdateOk();
+        else res = new InventoryUpdateError();
+        return res;
+    }
 
-    const res = new GetInventory(inventory);
-    ws.send(JSON.stringify(res));
-}
+    // プレイヤーの装備変更
+    public weaponUpdate(data: any){
+        const id = data.user_id;    
+        // 装備の変更
+        this.players[id].weapon.weaponSet(data.weapon, data.head, data.body, data.hand, data.leg, data.accessoryL, data.accessoryR);
+        return new ChangeWeapon();
+    }
 
-// アイテム一覧の取得
-function inventoryList(data: any, ws: any){
-    const id = data.user_id;
-    const result = players[id].inventory.changeItem(data.itemId, data.num, data.type);
-
-    let res;
-    if(result) res = new InventoryUpdateOk();
-    else res = new InventoryUpdateError();
-
-    ws.send(JSON.stringify(res));
-}
-
-// プレイヤーの装備変更
-function weaponUpdate(data: any, ws: any){
-    const id = data.user_id;    
-    // 装備の変更
-    players[id].weapon.weaponSet(data.weapon, data.head, data.body, data.hand, data.leg, data.accessoryL, data.accessoryR);
-    ws.send(JSON.stringify(new ChangeWeapon()));
+    // プレイヤーの追加
+    public addPlayer(data: any){
+        this.players[data.user_id] = new Player(data.id);
+    }
 }
