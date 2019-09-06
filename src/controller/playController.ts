@@ -3,6 +3,7 @@ import {listen} from 'socket.io';
 import {NewUser, PositionData, GetInventory, InventoryUpdateOk, InventoryUpdateError, ChangeWeapon, InitPlayer, Vec3} from './../model/packet';
 import {Player} from './object/playerClass';
 import { PlayerWeapon } from './object/playerWeapon';
+import { userSaveModel } from './../model/characterDataModel'
 
 const wss: Server = new Server({port: 8001});
 let players: {[key: string]: Player} = {};
@@ -42,7 +43,7 @@ export function playUpdate(){
                 // アイテム一覧の取得
                 case 702: inventoryList(json, ws); break;               
                 // ログアウト
-                case 701: break;
+                case 701: logoutUser(json); break;
             }
         })
     })
@@ -70,18 +71,21 @@ function playersMove(data: any){
 function initUser(data: any, ws: any){
     const res = new NewUser(data.user_id);
     wss.clients.forEach(client => {
-        client.send(JSON.stringify(res));
+        if(ws === client) {
+            // セーブデータの読み込み
+            // TODO: 値がデバッグ
+            const weapon = new PlayerWeapon(2,3,4,5,6,7,8);
+            const pos = new Vec3(10,10,10);
+            const playerRes = new InitPlayer(weapon, pos, 1, 10);
+            ws.send(JSON.stringify(playerRes));
+        } else client.send(JSON.stringify(res));
     })
-    // TODO: 値がデバッグ
-    const weapon = new PlayerWeapon(2,3,4,5,6,7,8);
-    const pos = new Vec3(10,10,10);
-    const playerRes = new InitPlayer(weapon, pos, 1, 10);
-    ws.send(JSON.stringify(playerRes));
 }
 
 // ログアウト
-function logoutUser(json: any){
-     
+async function logoutUser(json: any){
+    const player = players[json.user_id];
+    await userSaveModel(player.id, new Vec3(player.x, player.y, player.z), player.weapon, player.lv, player.exp);
 }
 
 // TODO: プレイヤーの状態共有

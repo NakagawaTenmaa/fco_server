@@ -19,6 +19,11 @@ export class Player
     public status: PlayerStatus;
     // インベントリ
     public inventory: Inventory;
+    // レベル
+    public lv: number;
+    // 経験値
+    public exp: number;
+    
     // コンストラクター
     constructor(_id: number){
         this.id = _id;
@@ -28,6 +33,8 @@ export class Player
         this.weapon = new PlayerWeapon(0, 0, 0,0,0,0,0);
         this.status = new PlayerStatus();
         this.inventory = new Inventory();
+        this.lv = 1;
+        this.exp = 0;
     }
 
     // 位置の設定

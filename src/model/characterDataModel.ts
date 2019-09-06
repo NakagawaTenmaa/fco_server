@@ -13,7 +13,6 @@ export async function userSaveModel(id: number, pos: Vec3, weapon: PlayerWeapon,
         "exp": exp,
         "updated": new Date()
     };
-    //connectionPool.query("insert into `save_data` set ?", data);
+    const conn = await connection();
+    return await conn.query("insert into `save_data` set ?", data);
 }
-
-// ログアウト
