@@ -66,6 +66,19 @@ export class PlayerStatus{
 	}
 }
 
+// チャット用
+// Author: Tama
+export class ChatData{
+    command: number = 802;
+    user_name: string;
+    message: string;
+
+    constructor(_name: string, _message: string){
+        this.user_name = _name;
+        this.message = _message;
+    }
+}
+
 export class NewUser{
     comand: number = 204;
     user_id: number;
