@@ -18,7 +18,7 @@ export class UserModel extends BaseModel{
 
     // ユーザー名の検索
     public async findUserByName(name: string){
-        return await this.find(name);
+        return await this.find(["name", name]);
     }
 
     // ログアウト

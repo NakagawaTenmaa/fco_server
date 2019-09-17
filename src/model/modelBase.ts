@@ -1,4 +1,5 @@
 import { connection }  from './setting'
+import { format } from 'mysql'
 
 // モデルクラスのベース
 export abstract class BaseModel{
@@ -13,6 +14,7 @@ export abstract class BaseModel{
     async create(col: any) {
         const conn = await connection();
         const query = "insert into ?? set ?"
+        
         return await conn.query(query, [this.TABLE_NAME, col]);
     }
 
@@ -26,15 +28,18 @@ export abstract class BaseModel{
     // 一覧
     async findAll(){
         const conn = await connection();
-        const query = "select * from ??";
+        const query = "select * from ?";
         return await conn.query(query, [this.TABLE_NAME]);
     }
 
     // 検索
-    async find(col: any){
+    async find(col: Array<any>){
         const conn = await connection();
-        const query = "select * form ?? where = ?";
-        return await conn.query(query, [this.TABLE_NAME, col]);
+        const query = "select * from ?? where ?? = ?";
+        col.unshift(this.TABLE_NAME);
+        const sql = format(query, col);
+        conn.query(sql);
+        return await conn.query(sql);
     }
 
     // 削除
