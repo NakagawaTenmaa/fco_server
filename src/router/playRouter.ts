@@ -1,6 +1,5 @@
 import {Server} from 'ws';
 import {listen} from 'socket.io';
-import {Player} from '../controller/object/playerClass';
 import { playController } from './../controller/playController';
 
 
@@ -22,10 +21,24 @@ export class playRouter{
                 console.log('msg : ' + msg);
                 let json = JSON.parse(msg);
                 switch(json.command){
+
+                    
+                    // セーブの読み込み
+                    case 209: ws.send(this.controller.loadPlayer(json.user_id)); break;
+                    // 読み込み完了なので入場
+                    case 211: this.initUser(json, ws); break;
                     // 位置同期
                     case 201: this.playersMove(json); break;
+                    // ログアウト
+                    case 701: {
+                        this.controller.logoutUser(json);
+                        ws.send({ command: 706, user_id: json.user_id });
+                    } 
+                    break;
+
                     // 初回IN
-                    case 203: this.initUser(json, ws); break;
+                    //case 203: this.initUser(json, ws); break;
+                    
                     // ステータス共有
                     case 205: break;
                     // インベントリの更新
@@ -34,8 +47,7 @@ export class playRouter{
                     case 306: this.weaponUpdate(json, ws); break;
                     // アイテム一覧の取得
                     case 702: this.inventoryList(json, ws); break;               
-                    // ログアウト
-                    case 701: this.controller.logoutUser(json); break;
+
                 }
             })
         })
@@ -67,6 +79,7 @@ export class playRouter{
         io.sockets.on('connection', (socket: any) => {
             console.log('connect');
             socket.on('user_login', (data: any) => {
+                console.log(data);
                 console.log("data : " + data);
                 this.controller.addPlayer(data);
             })
@@ -92,4 +105,10 @@ export class playRouter{
     public weaponUpdate(data: any, ws: any){
         ws.send(JSON.stringify(this.controller.weaponUpdate(data)));
     }
+
+    // データのセーブ
+
+    // 位置の更新
+
+    // 
 }

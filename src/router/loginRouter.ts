@@ -22,6 +22,7 @@ export class loginRouter{
         console.log("login server open");
         this.socket.on('connect', () => {
             this.wss.on('connection', (ws) => {
+                console.log('connection client');
                 ws.on('message', (msg: any) => {
                     let json = JSON.parse(msg);
                     switch(json.command){

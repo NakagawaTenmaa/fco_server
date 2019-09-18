@@ -1,33 +1,34 @@
-import { connection } from './setting';
 import { createHash, createSalt } from './../controller/utility/hash'
+import { BaseModel } from './modelBase'
 
-// ユーザーの作成
-export async function createUserModel(name: string, pass: string): Promise<any>{
-    // 重複チェック
-    if(await isDuplicateUser(name)) return null;
-    // ハッシュ化
-    const salt = await createSalt();
-    const hash = await createHash(pass, salt);
-    // 作成
-    const conn = await connection();
-    // 作成
-    return await conn.query("insert into `users` set ?", { name: name, hash: hash, salt: salt, status: 0 });
-}
+// ユーザーモデル
+export class UserModel extends BaseModel{
+    // コンストラクタ
+    constructor(){
+        super("users");
+    }
 
-// 重複確認 trueあり　falseなし
-export async function isDuplicateUser(name: string): Promise<boolean>{
-    const data = await findUsersByName(name);
-    return (data.length !== 0);
-}
+    // ユーザーの新規作成
+    public async newUser(name: string, pass: string){
+        if(await this.isDuplicateUser(name)) return null;
+        const salt = await createSalt();
+        const hash = await createHash(pass, salt);
+        return await this.create({ name: name, hash: hash, salt: salt, status: 0 });
+    }
 
-// ユーザー名の検索
-export async function findUsersByName(name: string): Promise<any>{
-    const conn = await connection();
-    return conn.query("select * from `users` where `name` = ?", [name]);
-}
+    // ユーザー名の検索
+    public async findUserByName(name: string){
+        return await this.find(["name", name]);
+    }
 
-// ログアウト処理
-export async function changeUserStatusById(id: number, status: number): Promise<any>{
-    const conn = await connection();
-    return conn.query("update `users` set status = ? where = ?",[status, id]);
+    // ログアウト
+    public async logout(id: number, status: number){
+        return await this.update([status, id]);
+    }
+
+    // 重複確認
+    private async isDuplicateUser(name: string){
+        const data = await this.findUserByName(name);
+        return (data.length !== 0);
+    }
 }

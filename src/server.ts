@@ -1,4 +1,4 @@
-import {connection} from './model/setting';
+import { connection } from './model/setting';
 import { loginRouter } from './router/loginRouter';
 import { playRouter } from './router/playRouter';
 import { chatUpdate } from './router/chatRouter'
