@@ -24,7 +24,7 @@ export class playRouter{
 
                     
                     // セーブの読み込み
-                    case 209: ws.send(this.controller.loadPlayer(json.user_id)); break;
+                    case 209: ws.send(JSON.stringify(this.controller.loadPlayer(json.user_id))); break;
                     // 読み込み完了なので入場
                     case 211: this.initUser(json, ws); break;
                     // 位置同期
