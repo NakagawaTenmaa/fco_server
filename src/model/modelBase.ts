@@ -14,7 +14,6 @@ export abstract class BaseModel{
     async create(col: any) {
         const conn = await connection();
         const query = "insert into ?? set ?"
-        
         return await conn.query(query, [this.TABLE_NAME, col]);
     }
 
@@ -47,5 +46,11 @@ export abstract class BaseModel{
         const conn = await connection();
         const query = "delete form ?? where = ?";
         return await conn.query(query, [table, col]);
+    }
+
+    // クエリ直
+    async myQuery(que: string){
+        const conn = await connection();
+        return await conn.query(que);
     }
 }
