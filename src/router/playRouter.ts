@@ -67,7 +67,7 @@ export class playRouter{
         const res = this.controller.initUser(data.user_id);
         this.wss.clients.forEach(client => {
             if(ws === client) {
-                ws.send(JSON.stringify(this.controller.loadPlayer(data.user_id)));
+                //ws.send(JSON.stringify(this.controller.loadPlayer(data.user_id)));
             } else client.send(JSON.stringify(res));
         })
     }
