@@ -28,7 +28,7 @@ export abstract class BaseModel{
     // 一覧
     async findAll(){
         const conn = await connection();
-        const query = "select * from ?";
+        const query = "select * from ??";
         return await conn.query(query, [this.TABLE_NAME]);
     }
 

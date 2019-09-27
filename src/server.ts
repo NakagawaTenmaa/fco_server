@@ -15,6 +15,6 @@ chatUpdate();
 // 終了処理
 process.on("SIGINT", async () => {
     const conn = await connection();
-    await conn.end();
+    try {await conn.end();} catch(e){ console.log('not open mysql'); }
     process.exit(0);
 })
