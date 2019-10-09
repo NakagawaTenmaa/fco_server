@@ -323,12 +323,42 @@ export namespace CommunicationData{
             // 何もない
         }
 
-        export class TEST implements Receive{
-            command: number = 0;
-            static id: number = 0;
+        // 位置同期
+        export class CharacterTransform implements Receive{
+            public readonly command: number = 202;
+            public static id: number = 202;
+            public user_id: number = 0;
+            public x: number;
+            public y: number;
+            public z: number;
+            public dir: number;
+            constructor(){
+                this.x = 0;
+                this.y = 0;
+                this.z = 0;
+                this.dir = 0;
+            }
         }
 
-        export type AllTypes = TEST;
+        // プレイへのログイン
+        export class InitCharacter implements Receive{
+            public readonly command: number = 204;
+            public static id = 204;
+            public user_id = 0;
+            constructor() {}
+        }
+
+        // プレイヤーの状態
+        export class PlayerStatus{
+            public readonly command: number = 206;
+            public static id = 204;
+            public user_id: number = 0;
+            public hp: number = 0;
+            public mp: number = 0;
+            public status : number = 0;
+        }
+
+        export type AllTypes = CharacterTransform | InitCharacter;
     }
 
     export type AllTypes = SendData.AllTypes | ReceiveData.AllTypes;
@@ -378,10 +408,20 @@ export namespace CommunicationData{
                     data.skill_id = parse.skill_id;
                     return data;
                 }
-                case ReceiveData.TEST.id:
+                case ReceiveData.CharacterTransform.id:
                 {
-                    const data: ReceiveData.TEST = new ReceiveData.TEST();
-                    
+                    const data: ReceiveData.CharacterTransform = new ReceiveData.CharacterTransform();
+                    data.x = parse.x;
+                    data.y = parse.y;
+                    data.z = parse.z;
+                    data.dir = parse.dir;
+                    return data;
+                }
+                case ReceiveData.InitCharacter.id:
+                {
+                    const data: ReceiveData.InitCharacter = new ReceiveData.InitCharacter();
+                    data.user_id = parse.user_id;
+                    return data;
                 }
             }
             console.error("Convert Error");
