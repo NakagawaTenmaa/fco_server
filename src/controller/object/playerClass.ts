@@ -1,5 +1,5 @@
 import { Inventory } from './playerInventory'
-import { PlayerWeapon } from './playerWeapon'
+import { Weapon } from './playerWeapon'
 import { PlayerStatus } from './playetStatus'
 
 // プレイヤークラス
@@ -14,7 +14,7 @@ export class Player
     // 位置Z
     public z: number;
     // 装備
-    public weapon: PlayerWeapon;
+    public weapon: Weapon;
     // 状態
     public status: PlayerStatus;
     // インベントリ
@@ -30,7 +30,8 @@ export class Player
         this.x = 0;
         this.y = 0;
         this.z = 0;
-        this.weapon = new PlayerWeapon(0, 0, 0,0,0,0,0);
+        this.weapon = new Weapon();
+        this.weapon.weaponSet(0, 0, 0,0,0,0,0);
         this.status = new PlayerStatus();
         this.inventory = new Inventory();
         this.lv = 1;

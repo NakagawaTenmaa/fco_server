@@ -1,5 +1,5 @@
-import { PlayerWeapon } from './../controller/object/playerWeapon'
-import { Vec3 } from './../controller/utility/vec3';
+import { Weapon } from './../controller/object/playerWeapon'
+import { Vector3 } from '../ishitaka/Vector3';
 
 //ログイン失敗
 export class NotUser{
@@ -120,15 +120,15 @@ export class InitPlayer{
     // コマンド
     public command: number = 210;
     // 装備
-    public weapon: PlayerWeapon;
+    public weapon: Weapon;
     // 位置
-    public position: Vec3;
+    public position: Vector3;
     // レベル
     public lv: number;
     // 経験値
     public exp: number;
     // コンストラクタ
-    constructor(weapon: PlayerWeapon, position: Vec3, lv: number, exp: number){
+    constructor(weapon: Weapon, position: Vector3, lv: number, exp: number){
         this.weapon = weapon;
         this.position = position;
         this.lv = lv;

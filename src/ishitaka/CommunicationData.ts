@@ -1,3 +1,6 @@
+import { Weapon } from "../controller/object/playerWeapon";
+import { Vector3 } from "./Vector3";
+
 /**
  * @fileoverview 通信データの実装ファイル
  * @file CommunicationData.ts
@@ -356,6 +359,18 @@ export namespace CommunicationData{
             public hp: number = 0;
             public mp: number = 0;
             public status : number = 0;
+            constructor(){}
+        }
+
+        // セーブデータの読み込み
+        export class LoadCharacter{
+            public readonly command: number = 210;
+            public static id = 210;
+            public weapon: Weapon = new Weapon();
+            public position: Vector3 = new Vector3();
+            public lv: number = 0;
+            public exp: number = 0;
+            constructor(){}
         }
 
         export type AllTypes = CharacterTransform | InitCharacter;
@@ -422,6 +437,21 @@ export namespace CommunicationData{
                     const data: ReceiveData.InitCharacter = new ReceiveData.InitCharacter();
                     data.user_id = parse.user_id;
                     return data;
+                }
+                case ReceiveData.LoadCharacter.id:
+                {
+                    const data: ReceiveData.LoadCharacter = new ReceiveData.LoadCharacter();
+                    data.exp = parse.exp;
+                    data.lv = parse.lv;
+                    data.position.x = parse.position.x;
+                    data.position.y = parse.position.y;
+                    data.position.z = parse.position.z;
+                    data.weapon.body = parse.weapon.body;
+                    data.weapon.hand = parse.weapon.hand;
+                    data.weapon.head = parse.weapon.head;
+                    data.weapon.leg = parse.weapon.leg;
+                    data.weapon.accessoryL = parse.weapon.accessoryL;
+                    data.weapon.accessoryR = parse.weapon.accessoryR;
                 }
             }
             console.error("Convert Error");

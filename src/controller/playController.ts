@@ -1,8 +1,8 @@
 import { Player } from './object/playerClass';
 import { PositionData, NewUser, InitPlayer, GetInventory, InventoryUpdateOk, InventoryUpdateError, ChangeWeapon } from '../model/packet';
-import { PlayerWeapon } from './object/playerWeapon';
-import { Vec3 } from './utility/vec3';
+import { Weapon } from './object/playerWeapon';
 import { userSaveModel } from '../model/characterDataModel';
+import { Vector3 } from '../ishitaka/Vector3';
 
 // プレイの処理
 export class playController{
@@ -34,15 +34,16 @@ export class playController{
     public loadPlayer(id: number){
         // セーブデータの読み込み
         // TODO: 値がデバッグ
-        const weapon = new PlayerWeapon(2,3,4,5,6,7,8);
-        const pos = new Vec3(10,10,10);
+        const weapon = new Weapon();
+        weapon.weaponSet(2,3,4,5,6,7,8);
+        const pos = new Vector3(10,10,10);
         return new InitPlayer(weapon, pos, 1, 10);
     }
 
     // ログアウト
     public async logoutUser(data: any){
         const player = this.players[data.user_id];
-        await userSaveModel(player.id, new Vec3(player.x, player.y, player.z), player.weapon, player.lv, player.exp);
+        await userSaveModel(player.id, new Vector3(player.x, player.y, player.z), player.weapon, player.lv, player.exp);
     }
 
     // アイテムの取得

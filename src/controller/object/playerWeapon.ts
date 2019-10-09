@@ -1,28 +1,21 @@
 // プレイヤーの装備クラス
-export class PlayerWeapon{
+export class Weapon{
     // 武器
-    private weapon: number;
+    public weapon: number = 0;
     // 頭
-    private head: number;
+    public head: number = 0;
     // 体
-    private body: number;
+    public body: number = 0;
     // 手
-    private hand: number;
+    public hand: number = 0;
     // 足
-    private leg: number;
+    public leg: number = 0;
     // アクセ
-    private accessoryL: number;
-    private accessoryR: number;
+    public accessoryL: number = 0;
+    public accessoryR: number = 0;
 
     // コンストラクター
-    constructor(weapon: number, head: number, body: number, hand: number, leg: number, accessoryL: number, accessoryR:number){
-        this.weapon = weapon;
-        this.head = head;
-        this.body = body;
-        this.hand = hand;
-        this.leg = leg;
-        this.accessoryL = accessoryL;
-        this.accessoryR = accessoryR;
+    constructor(){
     }
 
     // 全ての装備の設定
@@ -37,7 +30,7 @@ export class PlayerWeapon{
     }   
 
     // 現在の装備の取得
-    public weaponGet(): PlayerWeapon{
+    public weaponGet(): Weapon{
         return this;
     }
 }

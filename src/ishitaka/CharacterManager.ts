@@ -198,13 +198,13 @@ export class CharacterManager{
         const data = CommunicationData.Converter.Convert(_receiveData);
         if(typeof data === 'undefined' || !data) return false;
         switch(data.command){
-            case CommunicationData.SendData.CharacterTransform.id: 
-            
-            break;
+            // セーブデータの読み込み
+            case CommunicationData.ReceiveData.LoadCharacter.id: break;
+            // ログイン
+            case CommunicationData.ReceiveData.InitCharacter.id: break;
+            // 移動処理
+            case CommunicationData.ReceiveData.CharacterTransform.id: break;
         }
-        this.characterArray_.forEach((_character: Character) => {
-            
-        })
         // TODO:        
         return true;
     }
