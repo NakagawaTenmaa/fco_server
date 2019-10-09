@@ -1,6 +1,7 @@
 import {Server} from 'ws';
 import {listen} from 'socket.io';
 import { playController } from './../controller/playController';
+import { CharacterManager } from '../ishitaka/CharacterManager';
 
 
 
@@ -8,9 +9,13 @@ export class playRouter{
     controller: playController = new playController();
     wss: Server;
 
+    characterManager: CharacterManager = CharacterManager.instance;
+    time: number = 0;
     // コンストラクタ
     constructor(){
         this.wss = new Server({port: 8001});
+        this.characterManager.Initialize();
+        this.time = new Date().getTime();
     }
     
     // 更新
@@ -18,7 +23,17 @@ export class playRouter{
         this.wss.on('connection', (ws: any) => {
             console.log("client_connection");
             ws.on('message', (msg: any) => {
+                
+                // 更新時間の取得
+                var nowTime = new Date().getTime();
+                this.characterManager.Update(nowTime - this.time);
+                this.time = nowTime;
+
+
+
                 console.log('msg : ' + msg);
+                this.characterManager.Receive(msg);
+                
                 let json = JSON.parse(msg);
                 switch(json.command){
 
