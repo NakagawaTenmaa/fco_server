@@ -22,6 +22,15 @@ import {JobData,JobDataAccessor} from './DatabaseAccessors/JobDataAccessor'
  */
 export class Player implements Character{
     /**
+     * DB用ID
+     * @private
+     * @type {number}
+     * @memberof Player
+     */
+    private dbId_: number;
+    public get dbId(): number { return this.dbId_; }
+    public set dbId(_id: number) { this.dbId_ = _id; }
+    /**
      * キャラクタID
      * @private
      * @type {number}
@@ -90,6 +99,7 @@ export class Player implements Character{
      * @memberof Player
      */
     public constructor(){
+        this.dbId_ = -1;
         this.characterId_ = -1;
         this.mapId_ = 0;
         this.transform_ = new Transform();

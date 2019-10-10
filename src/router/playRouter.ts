@@ -2,6 +2,7 @@ import {Server} from 'ws';
 import {listen} from 'socket.io';
 import { playController } from './../controller/playController';
 import { CharacterManager } from '../ishitaka/CharacterManager';
+import { Player } from '../ishitaka/Player';
 
 
 
@@ -9,17 +10,28 @@ export class playRouter{
     controller: playController = new playController();
     wss: Server;
 
-    characterManager: CharacterManager = CharacterManager.instance;
+    characterManager: CharacterManager;
     time: number = 0;
     // コンストラクタ
     constructor(){
+        this.characterManager = CharacterManager.instance;
         this.wss = new Server({port: 8001});
         this.characterManager.Initialize();
         this.time = new Date().getTime();
     }
     
+
+    public characterUpdate(){
+        var nowTime = new Date().getTime();
+        this.characterManager = CharacterManager.instance;
+        this.characterManager.Update(nowTime - this.time);
+        this.time = nowTime;
+    }
+
     // 更新
     public playUpdate(){
+        
+        
         this.wss.on('connection', (ws: any) => {
             console.log("client_connection");
             ws.on('message', (msg: any) => {
@@ -96,6 +108,11 @@ export class playRouter{
             socket.on('user_login', (data: any) => {
                 console.log(data);
                 console.log("data : " + data);
+                let player: Player = new Player();
+                player.id = data.user_id;
+                player.dbId = data.id;
+
+
                 this.controller.addPlayer(data);
             })
         })
