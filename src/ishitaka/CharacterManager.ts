@@ -199,11 +199,17 @@ export class CharacterManager{
         if(typeof data === 'undefined' || !data) return false;
         switch(data.command){
             // セーブデータの読み込み
-            case CommunicationData.ReceiveData.LoadCharacter.id: break;
+            case CommunicationData.ReceiveData.LoadCharacter.id:
+                
+            break;
             // ログイン
-            case CommunicationData.ReceiveData.InitCharacter.id: break;
+            case CommunicationData.ReceiveData.InitCharacter.id:
+
+            break;
             // 移動処理
-            case CommunicationData.ReceiveData.CharacterTransform.id: break;
+            case CommunicationData.ReceiveData.CharacterTransform.id:
+
+            break;
         }
         // TODO:        
         return true;

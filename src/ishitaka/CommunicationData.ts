@@ -305,11 +305,30 @@ export namespace CommunicationData{
             }
         }
 
+        export class LoadCharacter implements Send{
+            public readonly command: number = 211;
+            public static id = 211;
+            public weapon: Weapon = new Weapon();
+            public position: Vector3 = new Vector3();
+            public lv: number = 0;
+            public exp: number = 0;
+            constructor(){}
+        }
+
+        export class InitCharacter implements Send{
+            public readonly command: number = 204;
+            public static id: number = 204;
+            public user_id: number = 0;
+            constructor(){}
+        }
+
         export type AllTypes = 
         CharacterTransform |
         SimpleDisplayOfCharacter |
         ModelSetting |
-        SkillUse;
+        SkillUse |
+        LoadCharacter | 
+        InitCharacter;
     }
     /**
      * 受信データ
@@ -345,8 +364,8 @@ export namespace CommunicationData{
 
         // プレイへのログイン
         export class InitCharacter implements Receive{
-            public readonly command: number = 204;
-            public static id = 204;
+            public readonly command: number = 203;
+            public static id = 203;
             public user_id = 0;
             constructor() {}
         }
@@ -354,7 +373,7 @@ export namespace CommunicationData{
         // プレイヤーの状態
         export class PlayerStatus{
             public readonly command: number = 206;
-            public static id = 204;
+            public static id = 206;
             public user_id: number = 0;
             public hp: number = 0;
             public mp: number = 0;
@@ -364,13 +383,9 @@ export namespace CommunicationData{
 
         // セーブデータの読み込み
         export class LoadCharacter{
-            public readonly command: number = 210;
-            public static id = 210;
-            public weapon: Weapon = new Weapon();
-            public position: Vector3 = new Vector3();
-            public lv: number = 0;
-            public exp: number = 0;
-            constructor(){}
+            public readonly command: number = 209;
+            public static id = 209;
+            public user_id = 0;
         }
 
         export type AllTypes = CharacterTransform | InitCharacter;
@@ -423,6 +438,23 @@ export namespace CommunicationData{
                     data.skill_id = parse.skill_id;
                     return data;
                 }
+                case SendData.LoadCharacter.id:
+                {
+                    const data: SendData.LoadCharacter = new SendData.LoadCharacter();
+                    data.exp = parse.exp;
+                    data.lv = parse.lv;
+                    data.position = parse.position;
+                    data.weapon = parse.weapon;
+                    return data;
+                }
+                case SendData.InitCharacter.id:
+                {
+                    const data: SendData.InitCharacter = new SendData.InitCharacter();
+                    data.user_id = parse.user_id;
+                    return data;
+                }
+                
+
                 case ReceiveData.CharacterTransform.id:
                 {
                     const data: ReceiveData.CharacterTransform = new ReceiveData.CharacterTransform();
@@ -441,18 +473,10 @@ export namespace CommunicationData{
                 case ReceiveData.LoadCharacter.id:
                 {
                     const data: ReceiveData.LoadCharacter = new ReceiveData.LoadCharacter();
-                    data.exp = parse.exp;
-                    data.lv = parse.lv;
-                    data.position.x = parse.position.x;
-                    data.position.y = parse.position.y;
-                    data.position.z = parse.position.z;
-                    data.weapon.body = parse.weapon.body;
-                    data.weapon.hand = parse.weapon.hand;
-                    data.weapon.head = parse.weapon.head;
-                    data.weapon.leg = parse.weapon.leg;
-                    data.weapon.accessoryL = parse.weapon.accessoryL;
-                    data.weapon.accessoryR = parse.weapon.accessoryR;
+                    data.user_id = parse.user_id;
+                    return data;
                 }
+                
             }
             console.error("Convert Error");
             return undefined;

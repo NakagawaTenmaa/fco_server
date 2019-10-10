@@ -3,6 +3,7 @@ import {listen} from 'socket.io';
 import { playController } from './../controller/playController';
 import { CharacterManager } from '../ishitaka/CharacterManager';
 import { Player } from '../ishitaka/Player';
+import { CommunicationData } from '../ishitaka/CommunicationData';
 
 
 
@@ -30,26 +31,39 @@ export class playRouter{
 
     // 更新
     public playUpdate(){
-        
-        
         this.wss.on('connection', (ws: any) => {
             console.log("client_connection");
             ws.on('message', (msg: any) => {
-                
-                // 更新時間の取得
-                var nowTime = new Date().getTime();
-                this.characterManager.Update(nowTime - this.time);
-                this.time = nowTime;
-
-
-
                 console.log('msg : ' + msg);
-                this.characterManager.Receive(msg);
+                //this.characterManager.Receive(msg);
+                const data = CommunicationData.Converter.Convert(msg);
+                // コンバートエラー
+                if(typeof data === 'undefined' || !data) return false;
                 
+                // 移動処理
+                if(data instanceof CommunicationData.ReceiveData.CharacterTransform){
+                    
+                }
+                // セーブデータの読み込み
+                else if(data instanceof CommunicationData.ReceiveData.LoadCharacter){
+                    ws.send(JSON.stringify(this.controller.loadPlayer(data.user_id)));
+                }
+                // ログイン
+                else if(data instanceof CommunicationData.ReceiveData.InitCharacter){
+                    let sendData:CommunicationData.SendData.InitCharacter = new CommunicationData.SendData.InitCharacter();
+                    sendData.user_id = data.user_id;
+                    const sendJson = JSON.stringify(sendData);
+                    this.wss.clients.forEach((_ws) => {
+                        if(_ws !== ws)_ws.send(sendJson);
+                    });
+                }
+
+
                 let json = JSON.parse(msg);
+                /*
                 switch(json.command){
 
-                    
+
                     // セーブの読み込み
                     case 209: ws.send(JSON.stringify(this.controller.loadPlayer(json.user_id))); break;
                     // 読み込み完了なので入場
@@ -76,6 +90,7 @@ export class playRouter{
                     case 702: this.inventoryList(json, ws); break;               
 
                 }
+                */
             })
         })
         this.serverSocUpdate();
@@ -108,10 +123,12 @@ export class playRouter{
             socket.on('user_login', (data: any) => {
                 console.log(data);
                 console.log("data : " + data);
-                let player: Player = new Player();
-                player.id = data.user_id;
-                player.dbId = data.id;
 
+                // TODO: 処理の場所変更 ---
+                let player: Player = new Player();
+                player.dbId = data.id;
+                this.characterManager.AddCharacter(player);
+                // -----------------------
 
                 this.controller.addPlayer(data);
             })
