@@ -43,7 +43,7 @@ export class playRouter{
 
                 // 移動処理
                 if(data instanceof CommunicationData.ReceiveData.CharacterTransform){
-                    
+                    this.characterManager.Receive(JSON.stringify(data));
                 }
                 // セーブデータの読み込み
                 else if(data instanceof CommunicationData.ReceiveData.LoadCharacter){
@@ -55,40 +55,6 @@ export class playRouter{
                     sendData.user_id = data.user_id;                    
                     this.characterManager.SendAll(JSON.stringify(sendData));
                 }
-
-
-                let json = JSON.parse(msg.toString());
-                /*
-                switch(json.command){
-
-
-                    // セーブの読み込み
-                    case 209: ws.send(JSON.stringify(this.controller.loadPlayer(json.user_id))); break;
-                    // 読み込み完了なので入場
-                    case 211: this.initUser(json, ws); break;
-                    // 位置同期
-                    case 201: this.playersMove(json); break;
-                    // ログアウト
-                    case 701: {
-                        this.controller.logoutUser(json);
-                        ws.send({ command: 706, user_id: json.user_id });
-                    } 
-                    break;
-
-                    // 初回IN
-                    //case 203: this.initUser(json, ws); break;
-                    
-                    // ステータス共有
-                    case 205: break;
-                    // インベントリの更新
-                    case 301: this.inventoryUpdate(json, ws); break;
-                    // 装備の更新
-                    case 306: this.weaponUpdate(json, ws); break;
-                    // アイテム一覧の取得
-                    case 702: this.inventoryList(json, ws); break;               
-
-                }
-                */
             })
         })
         

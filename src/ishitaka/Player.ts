@@ -221,14 +221,15 @@ export class Player implements Character{
         const model: any = { 
             postion :{ x: 0,y: 0, z:0 },
             weapon : { head: 0, hand: 0 },
-            mapId: 0
+            mapId: 0,
+            exp: 0
         }
-        this.transform.position = new Vector3(0,0,0);
+        this.transform.position = new Vector3(model.position.x, model.position.y, model.position.z);
         // TODO: 武器etc...の読み込み実装予定
         let data: CommunicationData.SendData.LoadCharacter = new CommunicationData.SendData.LoadCharacter();
-        data.exp = 0;
+        data.exp = model.exp;
         data.lv =1;
-        data.position = new Vector3(0,0,0);
+        data.position = this.transform.position;
         data.weapon = new Weapon();
         return CharacterManager.instance.SendOne(this.id, JSON.stringify(data));
     }

@@ -10,6 +10,7 @@ import {Player} from './Player'
 import {Enemy} from './Enemy'
 import { CommunicationData } from './CommunicationData';
 import WebSocket = require('ws');
+import { Vector3 } from './Vector3';
 
 /**
  * キャラクタマネージャ
@@ -252,6 +253,27 @@ export class CharacterManager{
         player.webSocket = _ws;
         player.LoadSaveData();
         return true;
+    }
+
+    public MovePlayer(_data: string): boolean {
+        let isSuccess = true;
+        const data = CommunicationData.Converter.Convert(_data);
+        if(data instanceof CommunicationData.ReceiveData.CharacterTransform)
+        {       
+            let sendData: CommunicationData.SendData.CharacterTransform = new CommunicationData.SendData.CharacterTransform();
+            sendData.user_id = data.user_id;
+            sendData.map_id = 0;
+            sendData.x = data.x;
+            sendData.y = data.y;
+            sendData.z = data.z;
+            sendData.dir = data.dir;
+
+            this.playerArray_.forEach((_player: Player) => {
+                if(_player.id === data.user_id) _player.transform.position = new Vector3(data.x, data.y, data.z);
+                else _player.SendToClient(_data);
+            });
+        }
+        return isSuccess;
     }
 
     /**
