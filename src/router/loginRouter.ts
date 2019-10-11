@@ -3,6 +3,7 @@ import io from 'socket.io-client';
 import {IsThere, MakeOk, DuplicateLogin, NotUser, LoginOK, UserData} from '../model/packet';
 import { loginController } from './../controller/loginController';
 import { CharacterManager } from '../ishitaka/CharacterManager';
+import { Player } from '../ishitaka/Player';
 
 
 // ログインルーター
@@ -41,13 +42,16 @@ export class loginRouter{
     private async resultCreateUser(data: any, ws: any){   
         const result = await this.controller.createUser(data);
         if(result === 0) {
-            const a: CharacterManager = CharacterManager.instance;
+            const characterManager: CharacterManager = CharacterManager.instance;
+            let player: Player = new Player();
+            player.dbId = result;
+            characterManager.AddCharacter(player);
 
             const res = new MakeOk();
-            res.user_id = 0;
-            console.log(res);
+            res.user_id = player.id;
+
+            console.log('send makeok : ' + JSON.stringify(res));
             ws.send(JSON.stringify(res));
-            this.sendPlayServer(res, result);
         }
         else if(result === -1) {
             const res = new IsThere();
@@ -62,17 +66,16 @@ export class loginRouter{
         if(result === -1) ws.send(JSON.stringify(new DuplicateLogin()));
         else if(result === -2) ws.send(JSON.stringify(new NotUser()));
         else {
-            const res = new LoginOK();
-            ws.send(JSON.stringify(res));
-            this.sendPlayServer(res, result);
-        }
-    }
+            const characterManager: CharacterManager = CharacterManager.instance;
+            let player: Player = new Player();
+            player.dbId = result;
+            characterManager.AddCharacter(player);
 
-    // プレイサーバーに伝達
-    sendPlayServer(req: any, userId: number){
-        const user_data  = new UserData();
-        user_data.user_id = req.user_id;
-        user_data.id = userId;				
-        this.socket.emit("user_login", user_data);
+            const res = new LoginOK();
+            res.user_id = player.id;
+
+            console.log('send loginok : ' + JSON.stringify(res));
+            ws.send(JSON.stringify(res));
+        }
     }
 }

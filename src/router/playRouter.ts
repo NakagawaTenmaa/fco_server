@@ -37,21 +37,23 @@ export class playRouter{
             ws.on('message', (msg: WebSocket.Data) => {
                 console.log('msg : ' + msg);
                 const data = CommunicationData.Converter.Convert(msg.toString());
+  
                 // コンバートエラー
                 if(typeof data === 'undefined' || !data) return false;
-                
+
                 // 移動処理
                 if(data instanceof CommunicationData.ReceiveData.CharacterTransform){
                     
                 }
                 // セーブデータの読み込み
                 else if(data instanceof CommunicationData.ReceiveData.LoadCharacter){
+                    this.characterManager.Receive("");
                     let sendDate: CommunicationData.SendData.LoadCharacter = new CommunicationData.SendData.LoadCharacter();
                     sendDate.exp = 0;
                     sendDate.lv = 10;
                     ws.send(JSON.stringify(sendDate));
                 }
-                // ログイン
+                // 初期ログイン
                 else if(data instanceof CommunicationData.ReceiveData.InitCharacter){
                     let sendData:CommunicationData.SendData.InitCharacter = new CommunicationData.SendData.InitCharacter();
                     sendData.user_id = data.user_id;

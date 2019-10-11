@@ -14,7 +14,8 @@ import {CharacterManager} from './CharacterManager'
 import {CommunicationData} from './CommunicationData';
 import {JobData,JobDataAccessor} from './DatabaseAccessors/JobDataAccessor'
 import WebSocket = require('ws')
-
+import {  } from '../model/characterDataModel';
+import { Vector3 } from './Vector3'
 /**
  * プレイヤー
  * @export
@@ -197,6 +198,28 @@ export class Player implements Character{
      */
     public ReceiveAnEffect(_effect:CharacterEffect) : boolean {
         return _effect.Show(this);
+    }
+
+    
+    /**
+     * セーブデータの読み込み
+     * @public
+     * @param {}
+     * @returns {boolean} true:成功 false:失敗
+     * @memberof Player
+     */
+    public LoadSaveData(): boolean{
+        // TODO: Modelから取得するように変更 いったんデバッグ用で作作成
+        const model: any = { 
+            postion :{ x: 0,y: 0, z:0 },
+            weapon : { head: 0, hand: 0 },
+            mapId: 0
+        }
+        this.transform.position = new Vector3(0,0,0);
+        // TODO: 武器etc...の読み込み実装予定
+
+        // 読み込み結果をクライアントに送信
+        return CharacterManager.instance.Send(this.id, this.mapId, JSON.stringify(model));;
     }
 
 

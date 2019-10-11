@@ -9,6 +9,7 @@ import {Character} from './Character'
 import {Player} from './Player'
 import {Enemy} from './Enemy'
 import { CommunicationData } from './CommunicationData';
+import WebSocket = require('ws');
 
 /**
  * キャラクタマネージャ
@@ -100,6 +101,13 @@ export class CharacterManager{
         }
         return true;
     }
+
+    /**
+     * ユーザーデータの読み込み
+     * @public
+     * @returns {boolean}
+     * @memberof CharacterManager
+     */
 
     /**
      * 更新処理
@@ -195,26 +203,24 @@ export class CharacterManager{
      * @memberof CharacterManager
      */
     public Receive(_receiveData:string) : boolean {
-        const data = CommunicationData.Converter.Convert(_receiveData);
-        if(typeof data === 'undefined' || !data) return false;
-        switch(data.command){
-            // セーブデータの読み込み
-            case CommunicationData.ReceiveData.LoadCharacter.id:
-                
-            break;
-            // ログイン
-            case CommunicationData.ReceiveData.InitCharacter.id:
-
-            break;
-            // 移動処理
-            case CommunicationData.ReceiveData.CharacterTransform.id:
-
-            break;
-        }
         // TODO:        
         return true;
     }
 
+    /**
+     * プレイヤーの初期設定
+     * @public
+     * @param {WebSocket} _ws ウェブソケット
+     * @returns {void}
+     */
+    public LoadCharacter(_ws: WebSocket, _characterId: number): boolean{
+        // ソケットの設定
+        const player: Player | undefined = this.playerArray_.find((_player: Player) => { return _player.id === _characterId; })
+        if(typeof player === 'undefined') return false;
+        player.webSocket = _ws;
+        player.LoadSaveData();
+        return true;
+    }
 
     /**
      * キャラクタの取得
