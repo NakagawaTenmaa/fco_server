@@ -195,6 +195,18 @@ export class CharacterManager{
         return isSuccess;
     }
 
+
+    /**
+     * 個人に送信
+     * @public
+     * @param {string} _sendData 送信データ 
+     */
+    public SendOne(_characterId: number, _sendData: string): boolean{
+        const player = this.FindPlayer(_characterId);
+        if(typeof player === 'undefined') return false;
+        return player.SendToClient(_sendData);
+    }
+
     /**
      * 受信
      * @public
@@ -276,5 +288,17 @@ export class CharacterManager{
         _character.id = (lastCharacter === undefined) ? (0) : (lastCharacter.id + 1);
         this.characterArray_[_character.id] = _character;
         return true;
+    }
+
+
+    /**
+     * IDからプレイヤーの検索
+     * @privet 
+     * @param {number} プレイヤーのID
+     * @returns {Player} 検索結果
+     * @memberof CharacterManager
+     */
+    private FindPlayer(_characterId: number): Player | undefined{
+        return this.playerArray_.find((player: Player) => player.id === _characterId);
     }
 }

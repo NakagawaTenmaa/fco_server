@@ -47,11 +47,7 @@ export class playRouter{
                 }
                 // セーブデータの読み込み
                 else if(data instanceof CommunicationData.ReceiveData.LoadCharacter){
-                    this.characterManager.Receive("");
-                    let sendDate: CommunicationData.SendData.LoadCharacter = new CommunicationData.SendData.LoadCharacter();
-                    sendDate.exp = 0;
-                    sendDate.lv = 10;
-                    ws.send(JSON.stringify(sendDate));
+                    this.characterManager.LoadCharacter(ws,data.user_id);
                 }
                 // 初期ログイン
                 else if(data instanceof CommunicationData.ReceiveData.InitCharacter){

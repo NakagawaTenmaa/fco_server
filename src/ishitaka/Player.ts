@@ -16,6 +16,7 @@ import {JobData,JobDataAccessor} from './DatabaseAccessors/JobDataAccessor'
 import WebSocket = require('ws')
 import {  } from '../model/characterDataModel';
 import { Vector3 } from './Vector3'
+import { Weapon } from '../controller/object/playerWeapon'
 /**
  * プレイヤー
  * @export
@@ -164,6 +165,7 @@ export class Player implements Character{
      */
     public SendToClient(_sendData:string) : boolean {
         // TODO:
+        if(this.ws_ === null) return false;
         const data:CommunicationData.AllTypes|undefined = CommunicationData.Converter.Convert(_sendData);
         if(data === undefined){
             console.log('Undefined data.');
@@ -179,11 +181,13 @@ export class Player implements Character{
         }
         else if(data instanceof CommunicationData.SendData.SkillUse){
             console.log('Skill use data.');
+        } else if(data instanceof CommunicationData.SendData.LoadCharacter){
+            console.log('Load data');
         }
         else{
             console.log('Any data.');
         }
-
+        this.ws_.send(_sendData);
         console.log('send:'+_sendData+' -> user_id:'+this.id.toString());
         return true;
     }
@@ -217,9 +221,12 @@ export class Player implements Character{
         }
         this.transform.position = new Vector3(0,0,0);
         // TODO: 武器etc...の読み込み実装予定
-
-        // 読み込み結果をクライアントに送信
-        return CharacterManager.instance.Send(this.id, this.mapId, JSON.stringify(model));;
+        let data: CommunicationData.SendData.LoadCharacter = new CommunicationData.SendData.LoadCharacter();
+        data.exp = 0;
+        data.lv =1;
+        data.position = new Vector3(0,0,0);
+        data.weapon = new Weapon();
+        return CharacterManager.instance.SendOne(this.id, JSON.stringify(data));
     }
 
 
