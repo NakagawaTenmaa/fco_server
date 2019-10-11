@@ -259,10 +259,32 @@ export class CharacterManager{
             console.error('Couldn\'t add character.');
             return false;
         }
-
+        
         const lastCharacter : Character|undefined = this.characterArray_.slice(-1).shift();
-        _character.id = (lastCharacter === undefined) ? (0) : (lastCharacter.id + 1);
+        let checkId:number = (lastCharacter === undefined) ? (0) : (lastCharacter.id + 1);
+        
+        while(checkId in this.characterArray_){
+            // 使われているなら次のIDへ
+            checkId = (checkId+1) % Number.MAX_SAFE_INTEGER;
+        }
+
+        _character.id = checkId;
         this.characterArray_[_character.id] = _character;
         return true;
+    }
+
+    /**
+     * キャラクタの削除
+     * @public
+     * @param {number} _characterId キャラクタID
+     * @returns {boolean} true:成功 false:失敗
+     * @memberof CharacterManager
+     */
+    public RemoveCharacter(_characterId:number) : boolean{
+        if(_characterId in this.characterArray_){
+            delete this.characterArray_[_characterId];
+            return true;
+        }
+        return false;
     }
 }
