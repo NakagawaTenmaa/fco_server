@@ -31,7 +31,7 @@ export class Enemy implements Character{
      * @type {number}
      * @memberof Enemy
      */
-    private static readonly repopulateInterval_ : number = 3.0;
+    private static readonly repopulateInterval_ : number = 3000.0;
 
 
     /**
@@ -120,7 +120,7 @@ export class Enemy implements Character{
         this.characterId_ = -1;
         this.mapId_ = -1;
         this.transform_ = new Transform();
-        this.enemyStatus_ = new EnemyStatus();
+        this.enemyStatus_ = new EnemyStatus(this);
         this.currentUpdateMethod_ = this.UpdateOfNormal;
         this.repopulateTime_ = 0;
     }
@@ -134,7 +134,6 @@ export class Enemy implements Character{
      */
     public Initialize() : boolean {
         this.enemyStatus_.Initialize();
-        this.currentUpdateMethod_ = this.UpdateOfNormal;
         this.Populate();
         return true;
     }
@@ -175,10 +174,12 @@ export class Enemy implements Character{
 
     /**
      * 死んだときの処理
-     * @private
+     * @public
      * @memberof Enemy
      */
-    private OnDead() : void {
+    public OnDead() : void {
+        console.log('enemy id:' + this.characterId_.toString() + ' dead.');
+
         this.repopulateTime_ = Enemy.repopulateInterval_;
         this.currentUpdateMethod_ = this.UpdateOfDead;
     }
@@ -241,7 +242,8 @@ export class Enemy implements Character{
      */
     private UpdateOfNormal(_elapsedTime:number) : boolean {
         // TODO:
-        this.enemyStatus_.hitPoint = Math.floor(0.5 * this.enemyStatus_.hitPoint);
+        this.enemyStatus_.hitPoint -= 2.0;
+        console.log('enemy id:' + this.characterId_.toString() + ', hp:' + this.enemyStatus_.hitPoint.toString());
 
         this.SendTransform(this.mapId);
         this.SendSimpleDisplay();
@@ -268,6 +270,8 @@ export class Enemy implements Character{
      * @memberof Enemy
      */
     private UpdateOfDead(_elapsedTime:number) : boolean {
+        console.log('enemy id:' + this.characterId_.toString() + ' repop:' + this.repopulateTime_.toString());
+
         this.repopulateTime_ -= _elapsedTime;
         if(this.repopulateTime_ < 0){
             this.Populate();
@@ -314,6 +318,7 @@ export class Enemy implements Character{
         }
 
         this.repopulateTime_ = 0;
+        this.currentUpdateMethod_ = this.UpdateOfNormal;
 
         return true;
     }
