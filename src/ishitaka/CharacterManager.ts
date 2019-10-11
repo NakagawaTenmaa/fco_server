@@ -195,16 +195,36 @@ export class CharacterManager{
         return isSuccess;
     }
 
-
     /**
      * 個人に送信
      * @public
-     * @param {string} _sendData 送信データ 
+     * @param {number} _characterId
+     * @param {string} _sendData
+     * @returns {boolean}
+     * @memberof CharacterManager
      */
     public SendOne(_characterId: number, _sendData: string): boolean{
         const player = this.FindPlayer(_characterId);
         if(typeof player === 'undefined') return false;
         return player.SendToClient(_sendData);
+    }
+
+  
+    /**
+     * 全員に送信
+     * @public
+     * @param {string} _sendData 送信データ
+     * @returns {boolean}
+     * @memberof CharacterManager
+     */
+    public SendAll(_sendData: string): boolean {
+        let isSuccess: boolean = true;
+        this.playerArray_.forEach((player: Player) => {
+            if(!player.SendToClient(_sendData)) {
+                isSuccess = false;
+            }
+        });
+        return isSuccess;
     }
 
     /**

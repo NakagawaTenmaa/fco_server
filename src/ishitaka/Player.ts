@@ -181,8 +181,12 @@ export class Player implements Character{
         }
         else if(data instanceof CommunicationData.SendData.SkillUse){
             console.log('Skill use data.');
-        } else if(data instanceof CommunicationData.SendData.LoadCharacter){
+        } 
+        else if(data instanceof CommunicationData.SendData.LoadCharacter){
             console.log('Load data');
+        } 
+        else if(data instanceof CommunicationData.SendData.InitCharacter){
+            console.log('Init user data');
         }
         else{
             console.log('Any data.');
