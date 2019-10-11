@@ -1,14 +1,14 @@
-import {Server} from 'ws';
+import { Server, } from 'ws';
 import {listen} from 'socket.io';
-import { playController } from './../controller/playController';
 import { CharacterManager } from '../ishitaka/CharacterManager';
 import { Player } from '../ishitaka/Player';
 import { CommunicationData } from '../ishitaka/CommunicationData';
+import WebSocket = require('ws');
 
 
 
 export class playRouter{
-    controller: playController = new playController();
+    //controller: playController = new playController();
     wss: Server;
 
     characterManager: CharacterManager;
@@ -31,12 +31,12 @@ export class playRouter{
 
     // 更新
     public playUpdate(){
-        this.wss.on('connection', (ws: any) => {
+        this.wss.on('connection', (ws: WebSocket) => {
             console.log("client_connection");
-            ws.on('message', (msg: any) => {
+
+            ws.on('message', (msg: WebSocket.Data) => {
                 console.log('msg : ' + msg);
-                //this.characterManager.Receive(msg);
-                const data = CommunicationData.Converter.Convert(msg);
+                const data = CommunicationData.Converter.Convert(msg.toString());
                 // コンバートエラー
                 if(typeof data === 'undefined' || !data) return false;
                 
@@ -46,7 +46,10 @@ export class playRouter{
                 }
                 // セーブデータの読み込み
                 else if(data instanceof CommunicationData.ReceiveData.LoadCharacter){
-                    ws.send(JSON.stringify(this.controller.loadPlayer(data.user_id)));
+                    let sendDate: CommunicationData.SendData.LoadCharacter = new CommunicationData.SendData.LoadCharacter();
+                    sendDate.exp = 0;
+                    sendDate.lv = 10;
+                    ws.send(JSON.stringify(sendDate));
                 }
                 // ログイン
                 else if(data instanceof CommunicationData.ReceiveData.InitCharacter){
@@ -59,7 +62,7 @@ export class playRouter{
                 }
 
 
-                let json = JSON.parse(msg);
+                let json = JSON.parse(msg.toString());
                 /*
                 switch(json.command){
 
@@ -93,9 +96,31 @@ export class playRouter{
                 */
             })
         })
+        
         this.serverSocUpdate();
     }
-
+    
+    // サーバー間のやり取り用更新
+    private serverSocUpdate(){
+            let io = listen(10001);
+            console.log('start socket.io server');
+            io.sockets.on('connection', (socket: any) => {
+                console.log('connect');
+                socket.on('user_login', (data: any) => {
+                    console.log(data);
+                    console.log("data : " + data);
+    
+                    // TODO: 処理の場所変更 ---
+                    let player: Player = new Player();
+                    player.dbId = data.id;
+                    this.characterManager.AddCharacter(player);
+                    // -----------------------
+    
+                    //this.controller.addPlayer(data);
+                })
+            })
+        }
+/*
     // 移動201
     private playersMove(data: any){
         const res = this.controller.playersMove(data);
@@ -114,26 +139,7 @@ export class playRouter{
         })
     }
 
-    // サーバー間のやり取り用更新
-    private serverSocUpdate(){
-        let io = listen(10001);
-        console.log('start socket.io server');
-        io.sockets.on('connection', (socket: any) => {
-            console.log('connect');
-            socket.on('user_login', (data: any) => {
-                console.log(data);
-                console.log("data : " + data);
 
-                // TODO: 処理の場所変更 ---
-                let player: Player = new Player();
-                player.dbId = data.id;
-                this.characterManager.AddCharacter(player);
-                // -----------------------
-
-                this.controller.addPlayer(data);
-            })
-        })
-    }
 
     // TODO: プレイヤーの状態共有
     private statusUpdate(data: any){
@@ -160,4 +166,5 @@ export class playRouter{
     // 位置の更新
 
     // 
+    */
 }

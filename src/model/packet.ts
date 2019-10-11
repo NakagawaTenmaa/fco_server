@@ -15,13 +15,13 @@ export class DuplicateLogin{
 export class LoginOK
 {
     command: number = 103;
-    user_id: number = Math.floor(Math.random() * 1000000000);
+    user_id: number = 0;
 }
 
 // 作成OK
 export class MakeOk{
     command: number = 105;
-    user_id: number = Math.floor(Math.random() * 1000000000);
+    user_id: number = 0;
 }
 
 // すでに登録されている

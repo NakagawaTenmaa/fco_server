@@ -2,6 +2,7 @@ import { Server } from 'ws';
 import io from 'socket.io-client';
 import {IsThere, MakeOk, DuplicateLogin, NotUser, LoginOK, UserData} from '../model/packet';
 import { loginController } from './../controller/loginController';
+import { CharacterManager } from '../ishitaka/CharacterManager';
 
 
 // ログインルーター
@@ -40,7 +41,10 @@ export class loginRouter{
     private async resultCreateUser(data: any, ws: any){   
         const result = await this.controller.createUser(data);
         if(result === 0) {
+            const a: CharacterManager = CharacterManager.instance;
+
             const res = new MakeOk();
+            res.user_id = 0;
             console.log(res);
             ws.send(JSON.stringify(res));
             this.sendPlayServer(res, result);

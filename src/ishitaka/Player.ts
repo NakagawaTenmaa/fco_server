@@ -13,6 +13,7 @@ import {CharacterEffect} from './CharacterEffect'
 import {CharacterManager} from './CharacterManager'
 import {CommunicationData} from './CommunicationData';
 import {JobData,JobDataAccessor} from './DatabaseAccessors/JobDataAccessor'
+import WebSocket = require('ws')
 
 /**
  * プレイヤー
@@ -21,6 +22,14 @@ import {JobData,JobDataAccessor} from './DatabaseAccessors/JobDataAccessor'
  * @implements {Character}
  */
 export class Player implements Character{
+    /**
+     * webソケット
+     * @private
+     * @type {PlayerWebSocket | null}
+     * @memberof Player
+     */
+    private ws_: WebSocket | null;
+    public set webSocket(_ws: WebSocket) { this.ws_ = _ws; }
     /**
      * DB用ID
      * @private
@@ -99,6 +108,7 @@ export class Player implements Character{
      * @memberof Player
      */
     public constructor(){
+        this.ws_ = null;
         this.dbId_ = -1;
         this.characterId_ = -1;
         this.mapId_ = 0;
