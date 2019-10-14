@@ -236,8 +236,28 @@ export class CharacterManager{
      * @memberof CharacterManager
      */
     public Receive(_receiveData:string) : boolean {
-        // TODO:        
-        return true;
+        const data = CommunicationData.Converter.Convert(_receiveData);
+        let isSuccess = true;
+        // コンバートエラー
+        if(typeof data === 'undefined' || !data) return false;
+
+        // 移動処理
+        if(data instanceof CommunicationData.ReceiveData.CharacterTransform){
+            const user: Player| undefined = this.FindPlayer(data.user_id);
+            if(user !== undefined) {
+                user.transform.position = new Vector3(data.x,data.y,data.z);
+                user.dir = data.dir;
+            }
+
+            let sendData:CommunicationData.SendData.CharacterTransform = new CommunicationData.SendData.CharacterTransform();
+            sendData.x = data.x;
+            sendData.y = data.y;
+            sendData.z = data.z;
+            sendData.dir = data.dir;
+            sendData.user_id = data.user_id;
+            isSuccess = this.SendAll(JSON.stringify(sendData));
+        }
+        return isSuccess;
     }
 
     /**
@@ -253,27 +273,6 @@ export class CharacterManager{
         player.webSocket = _ws;
         player.LoadSaveData();
         return true;
-    }
-
-    public MovePlayer(_data: string): boolean {
-        let isSuccess = true;
-        const data = CommunicationData.Converter.Convert(_data);
-        if(data instanceof CommunicationData.ReceiveData.CharacterTransform)
-        {       
-            let sendData: CommunicationData.SendData.CharacterTransform = new CommunicationData.SendData.CharacterTransform();
-            sendData.user_id = data.user_id;
-            sendData.map_id = 0;
-            sendData.x = data.x;
-            sendData.y = data.y;
-            sendData.z = data.z;
-            sendData.dir = data.dir;
-
-            this.playerArray_.forEach((_player: Player) => {
-                if(_player.id === data.user_id) _player.transform.position = new Vector3(data.x, data.y, data.z);
-                else _player.SendToClient(_data);
-            });
-        }
-        return isSuccess;
     }
 
     /**

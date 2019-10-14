@@ -102,6 +102,9 @@ export class Player implements Character{
      */
     public get status() : CharacterStatus { return this.playerStatus_; }
 
+    private playerDir_ : number;
+    public get dir(): number { return this.playerDir_; }
+    public set dir(_dir: number) { this.playerDir_ = _dir; }
 
     /**
      * デフォルトコンストラクタ
@@ -110,6 +113,7 @@ export class Player implements Character{
      * @memberof Player
      */
     public constructor(){
+        this.playerDir_ = -1;
         this.ws_ = null;
         this.dbId_ = -1;
         this.characterId_ = -1;
@@ -219,7 +223,7 @@ export class Player implements Character{
     public LoadSaveData(): boolean{
         // TODO: Modelから取得するように変更 いったんデバッグ用で作作成
         const model: any = { 
-            postion :{ x: 0,y: 0, z:0 },
+            position :{ x: 0,y: 0, z:0 },
             weapon : { head: 0, hand: 0 },
             mapId: 0,
             exp: 0
