@@ -59,7 +59,7 @@ export namespace CommunicationData{
              * @type {number}
              * @memberof CharacterTransform
              */
-            public static readonly id : number = 201;
+            public static readonly id : number = 202;
             /**
              * コマンドID
              * @public
@@ -306,8 +306,8 @@ export namespace CommunicationData{
         }
 
         export class LoadCharacter implements Send{
-            public readonly command: number = 211;
-            public static id = 211;
+            public readonly command: number = 210;
+            public static id = 210;
             public weapon: Weapon = new Weapon();
             public position: Vector3 = new Vector3();
             public lv: number = 0;
@@ -347,8 +347,8 @@ export namespace CommunicationData{
 
         // 位置同期
         export class CharacterTransform implements Receive{
-            public readonly command: number = 202;
-            public static id: number = 202;
+            public readonly command: number = 201;
+            public static id: number = 201;
             public user_id: number = 0;
             public x: number;
             public y: number;
@@ -372,8 +372,8 @@ export namespace CommunicationData{
 
         // プレイヤーの状態
         export class PlayerStatus{
-            public readonly command: number = 206;
-            public static id = 206;
+            public readonly command: number = 205;
+            public static id = 205;
             public user_id: number = 0;
             public hp: number = 0;
             public mp: number = 0;
@@ -385,6 +385,12 @@ export namespace CommunicationData{
         export class LoadCharacter{
             public readonly command: number = 209;
             public static id = 209;
+            public user_id = 0;
+        }
+
+        export class LogoutCharacter {
+            public readonly command: number = 0;
+            public static id = 0;
             public user_id = 0;
         }
 

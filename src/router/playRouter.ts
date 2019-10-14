@@ -55,6 +55,10 @@ export class playRouter{
                     sendData.user_id = data.user_id;                    
                     this.characterManager.SendAll(JSON.stringify(sendData));
                 }
+                // ログアウト
+                else if(data instanceof CommunicationData.ReceiveData.CharacterTransform){
+                    
+                }
             })
         })
         
