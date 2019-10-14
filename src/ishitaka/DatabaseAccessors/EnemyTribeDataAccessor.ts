@@ -21,6 +21,13 @@ export class EnemyTribeData{
      */
     public tribeName_ : string;
     /**
+     * 利用するスキルID
+     * @public
+     * @type {number}
+     * @memberof EnemyTribeData
+     */
+    public useSkillId_ : number;
+    /**
      * 最大体力
      * @public
      * @type {number}
@@ -86,6 +93,7 @@ export class EnemyTribeData{
      */
     public constructor(){
         this.tribeName_ = 'none';
+        this.useSkillId_ = 0;
         this.maxHitPoint_ = 0;
         this.maxMagicPoint_ = 0;
         this.strength_ = 0;
@@ -200,6 +208,7 @@ export class EnemyTribeDataAccessor implements DatabaseAccessor{
         // テスト用データ
         const testTribe:EnemyTribeData = new EnemyTribeData();
         testTribe.tribeName_ = 'test';
+        testTribe.useSkillId_ = 0;
         testTribe.maxHitPoint_ = 300;
         testTribe.maxMagicPoint_ = 50;
         testTribe.strength_ = 50;

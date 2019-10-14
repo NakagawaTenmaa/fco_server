@@ -15,7 +15,7 @@ import {CharacterManager} from './CharacterManager'
 import {CommunicationData} from './CommunicationData';
 import {EnemyPopAreaData, EnemyPopAreaDataAccessor} from './DatabaseAccessors/EnemyPopAreaDataAccessor'
 import {Vector3} from './Vector3'
-import { Matrix4x4 } from './Matrix4x4'
+import {Matrix4x4} from './Matrix4x4'
 
 /**
  * 敵
@@ -102,12 +102,26 @@ export class Enemy implements Character{
      */
     private currentUpdateMethod_ : (_elapsedTime:number)=>boolean;
     /**
-     * リポップタイム
+     * 休憩時間
      * @private
      * @type {number}
      * @memberof Enemy
      */
-    private repopulateTime_ : number;
+    private restTime_ : number;
+    /**
+     * 戦闘相手のキャラクタID
+     * @private
+     * @type {number}
+     * @memberof Enemy
+     */
+    private battleCharacterId_ : number;
+    /**
+     * 現在のバトルメソッド
+     * @private
+     * @type {function}
+     * @memberof Enemy
+     */
+    private currentBattleMethod_ : (_elapsedTime:number)=>boolean;
 
 
     /**
@@ -122,7 +136,9 @@ export class Enemy implements Character{
         this.transform_ = new Transform();
         this.enemyStatus_ = new EnemyStatus(this);
         this.currentUpdateMethod_ = this.UpdateOfNormal;
-        this.repopulateTime_ = 0;
+        this.restTime_ = 0;
+        this.battleCharacterId_ = 0;
+        this.currentBattleMethod_ = this.ButtleOfActionJudge;
     }
 
 
@@ -172,17 +188,77 @@ export class Enemy implements Character{
         return _effect.Show(this);
     }
 
+
+    /**
+     * 通常状態になるときの処理
+     * @public
+     * @memberof Enemy
+     */
+    public OnNormal() : void {
+        this.currentUpdateMethod_ = this.UpdateOfNormal;
+        
+        console.log('enemy [id:' + this.characterId_.toString() + ']  is normal mode.');
+    }
+    /**
+     * 戦闘するときの処理
+     * @public
+     * @memberof Enemy
+     */
+    public OnBattle() : void {
+        this.currentBattleMethod_ = this.ButtleOfActionJudge;
+        this.currentUpdateMethod_ = this.UpdateOfBattle;
+
+        console.log('enemy [id:' + this.characterId_.toString() + '] is battle mode.');
+    }
     /**
      * 死んだときの処理
      * @public
      * @memberof Enemy
      */
     public OnDead() : void {
-        console.log('enemy id:' + this.characterId_.toString() + ' dead.');
-
-        this.repopulateTime_ = Enemy.repopulateInterval_;
+        this.restTime_ = Enemy.repopulateInterval_;
         this.currentUpdateMethod_ = this.UpdateOfDead;
+        
+        console.log('enemy [id:' + this.characterId_.toString() + '] is dead mode.');
     }
+
+    /**
+     * 戦闘移動するときの処理
+     * @public
+     * @memberof Enemy
+     */
+    public OnChangeButtleModeOfMove() : void {
+        this.currentBattleMethod_ = this.ButtleOfMove;
+
+        console.log('enemy [id:' + this.characterId_.toString() + '] change battle mode of move.');
+    }
+    /**
+     * スキルを使用するときの処理
+     * @public
+     * @memberof Enemy
+     */
+    public OnChangeBattleModeOfSkillUse() : void {
+        // TODO: キャストタイム設定
+        this.restTime_ = 1000.0;
+
+        this.currentBattleMethod_ = this.ButtleOfSkillCastTimeConsumption;
+
+        console.log('enemy [id:' + this.characterId_.toString() + '] change battle mode of skill use.');
+    }
+
+    /**
+     * スキルの使用
+     * @private
+     * @param {number} _elapsedTime 経過時間
+     * @returns {boolean} true:継続 false:終了
+     * @memberof Enemy
+     */
+    private OnUseSkill() : void {
+        // TODO:スキル使用
+
+        console.log('enemy [id:' + this.characterId_.toString() + '] is use skill.');
+    }
+
 
     /**
      * 種族(またはレベル)の変更
@@ -257,10 +333,11 @@ export class Enemy implements Character{
      * @memberof Enemy
      */
     private UpdateOfBattle(_elapsedTime:number) : boolean {
-        // TODO:
+        const result = this.currentBattleMethod_(_elapsedTime);
+
         this.SendTransform(this.mapId);
         this.SendSimpleDisplay();
-        return true;
+        return result;
     }
     /**
      * 死んでいる時の更新処理
@@ -270,11 +347,109 @@ export class Enemy implements Character{
      * @memberof Enemy
      */
     private UpdateOfDead(_elapsedTime:number) : boolean {
-        console.log('enemy id:' + this.characterId_.toString() + ' repop:' + this.repopulateTime_.toString());
-
-        this.repopulateTime_ -= _elapsedTime;
-        if(this.repopulateTime_ < 0){
+        this.restTime_ -= _elapsedTime;
+        if(this.restTime_ < 0){
             this.Populate();
+        }
+        return true;
+    }
+
+    /**
+     * バトル行動判定
+     * @private
+     * @param {number} _elapsedTime 経過時間
+     * @returns {boolean} true:継続 false:終了
+     * @memberof Enemy
+     */
+    private ButtleOfActionJudge(_elapsedTime:number) : boolean {
+        // TODO: 各行動点数計算
+        const movePoint = 0;
+        const useSkillPoint = 0;
+
+        // 点数の高いほうの行動をする
+        if(movePoint < useSkillPoint){
+            this.OnChangeBattleModeOfSkillUse();
+        }
+        else{
+            this.OnChangeButtleModeOfMove();
+        }
+
+        return true;
+    }
+    /**
+     * バトル移動
+     * @private
+     * @param {number} _elapsedTime 経過時間
+     * @returns {boolean} true:継続 false:終了
+     * @memberof Enemy
+     */
+    private ButtleOfMove(_elapsedTime:number) : boolean {
+        // 相手の場所に近づく
+        const battleCharacter:Character|undefined = CharacterManager.instance.GetCharacter(this.battleCharacterId_);
+        if(battleCharacter !== undefined){
+            const battleCharacterInLocal:Matrix4x4 = battleCharacter.transform.worldMatrix.invertMatrix.Multiplication(this.transform_.worldMatrix);
+            const toPosition:Vector3 = battleCharacterInLocal.column4.xyz;
+            
+            // TODO:最大回転量
+            const maxRotation:number = 1.0;
+
+            let rotation:number = 0.0;
+            // 前に進む
+            if(toPosition.z > 0.0){
+                // TODO:最大移動量
+                const maxMoveDistance:number = 1.0;
+
+                // 移動量と回転量を計算
+                const moveDistance:number = (toPosition.z>maxMoveDistance) ? (maxMoveDistance) : (toPosition.z);
+                // 移動
+                this.transform_.worldMatrix.column4.z += moveDistance;
+
+                // 回転量を計算
+                rotation = maxRotation*(toPosition.x*toPosition.x)/(toPosition.x*toPosition.x + toPosition.z*toPosition.z);
+            }
+            else{
+                // 回転量を計算
+                rotation = (toPosition.x < 0.0) ? (-maxRotation) : (maxRotation);
+            }
+
+            // 回転
+            this.transform_.worldMatrix = this.transform_.worldMatrix.Multiplication(Matrix4x4.CreateRotationMatrix(rotation));
+        }
+
+        // 行動判定へ
+        this.currentBattleMethod_ = this.ButtleOfActionJudge;
+        return true;
+    }
+    /**
+     * バトルスキルのキャストタイム消費
+     * @private
+     * @param {number} _elapsedTime 経過時間
+     * @returns {boolean} true:継続 false:終了
+     * @memberof Enemy
+     */
+    private ButtleOfSkillCastTimeConsumption(_elapsedTime:number) : boolean {
+        this.restTime_ -= _elapsedTime;
+        if(this.restTime_ < 0.0){
+            // スキル使用
+            this.OnUseSkill();
+            // リキャストタイム消費モードへ
+            this.restTime_ = 2000.0;
+            this.currentBattleMethod_ = this.ButtleOfSkillRecastTimeConsumption
+        }
+        return true;
+    }
+    /**
+     * バトルスキルのリキャストタイム消費
+     * @private
+     * @param {number} _elapsedTime 経過時間
+     * @returns {boolean} true:継続 false:終了
+     * @memberof Enemy
+     */
+    private ButtleOfSkillRecastTimeConsumption(_elapsedTime:number) : boolean {
+        this.restTime_ -= _elapsedTime;
+        if(this.restTime_ < 0.0){
+            // 行動判定へ
+            this.currentBattleMethod_ = this.ButtleOfActionJudge;
         }
         return true;
     }
@@ -296,17 +471,8 @@ export class Enemy implements Character{
         }
 
         this.mapId_ = area.mapID_;
-        {
-            const direction:number = 2.0*Math.PI * (Math.random()-0.5);
-            const rotation:Matrix4x4 = Matrix4x4.identity;
-            const cosValue:number = Math.cos(direction);
-            const sinValue:number = Math.sin(direction);
-            rotation.column1.x = cosValue;
-            rotation.column1.z = sinValue;
-            rotation.column3.x = -sinValue;
-            rotation.column3.z = cosValue;
-            this.transform.worldMatrix = rotation;
-        }
+
+        this.transform.worldMatrix = Matrix4x4.CreateRotationMatrix(2.0*Math.PI * (Math.random()-0.5));
         {
             const direction:number = 2.0*Math.PI * (Math.random()-0.5);
             const delta:number = area.popAreaRadius_ * Math.random();
@@ -317,8 +483,8 @@ export class Enemy implements Character{
             );
         }
 
-        this.repopulateTime_ = 0;
-        this.currentUpdateMethod_ = this.UpdateOfNormal;
+        this.restTime_ = 0;
+        this.OnNormal();
 
         return true;
     }
