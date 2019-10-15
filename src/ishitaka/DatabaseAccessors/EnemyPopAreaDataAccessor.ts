@@ -28,6 +28,13 @@ export class EnemyPopAreaData{
      */
     public positionX_ : number;
     /**
+     * Y位置座標
+     * @public
+     * @type {number}
+     * @memberof EnemyPopAreaData
+     */
+    public positionY_ : number;
+    /**
      * Z位置座標
      * @public
      * @type {number}
@@ -100,24 +107,52 @@ export class EnemyPopAreaData{
 
 
     /**
-     * デフォルトコンストラクタ
+     * フルコンストラクタ
      * @public
      * @constructor
+     * @param {number} _mapID マップID
+     * @param {number} _positionX X位置座標
+     * @param {number} _positionY Y位置座標
+     * @param {number} _positionZ Z位置座標
+     * @param {number} _popAreaRadius 出現エリア半径
+     * @param {number} _areaRadius エリア半径
+     * @param {number} _maxPopEnemyCount 敵ポップ最大数
+     * @param {number} _popEnemy1ID ポップする敵1の種族ID
+     * @param {number} _popEnemy1MaxCount ポップする敵1の最大数
+     * @param {number} _popEnemy2ID ポップする敵2の種族ID
+     * @param {number} _popEnemy2MaxCount ポップする敵2の最大数
+     * @param {number} _popEnemy3ID ポップする敵3の種族ID
+     * @param {number} _popEnemy3MaxCount ポップする敵3の最大数
      * @memberof EnemyPopAreaData
      */
-    public constructor(){
-        this.mapID_ = -1;
-        this.positionX_ = 0;
-        this.positionZ_ = 0;
-        this.popAreaRadius_ = 0;
-        this.areaRadius_ = 0;
-        this.maxPopEnemyCount_ = 0;
-        this.popEnemy1ID_ = -1;
-        this.popEnemy1MaxCount_ = 0;
-        this.popEnemy2ID_ = -1;
-        this.popEnemy2MaxCount_ = 0;
-        this.popEnemy3ID_ = -1;
-        this.popEnemy3MaxCount_ = 0;
+    public constructor(
+        _mapID : number,
+        _positionX : number,
+        _positionY : number,
+        _positionZ : number,
+        _popAreaRadius : number,
+        _areaRadius : number,
+        _maxPopEnemyCount : number,
+        _popEnemy1ID : number,
+        _popEnemy1MaxCount : number,
+        _popEnemy2ID : number,
+        _popEnemy2MaxCount : number,
+        _popEnemy3ID : number,
+        _popEnemy3MaxCount : number,
+    ){
+        this.mapID_ = _mapID;
+        this.positionX_ = _positionX;
+        this.positionY_ = _positionY;
+        this.positionZ_ = _positionZ;
+        this.popAreaRadius_ = _popAreaRadius;
+        this.areaRadius_ = _areaRadius;
+        this.maxPopEnemyCount_ = _maxPopEnemyCount;
+        this.popEnemy1ID_ = _popEnemy1ID;
+        this.popEnemy1MaxCount_ = _popEnemy1MaxCount;
+        this.popEnemy2ID_ = _popEnemy2ID;
+        this.popEnemy2MaxCount_ = _popEnemy2MaxCount;
+        this.popEnemy3ID_ = _popEnemy3ID;
+        this.popEnemy3MaxCount_ = _popEnemy3MaxCount;
     }
 }
 
@@ -206,19 +241,16 @@ export class EnemyPopAreaDataAccessor implements DatabaseAccessor{
      */
     public async Load() : Promise<boolean> {
         // テスト用データ
-        const testArea:EnemyPopAreaData = new EnemyPopAreaData();
-        testArea.mapID_ = 0;
-        testArea.positionX_ = 10.0;
-        testArea.positionZ_ = -20.0;
-        testArea.popAreaRadius_ = 3.0;
-        testArea.areaRadius_ = 5.0;
-        testArea.maxPopEnemyCount_ = 3;
-        testArea.popEnemy1ID_ = 0;
-        testArea.popEnemy1MaxCount_ = 3;
-        testArea.popEnemy2ID_ = -1;
-        testArea.popEnemy2MaxCount_ = 0;
-        testArea.popEnemy3ID_ = -1;
-        testArea.popEnemy3MaxCount_ = 0;
+        const testArea:EnemyPopAreaData = new EnemyPopAreaData(
+            0,
+            10.0, 0.0, -20.0,
+            3.0,
+            5.0,
+            3,
+            0, 3,
+            -1, 0,
+            -1, 0
+        );
 
         this.enemyPopAreaDataArray_[0] = testArea;
 

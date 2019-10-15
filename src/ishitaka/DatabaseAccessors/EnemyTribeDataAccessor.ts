@@ -21,7 +21,7 @@ export class EnemyTribeData{
      */
     public tribeName_ : string;
     /**
-     * 利用するスキルID
+     * 使用スキルID
      * @public
      * @type {number}
      * @memberof EnemyTribeData
@@ -86,22 +86,43 @@ export class EnemyTribeData{
 
 
     /**
-     * デフォルトコンストラクタ
+     * フルコンストラクタ
      * @public
      * @constructor
+     * @param {string} _tribeName 種族名
+     * @param {number} _useSkillId 使用スキルID
+     * @param {number} _maxHitPoint 最大体力
+     * @param {number} _maxMagicPoint 最大魔力
+     * @param {number} _strength 物理攻撃力
+     * @param {number} _vitality 物理防御力
+     * @param {number} _intelligence 魔法攻撃力
+     * @param {number} _mind 魔法防御力
+     * @param {number} _dexterity 器用さ
+     * @param {number} _agility 敏捷性
      * @memberof EnemyTribeData
      */
-    public constructor(){
-        this.tribeName_ = 'none';
-        this.useSkillId_ = 0;
-        this.maxHitPoint_ = 0;
-        this.maxMagicPoint_ = 0;
-        this.strength_ = 0;
-        this.vitality_ = 0;
-        this.intelligence_ = 0;
-        this.mind_ = 0;
-        this.dexterity_ = 0;
-        this.agility_ = 0;
+    public constructor(
+        _tribeName : string,
+        _useSkillId : number,
+        _maxHitPoint : number,
+        _maxMagicPoint : number,
+        _strength : number,
+        _vitality : number,
+        _intelligence : number,
+        _mind : number,
+        _dexterity : number,
+        _agility : number
+    ){
+        this.tribeName_ = _tribeName;
+        this.useSkillId_ = _useSkillId;
+        this.maxHitPoint_ = _maxHitPoint;
+        this.maxMagicPoint_ = _maxMagicPoint;
+        this.strength_ = _strength;
+        this.vitality_ = _vitality;
+        this.intelligence_ = _intelligence;
+        this.mind_ = _mind;
+        this.dexterity_ = _dexterity;
+        this.agility_ = _agility;
     }
 }
 
@@ -205,17 +226,15 @@ export class EnemyTribeDataAccessor implements DatabaseAccessor{
      */
     public async Load() : Promise<boolean> {
         // テスト用データ
-        const testTribe:EnemyTribeData = new EnemyTribeData();
-        testTribe.tribeName_ = 'test';
-        testTribe.useSkillId_ = 0;
-        testTribe.maxHitPoint_ = 300;
-        testTribe.maxMagicPoint_ = 50;
-        testTribe.strength_ = 50;
-        testTribe.vitality_ = 70;
-        testTribe.intelligence_ = 20;
-        testTribe.mind_ = 30;
-        testTribe.dexterity_ = 50;
-        testTribe.agility_ = 50;
+        const testTribe:EnemyTribeData = new EnemyTribeData(
+            'test',
+            0,
+            300, 50,
+            50, 70,
+            20, 30,
+            50,
+            50
+        );
 
         this.enemyTribeDataArray_[0] = testTribe;
         //this.enemyTribeDataArray_ = await GetEnemyData();
