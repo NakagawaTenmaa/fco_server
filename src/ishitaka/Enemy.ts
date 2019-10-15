@@ -479,7 +479,7 @@ export class Enemy implements Character{
             const delta:number = area.popAreaRadius_ * Math.random();
             this.transform.position = new Vector3(
                 area.positionX_ + delta*Math.cos(direction),
-                0.0,
+                area.positionY_,
                 area.positionZ_ + delta*Math.sin(direction)
             );
         }
