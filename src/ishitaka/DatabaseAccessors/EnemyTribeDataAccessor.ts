@@ -28,6 +28,13 @@ export class EnemyTribeData{
      */
     public useSkillId_ : number;
     /**
+     * モデルID
+     * @public
+     * @type {number}
+     * @memberof EnemyTribeData
+     */
+    public modelId_ : number;
+    /**
      * 最大体力
      * @public
      * @type {number}
@@ -91,6 +98,7 @@ export class EnemyTribeData{
      * @constructor
      * @param {string} _tribeName 種族名
      * @param {number} _useSkillId 使用スキルID
+     * @param {number} _modelId モデルID
      * @param {number} _maxHitPoint 最大体力
      * @param {number} _maxMagicPoint 最大魔力
      * @param {number} _strength 物理攻撃力
@@ -104,6 +112,7 @@ export class EnemyTribeData{
     public constructor(
         _tribeName : string,
         _useSkillId : number,
+        _modelId : number,
         _maxHitPoint : number,
         _maxMagicPoint : number,
         _strength : number,
@@ -115,6 +124,7 @@ export class EnemyTribeData{
     ){
         this.tribeName_ = _tribeName;
         this.useSkillId_ = _useSkillId;
+        this.modelId_ = _modelId;
         this.maxHitPoint_ = _maxHitPoint;
         this.maxMagicPoint_ = _maxMagicPoint;
         this.strength_ = _strength;
@@ -228,6 +238,7 @@ export class EnemyTribeDataAccessor implements DatabaseAccessor{
         // テスト用データ
         const testTribe:EnemyTribeData = new EnemyTribeData(
             'test',
+            0,
             0,
             300, 50,
             50, 70,
