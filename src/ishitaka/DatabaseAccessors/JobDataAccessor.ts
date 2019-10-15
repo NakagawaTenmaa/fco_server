@@ -135,29 +135,64 @@ export class JobData{
 
 
     /**
-     * デフォルトコンストラクタ
+     * フルコンストラクタ
      * @public
      * @constructor
+     * @param {string} _name 職業名
+     * @param {number} _maxHitPointOffset 最大体力オフセット
+     * @param {number} _maxHitPointRate 最大体力増加量
+     * @param {number} _maxMagicPointOffset 最大魔力オフセット
+     * @param {number} _maxMagicPointRate 最大魔力増加量
+     * @param {number} _strengthOffset 物理攻撃力オフセット
+     * @param {number} _strengthRate 物理攻撃力増加量
+     * @param {number} _vitalityOffset 物理防御力オフセット
+     * @param {number} _vitalityRate 物理防御力増加量
+     * @param {number} _intelligenceOffset 魔法攻撃力オフセット
+     * @param {number} _intelligenceRate 魔法攻撃力増加量
+     * @param {number} _mindOffset 魔法防御力オフセット
+     * @param {number} _mindRate 魔法防御力増加量
+     * @param {number} _dexterityOffset 器用さオフセット
+     * @param {number} _dexterityRate 器用さ増加量
+     * @param {number} _agilityOffset 敏捷性オフセット
+     * @param {number} _agilityRate 敏捷性増加量
      * @memberof JobData
      */
-    public constructor(){
-        this.name_ = 'none';
-        this.maxHitPointOffset_ = 0;
-        this.maxHitPointRate_ = 0;
-        this.maxMagicPointOffset_ = 0;
-        this.maxMagicPointRate_ = 0;
-        this.strengthOffset_ = 0;
-        this.strengthRate_ = 0;
-        this.vitalityOffset_ = 0;
-        this.vitalityRate_ = 0;
-        this.intelligenceOffset_ = 0;
-        this.intelligenceRate_ = 0;
-        this.mindOffset_ = 0;
-        this.mindRate_ = 0;
-        this.dexterityOffset_ = 0;
-        this.dexterityRate_ = 0;
-        this.agilityOffset_ = 0;
-        this.agilityRate_ = 0;
+    public constructor(
+        _name : string,
+        _maxHitPointOffset : number,
+        _maxHitPointRate : number,
+        _maxMagicPointOffset : number,
+        _maxMagicPointRate : number,
+        _strengthOffset : number,
+        _strengthRate : number,
+        _vitalityOffset : number,
+        _vitalityRate : number,
+        _intelligenceOffset : number,
+        _intelligenceRate : number,
+        _mindOffset : number,
+        _mindRate : number,
+        _dexterityOffset : number,
+        _dexterityRate : number,
+        _agilityOffset : number,
+        _agilityRate : number
+    ){
+        this.name_ = _name;
+        this.maxHitPointOffset_ = _maxHitPointOffset;
+        this.maxHitPointRate_ = _maxHitPointRate;
+        this.maxMagicPointOffset_ = _maxMagicPointOffset;
+        this.maxMagicPointRate_ = _maxMagicPointRate;
+        this.strengthOffset_ = _strengthOffset;
+        this.strengthRate_ = _strengthRate;
+        this.vitalityOffset_ = _vitalityOffset;
+        this.vitalityRate_ = _vitalityRate;
+        this.intelligenceOffset_ = _intelligenceOffset;
+        this.intelligenceRate_ = _intelligenceRate;
+        this.mindOffset_ = _mindOffset;
+        this.mindRate_ = _mindRate;
+        this.dexterityOffset_ = _dexterityOffset;
+        this.dexterityRate_ = _dexterityRate;
+        this.agilityOffset_ = _agilityOffset;
+        this.agilityRate_ = _agilityRate;
     }
 }
 
@@ -188,7 +223,6 @@ export class JobDataAccessor implements DatabaseAccessor{
     public static get instance() : JobDataAccessor {
         if(JobDataAccessor.instance_ === undefined){
             JobDataAccessor.instance_ = new JobDataAccessor();
-            JobDataAccessor.instance_.SynchronizeToTheDatabase();
         }
         return JobDataAccessor.instance_;
     }
@@ -255,31 +289,24 @@ export class JobDataAccessor implements DatabaseAccessor{
     }
 
     /**
-     * データベースに同期する
+     * データベースを読み込む
      * @public
-     * @returns {boolean} true:成功 false:失敗
+     * @returns {Promise<boolean>} true:成功 false:失敗
      * @memberof JobDataAccessor
      */
-    public SynchronizeToTheDatabase() : boolean {
+    public async Load() : Promise<boolean> {
         // テスト用データ
-        const testJob:JobData = new JobData();
-        testJob.name_ = 'test';
-        testJob.maxHitPointOffset_ = 900;
-        testJob.maxHitPointRate_ = 100;
-        testJob.maxMagicPointOffset_ = 200;
-        testJob.maxMagicPointRate_ = 100;
-        testJob.strengthOffset_ = 90;
-        testJob.strengthRate_ = 10;
-        testJob.vitalityOffset_ = 80;
-        testJob.vitalityRate_ = 20;
-        testJob.intelligenceOffset_ = 90;
-        testJob.intelligenceRate_ = 10;
-        testJob.mindOffset_ = 80;
-        testJob.mindRate_ = 20;
-        testJob.dexterityOffset_ = 90;
-        testJob.dexterityRate_ = 10;
-        testJob.agilityOffset_ = 90;
-        testJob.agilityRate_ = 10;
+        const testJob:JobData = new JobData(
+            'test',
+            900, 100,
+            200, 100,
+            90, 10,
+            80, 20,
+            90, 10,
+            80, 20,
+            90, 10,
+            90, 10
+        );
 
         this.jobDataArray_[0] = testJob;
 

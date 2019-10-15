@@ -30,6 +30,19 @@ export class Matrix4x4 {
         );
     }
 
+    public static CreateRotationMatrix(_rotation:number) : Matrix4x4 {
+        const rotation:Matrix4x4 = Matrix4x4.identity;
+
+        const cosValue:number = Math.cos(_rotation);
+        const sinValue:number = Math.sin(_rotation);
+        rotation.column1.x = cosValue;
+        rotation.column1.z = sinValue;
+        rotation.column3.x = -sinValue;
+        rotation.column3.z = cosValue;
+        
+        return rotation;
+    }
+
 
     /**
      * 1行目の成分
@@ -172,6 +185,165 @@ export class Matrix4x4 {
         this.column2.w = _row4.y;
         this.column3.w = _row4.z;
         this.column4.w = _row4.w;
+    }
+
+    /**
+     * 転置行列
+     * @public
+     * @returns {Matrix4x4} 転置行列
+     * @memberof Matrix4x4
+     */
+    public get transposeMatrix() : Matrix4x4 {
+        return new Matrix4x4(
+            new Vector4(this.row1),
+            new Vector4(this.row2),
+            new Vector4(this.row3),
+            new Vector4(this.row4)
+        );
+    }
+
+    /**
+     * 逆行列
+     * @public
+     * @returns {Matrix4x4} 逆行列
+     * @memberof Matrix4x4
+     */
+    public get invertMatrix() : Matrix4x4 {
+        const newColumn1:Vector4 = new Vector4(
+            + this.column2.y*this.column3.z*this.column4.w
+            + this.column2.z*this.column3.w*this.column4.y
+            + this.column2.w*this.column3.y*this.column4.z
+            - this.column2.w*this.column3.z*this.column4.y
+            - this.column2.z*this.column3.y*this.column4.w
+            - this.column2.y*this.column3.w*this.column4.z
+            ,
+            - this.column1.y*this.column3.z*this.column4.w
+            - this.column1.z*this.column3.w*this.column4.y
+            - this.column1.w*this.column3.y*this.column4.z
+            + this.column1.w*this.column3.z*this.column4.y
+            + this.column1.z*this.column3.y*this.column4.w
+            + this.column1.y*this.column3.w*this.column4.z
+            ,
+            + this.column1.y*this.column2.z*this.column4.w
+            + this.column1.z*this.column2.w*this.column4.y
+            + this.column1.w*this.column2.y*this.column4.z
+            - this.column1.w*this.column2.z*this.column4.y
+            - this.column1.z*this.column2.y*this.column4.w
+            - this.column1.y*this.column2.w*this.column4.z
+            ,
+            - this.column1.y*this.column2.z*this.column3.w
+            - this.column1.z*this.column2.w*this.column3.y
+            - this.column1.w*this.column2.y*this.column3.z
+            + this.column1.w*this.column2.z*this.column3.y
+            + this.column1.z*this.column2.y*this.column3.w
+            + this.column1.y*this.column2.w*this.column3.z
+        );
+
+        const matrixValue:number =
+            this.column1.x*newColumn1.x +
+            this.column2.x*newColumn1.y +
+            this.column3.x*newColumn1.z +
+            this.column4.x*newColumn1.w;
+        if((matrixValue > (-Number.MIN_VALUE)) || (matrixValue < Number.MIN_VALUE)){
+            console.error('Couldn\'t create invert matrix.');
+            return new Matrix4x4(this);
+        }
+
+        const newColumn2:Vector4 = new Vector4(
+            - this.column2.x*this.column3.z*this.column4.w
+            - this.column2.z*this.column3.w*this.column4.x
+            - this.column2.w*this.column3.x*this.column4.z
+            + this.column2.w*this.column3.z*this.column4.x
+            + this.column2.z*this.column3.x*this.column4.w
+            + this.column2.x*this.column3.w*this.column4.z
+            ,
+            + this.column1.x*this.column3.z*this.column4.w
+            + this.column1.z*this.column3.w*this.column4.x
+            + this.column1.w*this.column3.x*this.column4.z
+            - this.column1.w*this.column3.z*this.column4.x
+            - this.column1.z*this.column3.x*this.column4.w
+            - this.column1.x*this.column3.w*this.column4.z
+            ,
+            - this.column1.x*this.column2.z*this.column4.w
+            - this.column1.z*this.column2.w*this.column4.x
+            - this.column1.w*this.column2.x*this.column4.z
+            + this.column1.w*this.column2.z*this.column4.x
+            + this.column1.z*this.column2.x*this.column4.w
+            + this.column1.x*this.column2.w*this.column4.z
+            ,
+            + this.column1.x*this.column2.z*this.column3.w
+            + this.column1.z*this.column2.w*this.column3.x
+            + this.column1.w*this.column2.x*this.column3.z
+            - this.column1.w*this.column2.z*this.column3.x
+            - this.column1.z*this.column2.x*this.column3.w
+            - this.column1.x*this.column2.w*this.column3.z
+        );
+        const newColumn3:Vector4 = new Vector4(
+            + this.column2.x*this.column3.y*this.column4.w
+            + this.column2.y*this.column3.w*this.column4.x
+            + this.column2.w*this.column3.x*this.column4.y
+            - this.column2.w*this.column3.y*this.column4.x
+            - this.column2.y*this.column3.x*this.column4.w
+            - this.column2.x*this.column3.w*this.column4.y
+            ,
+            - this.column1.x*this.column3.y*this.column4.w
+            - this.column1.y*this.column3.w*this.column4.x
+            - this.column1.w*this.column3.x*this.column4.y
+            + this.column1.w*this.column3.y*this.column4.x
+            + this.column1.y*this.column3.x*this.column4.w
+            + this.column1.x*this.column3.w*this.column4.y
+            ,
+            + this.column1.x*this.column2.y*this.column4.w
+            + this.column1.y*this.column2.w*this.column4.x
+            + this.column1.w*this.column2.x*this.column4.y
+            - this.column1.w*this.column2.y*this.column4.x
+            - this.column1.y*this.column2.x*this.column4.w
+            - this.column1.x*this.column2.w*this.column4.y
+            ,
+            - this.column1.x*this.column2.y*this.column3.w
+            - this.column1.y*this.column2.w*this.column3.x
+            - this.column1.w*this.column2.x*this.column3.y
+            + this.column1.w*this.column2.y*this.column3.x
+            + this.column1.y*this.column2.x*this.column3.w
+            + this.column1.x*this.column2.w*this.column3.y
+        );
+        const newColumn4:Vector4 = new Vector4(
+            - this.column2.x*this.column3.y*this.column4.z
+            - this.column2.y*this.column3.z*this.column4.x
+            - this.column2.z*this.column3.x*this.column4.y
+            + this.column2.z*this.column3.y*this.column4.x
+            + this.column2.y*this.column3.x*this.column4.z
+            + this.column2.x*this.column3.z*this.column4.y
+            ,
+            + this.column1.x*this.column3.y*this.column4.z
+            + this.column1.y*this.column3.z*this.column4.x
+            + this.column1.z*this.column3.x*this.column4.y
+            - this.column1.z*this.column3.y*this.column4.x
+            - this.column1.y*this.column3.x*this.column4.z
+            - this.column1.x*this.column3.z*this.column4.y
+            ,
+            - this.column1.x*this.column2.y*this.column4.z
+            - this.column1.y*this.column2.z*this.column4.x
+            - this.column1.z*this.column2.x*this.column4.y
+            + this.column1.z*this.column2.y*this.column4.x
+            + this.column1.y*this.column2.x*this.column4.z
+            + this.column1.x*this.column2.z*this.column4.y
+            ,
+            + this.column1.x*this.column2.y*this.column3.z
+            + this.column1.y*this.column2.z*this.column3.x
+            + this.column1.z*this.column2.x*this.column3.y
+            - this.column1.z*this.column2.y*this.column3.x
+            - this.column1.y*this.column2.x*this.column3.z
+            - this.column1.x*this.column2.z*this.column3.y
+        );
+
+        const invertMatrixValue:number = 1.0 / matrixValue;
+        return new Matrix4x4(
+            newColumn1.Multiplication(invertMatrixValue),
+            newColumn2.Multiplication(invertMatrixValue),
+            newColumn3.Multiplication(invertMatrixValue),
+            newColumn4.Multiplication(invertMatrixValue)
+        );
     }
 
 
@@ -369,165 +541,6 @@ export class Matrix4x4 {
                 this.column4.z*_mairix.column3.w +
                 this.column4.w*_mairix.column4.w
             )
-        );
-    }
-
-    /**
-     * 転置行列の取得
-     * @public
-     * @returns {Matrix4x4} 転置行列
-     * @memberof Matrix4x4
-     */
-    public GetTransposeMatrix() : Matrix4x4 {
-        return new Matrix4x4(
-            new Vector4(this.row1),
-            new Vector4(this.row2),
-            new Vector4(this.row3),
-            new Vector4(this.row4)
-        );
-    }
-
-    /**
-     * 逆行列の取得
-     * @public
-     * @returns {Matrix4x4} 逆行列
-     * @memberof Matrix4x4
-     */
-    public GetInvertMatrix() : Matrix4x4 {
-        const newColumn1:Vector4 = new Vector4(
-            + this.column2.y*this.column3.z*this.column4.w
-            + this.column2.z*this.column3.w*this.column4.y
-            + this.column2.w*this.column3.y*this.column4.z
-            - this.column2.w*this.column3.z*this.column4.y
-            - this.column2.z*this.column3.y*this.column4.w
-            - this.column2.y*this.column3.w*this.column4.z
-            ,
-            - this.column1.y*this.column3.z*this.column4.w
-            - this.column1.z*this.column3.w*this.column4.y
-            - this.column1.w*this.column3.y*this.column4.z
-            + this.column1.w*this.column3.z*this.column4.y
-            + this.column1.z*this.column3.y*this.column4.w
-            + this.column1.y*this.column3.w*this.column4.z
-            ,
-            + this.column1.y*this.column2.z*this.column4.w
-            + this.column1.z*this.column2.w*this.column4.y
-            + this.column1.w*this.column2.y*this.column4.z
-            - this.column1.w*this.column2.z*this.column4.y
-            - this.column1.z*this.column2.y*this.column4.w
-            - this.column1.y*this.column2.w*this.column4.z
-            ,
-            - this.column1.y*this.column2.z*this.column3.w
-            - this.column1.z*this.column2.w*this.column3.y
-            - this.column1.w*this.column2.y*this.column3.z
-            + this.column1.w*this.column2.z*this.column3.y
-            + this.column1.z*this.column2.y*this.column3.w
-            + this.column1.y*this.column2.w*this.column3.z
-        );
-
-        const matrixValue:number =
-            this.column1.x*newColumn1.x +
-            this.column2.x*newColumn1.y +
-            this.column3.x*newColumn1.z +
-            this.column4.x*newColumn1.w;
-        if((matrixValue > (-Number.MIN_VALUE)) || (matrixValue < Number.MIN_VALUE)){
-            console.error('Couldn\'t create invert matrix.');
-            return new Matrix4x4(this);
-        }
-
-        const newColumn2:Vector4 = new Vector4(
-            - this.column2.x*this.column3.z*this.column4.w
-            - this.column2.z*this.column3.w*this.column4.x
-            - this.column2.w*this.column3.x*this.column4.z
-            + this.column2.w*this.column3.z*this.column4.x
-            + this.column2.z*this.column3.x*this.column4.w
-            + this.column2.x*this.column3.w*this.column4.z
-            ,
-            + this.column1.x*this.column3.z*this.column4.w
-            + this.column1.z*this.column3.w*this.column4.x
-            + this.column1.w*this.column3.x*this.column4.z
-            - this.column1.w*this.column3.z*this.column4.x
-            - this.column1.z*this.column3.x*this.column4.w
-            - this.column1.x*this.column3.w*this.column4.z
-            ,
-            - this.column1.x*this.column2.z*this.column4.w
-            - this.column1.z*this.column2.w*this.column4.x
-            - this.column1.w*this.column2.x*this.column4.z
-            + this.column1.w*this.column2.z*this.column4.x
-            + this.column1.z*this.column2.x*this.column4.w
-            + this.column1.x*this.column2.w*this.column4.z
-            ,
-            + this.column1.x*this.column2.z*this.column3.w
-            + this.column1.z*this.column2.w*this.column3.x
-            + this.column1.w*this.column2.x*this.column3.z
-            - this.column1.w*this.column2.z*this.column3.x
-            - this.column1.z*this.column2.x*this.column3.w
-            - this.column1.x*this.column2.w*this.column3.z
-        );
-        const newColumn3:Vector4 = new Vector4(
-            + this.column2.x*this.column3.y*this.column4.w
-            + this.column2.y*this.column3.w*this.column4.x
-            + this.column2.w*this.column3.x*this.column4.y
-            - this.column2.w*this.column3.y*this.column4.x
-            - this.column2.y*this.column3.x*this.column4.w
-            - this.column2.x*this.column3.w*this.column4.y
-            ,
-            - this.column1.x*this.column3.y*this.column4.w
-            - this.column1.y*this.column3.w*this.column4.x
-            - this.column1.w*this.column3.x*this.column4.y
-            + this.column1.w*this.column3.y*this.column4.x
-            + this.column1.y*this.column3.x*this.column4.w
-            + this.column1.x*this.column3.w*this.column4.y
-            ,
-            + this.column1.x*this.column2.y*this.column4.w
-            + this.column1.y*this.column2.w*this.column4.x
-            + this.column1.w*this.column2.x*this.column4.y
-            - this.column1.w*this.column2.y*this.column4.x
-            - this.column1.y*this.column2.x*this.column4.w
-            - this.column1.x*this.column2.w*this.column4.y
-            ,
-            - this.column1.x*this.column2.y*this.column3.w
-            - this.column1.y*this.column2.w*this.column3.x
-            - this.column1.w*this.column2.x*this.column3.y
-            + this.column1.w*this.column2.y*this.column3.x
-            + this.column1.y*this.column2.x*this.column3.w
-            + this.column1.x*this.column2.w*this.column3.y
-        );
-        const newColumn4:Vector4 = new Vector4(
-            - this.column2.x*this.column3.y*this.column4.z
-            - this.column2.y*this.column3.z*this.column4.x
-            - this.column2.z*this.column3.x*this.column4.y
-            + this.column2.z*this.column3.y*this.column4.x
-            + this.column2.y*this.column3.x*this.column4.z
-            + this.column2.x*this.column3.z*this.column4.y
-            ,
-            + this.column1.x*this.column3.y*this.column4.z
-            + this.column1.y*this.column3.z*this.column4.x
-            + this.column1.z*this.column3.x*this.column4.y
-            - this.column1.z*this.column3.y*this.column4.x
-            - this.column1.y*this.column3.x*this.column4.z
-            - this.column1.x*this.column3.z*this.column4.y
-            ,
-            - this.column1.x*this.column2.y*this.column4.z
-            - this.column1.y*this.column2.z*this.column4.x
-            - this.column1.z*this.column2.x*this.column4.y
-            + this.column1.z*this.column2.y*this.column4.x
-            + this.column1.y*this.column2.x*this.column4.z
-            + this.column1.x*this.column2.z*this.column4.y
-            ,
-            + this.column1.x*this.column2.y*this.column3.z
-            + this.column1.y*this.column2.z*this.column3.x
-            + this.column1.z*this.column2.x*this.column3.y
-            - this.column1.z*this.column2.y*this.column3.x
-            - this.column1.y*this.column2.x*this.column3.z
-            - this.column1.x*this.column2.z*this.column3.y
-        );
-
-        const invertMatrixValue:number = 1.0 / matrixValue;
-        return new Matrix4x4(
-            newColumn1.Multiplication(invertMatrixValue),
-            newColumn2.Multiplication(invertMatrixValue),
-            newColumn3.Multiplication(invertMatrixValue),
-            newColumn4.Multiplication(invertMatrixValue)
         );
     }
 

@@ -6,6 +6,7 @@
  */
 
 import {CharacterStatus} from './CharacterStatus'
+import {Enemy} from './Enemy'
 import {EnemyTribeStatus} from './EnemyTribeStatus'
 import {AbnormalConditionStatus} from './AbnormalConditionStatus'
 
@@ -16,6 +17,14 @@ import {AbnormalConditionStatus} from './AbnormalConditionStatus'
  * @implements {CharacterStatus}
  */
 export class EnemyStatus implements CharacterStatus {
+    /**
+     * 敵情報
+     * @private
+     * @readonly
+     * @type {Enemy}
+     * @memberof EnemyStatus
+     */
+    private readonly enemy_ : Enemy;
     /**
      * 種族ステータス
      * @private
@@ -86,9 +95,13 @@ export class EnemyStatus implements CharacterStatus {
         return this.hitPoint_;
     }
     public set hitPoint(_hitPoint:number){
-        this.hitPoint_ = (_hitPoint < 0.0) ? (0.0) :
-            ((_hitPoint > this.maxHitPoint) ? (this.maxHitPoint) :
-                (_hitPoint));
+        if(_hitPoint <= 0.0){
+            this.hitPoint_ = 0.0;
+            this.enemy_.OnDead();
+            return;
+        }
+
+        this.hitPoint_ = (_hitPoint > this.maxHitPoint) ? (this.maxHitPoint) : (_hitPoint);
     }
     /**
      * 最大魔力
@@ -198,12 +211,14 @@ export class EnemyStatus implements CharacterStatus {
 
 
     /**
-     * デフォルトコンストラクタ
+     * コンストラクタ
      * @public
      * @constructor
+     * @param {Enemy} _enemy 敵情報
      * @memberof EnemyStatus
      */
-    public constructor(){
+    public constructor(_enemy:Enemy){
+        this.enemy_ = _enemy;
         this.tribeStatus_ = new EnemyTribeStatus();
         this.abnormalConditionStatus_ = new AbnormalConditionStatus();
         this.hitPoint_ = 0;

@@ -16,6 +16,13 @@ import {EnemyTribeData} from './DatabaseAccessors/EnemyTribeDataAccessor'
  */
 export class EnemyTribeStatus implements Status{
     /**
+     * 利用するスキルID
+     * @private
+     * @type {number}
+     * @memberof EnemyTribeStatus
+     */
+    private useSkillId_ : number;
+    /**
      * 最大体力
      * @private
      * @type {number}
@@ -72,6 +79,17 @@ export class EnemyTribeStatus implements Status{
      */
     private agility_ : number;
 
+    
+    /**
+     * 利用するスキルID
+     * @public
+     * @readonly
+     * @type {number}
+     * @memberof EnemyTribeStatus
+     */
+    public get useSkillId() : number {
+        return this.useSkillId_;
+    }
     /**
      * 最大体力
      * @public
@@ -161,6 +179,7 @@ export class EnemyTribeStatus implements Status{
      * @memberof EnemyTribeStatus
      */
     public constructor(){
+        this.useSkillId_ = 0;
         this.maxHitPoint_ = 0;
         this.maxMagicPoint_ = 0;
         this.strength_ = 0;
@@ -180,6 +199,7 @@ export class EnemyTribeStatus implements Status{
      * @memberof EnemyTribeStatus
      */
     public ChangeTribe(_tribeData:EnemyTribeData, _level:number) : boolean {
+        this.useSkillId_ = _tribeData.useSkillId_;
         this.maxHitPoint_ = _tribeData.maxHitPoint_;
         this.maxMagicPoint_ = _tribeData.maxMagicPoint_;
         this.strength_ = _tribeData.strength_;
