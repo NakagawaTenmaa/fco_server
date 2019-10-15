@@ -12,10 +12,10 @@
  */
 export interface DatabaseAccessor{
     /**
-     * データベースに同期する
+     * データベースを読み込む
      * @public
-     * @returns {boolean} true:成功 false:失敗
+     * @returns {Promise<boolean>} true:成功 false:失敗
      * @memberof DatabaseAccessor
      */
-    SynchronizeToTheDatabase() : boolean;
+    Load() : Promise<boolean>;
 }

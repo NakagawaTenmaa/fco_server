@@ -132,7 +132,6 @@ export class EnemyTribeDataAccessor implements DatabaseAccessor{
     public static get instance() : EnemyTribeDataAccessor {
         if(EnemyTribeDataAccessor.instance_ === undefined){
             EnemyTribeDataAccessor.instance_ = new EnemyTribeDataAccessor();
-            EnemyTribeDataAccessor.instance_.SynchronizeToTheDatabase();
         }
         return EnemyTribeDataAccessor.instance_;
     }
@@ -199,12 +198,12 @@ export class EnemyTribeDataAccessor implements DatabaseAccessor{
     }
 
     /**
-     * データベースに同期する
+     * データベースを読み込む
      * @public
-     * @returns {boolean} true:成功 false:失敗
+     * @returns {Promise<boolean>} true:成功 false:失敗
      * @memberof EnemyTribeDataAccessor
      */
-    public SynchronizeToTheDatabase() : boolean {
+    public async Load() : Promise<boolean> {
         // テスト用データ
         const testTribe:EnemyTribeData = new EnemyTribeData();
         testTribe.tribeName_ = 'test';

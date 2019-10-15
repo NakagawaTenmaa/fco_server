@@ -148,7 +148,6 @@ export class EnemyPopAreaDataAccessor implements DatabaseAccessor{
     public static get instance() : EnemyPopAreaDataAccessor {
         if(EnemyPopAreaDataAccessor.instance_ === undefined){
             EnemyPopAreaDataAccessor.instance_ = new EnemyPopAreaDataAccessor();
-            EnemyPopAreaDataAccessor.instance_.SynchronizeToTheDatabase();
         }
         return EnemyPopAreaDataAccessor.instance_;
     }
@@ -200,12 +199,12 @@ export class EnemyPopAreaDataAccessor implements DatabaseAccessor{
     }
 
     /**
-     * データベースに同期する
+     * データベースを読み込む
      * @public
-     * @returns {boolean} true:成功 false:失敗
+     * @returns {Promise<boolean>} true:成功 false:失敗
      * @memberof EnemyPopAreaDataAccessor
      */
-    public SynchronizeToTheDatabase() : boolean {
+    public async Load() : Promise<boolean> {
         // テスト用データ
         const testArea:EnemyPopAreaData = new EnemyPopAreaData();
         testArea.mapID_ = 0;

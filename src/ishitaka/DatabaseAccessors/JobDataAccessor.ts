@@ -188,7 +188,6 @@ export class JobDataAccessor implements DatabaseAccessor{
     public static get instance() : JobDataAccessor {
         if(JobDataAccessor.instance_ === undefined){
             JobDataAccessor.instance_ = new JobDataAccessor();
-            JobDataAccessor.instance_.SynchronizeToTheDatabase();
         }
         return JobDataAccessor.instance_;
     }
@@ -255,12 +254,12 @@ export class JobDataAccessor implements DatabaseAccessor{
     }
 
     /**
-     * データベースに同期する
+     * データベースを読み込む
      * @public
-     * @returns {boolean} true:成功 false:失敗
+     * @returns {Promise<boolean>} true:成功 false:失敗
      * @memberof JobDataAccessor
      */
-    public SynchronizeToTheDatabase() : boolean {
+    public async Load() : Promise<boolean> {
         // テスト用データ
         const testJob:JobData = new JobData();
         testJob.name_ = 'test';
