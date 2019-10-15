@@ -1,3 +1,6 @@
+import { Weapon } from "../controller/object/playerWeapon";
+import { Vector3 } from "./Vector3";
+
 /**
  * @fileoverview 通信データの実装ファイル
  * @file CommunicationData.ts
@@ -56,7 +59,7 @@ export namespace CommunicationData{
              * @type {number}
              * @memberof CharacterTransform
              */
-            public static readonly id : number = 201;
+            public static readonly id : number = 202;
             /**
              * コマンドID
              * @public
@@ -302,11 +305,30 @@ export namespace CommunicationData{
             }
         }
 
+        export class LoadCharacter implements Send{
+            public readonly command: number = 210;
+            public static id = 210;
+            public weapon: Weapon = new Weapon();
+            public position: Vector3 = new Vector3();
+            public lv: number = 0;
+            public exp: number = 0;
+            constructor(){}
+        }
+
+        export class InitCharacter implements Send{
+            public readonly command: number = 204;
+            public static id: number = 204;
+            public user_id: number = 0;
+            constructor(){}
+        }
+
         export type AllTypes = 
         CharacterTransform |
         SimpleDisplayOfCharacter |
         ModelSetting |
-        SkillUse;
+        SkillUse |
+        LoadCharacter | 
+        InitCharacter;
     }
     /**
      * 受信データ
@@ -323,12 +345,56 @@ export namespace CommunicationData{
             // 何もない
         }
 
-        export class TEST implements Receive{
-            command: number = 0;
-            static id: number = 0;
+        // 位置同期
+        export class CharacterTransform implements Receive{
+            public readonly command: number = 201;
+            public static id: number = 201;
+            public user_id: number = 0;
+            public x: number;
+            public y: number;
+            public z: number;
+            public dir: number;
+            constructor(){
+                this.x = 0;
+                this.y = 0;
+                this.z = 0;
+                this.dir = 0;
+            }
         }
 
-        export type AllTypes = TEST;
+        // プレイへのログイン
+        export class InitCharacter implements Receive{
+            public readonly command: number = 203;
+            public static id = 203;
+            public user_id = 0;
+            constructor() {}
+        }
+
+        // プレイヤーの状態
+        export class PlayerStatus{
+            public readonly command: number = 205;
+            public static id = 205;
+            public user_id: number = 0;
+            public hp: number = 0;
+            public mp: number = 0;
+            public status : number = 0;
+            constructor(){}
+        }
+
+        // セーブデータの読み込み
+        export class LoadCharacter{
+            public readonly command: number = 209;
+            public static id = 209;
+            public user_id = 0;
+        }
+
+        export class LogoutCharacter {
+            public readonly command: number = 0;
+            public static id = 0;
+            public user_id = 0;
+        }
+
+        export type AllTypes = CharacterTransform | InitCharacter;
     }
 
     export type AllTypes = SendData.AllTypes | ReceiveData.AllTypes;
@@ -378,11 +444,45 @@ export namespace CommunicationData{
                     data.skill_id = parse.skill_id;
                     return data;
                 }
-                case ReceiveData.TEST.id:
+                case SendData.LoadCharacter.id:
                 {
-                    const data: ReceiveData.TEST = new ReceiveData.TEST();
-                    
+                    const data: SendData.LoadCharacter = new SendData.LoadCharacter();
+                    data.exp = parse.exp;
+                    data.lv = parse.lv;
+                    data.position = parse.position;
+                    data.weapon = parse.weapon;
+                    return data;
                 }
+                case SendData.InitCharacter.id:
+                {
+                    const data: SendData.InitCharacter = new SendData.InitCharacter();
+                    data.user_id = parse.user_id;
+                    return data;
+                }
+                
+
+                case ReceiveData.CharacterTransform.id:
+                {
+                    const data: ReceiveData.CharacterTransform = new ReceiveData.CharacterTransform();
+                    data.x = parse.x;
+                    data.y = parse.y;
+                    data.z = parse.z;
+                    data.dir = parse.dir;
+                    return data;
+                }
+                case ReceiveData.InitCharacter.id:
+                {
+                    const data: ReceiveData.InitCharacter = new ReceiveData.InitCharacter();
+                    data.user_id = parse.user_id;
+                    return data;
+                }
+                case ReceiveData.LoadCharacter.id:
+                {
+                    const data: ReceiveData.LoadCharacter = new ReceiveData.LoadCharacter();
+                    data.user_id = parse.user_id;
+                    return data;
+                }
+                
             }
             console.error("Convert Error");
             return undefined;

@@ -10,6 +10,7 @@ const play: playRouter = new playRouter();
 // サーバーの処理
 login.loginUpdate();
 play.playUpdate();
+setInterval(play.characterUpdate, 1000 / 60);
 chatUpdate();
 
 // 終了処理
