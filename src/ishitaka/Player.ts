@@ -13,7 +13,10 @@ import {CharacterEffect} from './CharacterEffect'
 import {CharacterManager} from './CharacterManager'
 import {CommunicationData} from './CommunicationData';
 import {JobData,JobDataAccessor} from './DatabaseAccessors/JobDataAccessor'
-
+import WebSocket = require('ws')
+import {  } from '../model/characterDataModel';
+import { Vector3 } from './Vector3'
+import { Weapon } from '../controller/object/playerWeapon'
 /**
  * プレイヤー
  * @export
@@ -21,6 +24,23 @@ import {JobData,JobDataAccessor} from './DatabaseAccessors/JobDataAccessor'
  * @implements {Character}
  */
 export class Player implements Character{
+    /**
+     * webソケット
+     * @private
+     * @type {PlayerWebSocket | null}
+     * @memberof Player
+     */
+    private ws_: WebSocket | null;
+    public set webSocket(_ws: WebSocket) { this.ws_ = _ws; }
+    /**
+     * DB用ID
+     * @private
+     * @type {number}
+     * @memberof Player
+     */
+    private dbId_: number;
+    public get dbId(): number { return this.dbId_; }
+    public set dbId(_id: number) { this.dbId_ = _id; }
     /**
      * キャラクタID
      * @private
@@ -82,6 +102,9 @@ export class Player implements Character{
      */
     public get status() : CharacterStatus { return this.playerStatus_; }
 
+    private playerDir_ : number;
+    public get dir(): number { return this.playerDir_; }
+    public set dir(_dir: number) { this.playerDir_ = _dir; }
 
     /**
      * デフォルトコンストラクタ
@@ -90,6 +113,9 @@ export class Player implements Character{
      * @memberof Player
      */
     public constructor(){
+        this.playerDir_ = -1;
+        this.ws_ = null;
+        this.dbId_ = -1;
         this.characterId_ = -1;
         this.mapId_ = 0;
         this.transform_ = new Transform();
@@ -143,6 +169,7 @@ export class Player implements Character{
      */
     public SendToClient(_sendData:string) : boolean {
         // TODO:
+        if(this.ws_ === null) return false;
         const data:CommunicationData.AllTypes|undefined = CommunicationData.Converter.Convert(_sendData);
         if(data === undefined){
             console.log('Undefined data.');
@@ -158,11 +185,17 @@ export class Player implements Character{
         }
         else if(data instanceof CommunicationData.SendData.SkillUse){
             console.log('Skill use data.');
+        } 
+        else if(data instanceof CommunicationData.SendData.LoadCharacter){
+            console.log('Load data');
+        } 
+        else if(data instanceof CommunicationData.SendData.InitCharacter){
+            console.log('Init user data');
         }
         else{
             console.log('Any data.');
         }
-
+        this.ws_.send(_sendData);
         console.log('send:'+_sendData+' -> user_id:'+this.id.toString());
         return true;
     }
@@ -177,6 +210,32 @@ export class Player implements Character{
      */
     public ReceiveAnEffect(_effect:CharacterEffect) : boolean {
         return _effect.Show(this);
+    }
+
+    
+    /**
+     * セーブデータの読み込み
+     * @public
+     * @param {}
+     * @returns {boolean} true:成功 false:失敗
+     * @memberof Player
+     */
+    public LoadSaveData(): boolean{
+        // TODO: Modelから取得するように変更 いったんデバッグ用で作作成
+        const model: any = { 
+            position :{ x: 0,y: 0, z:0 },
+            weapon : { head: 0, hand: 0 },
+            mapId: 0,
+            exp: 0
+        }
+        this.transform.position = new Vector3(model.position.x, model.position.y, model.position.z);
+        // TODO: 武器etc...の読み込み実装予定
+        let data: CommunicationData.SendData.LoadCharacter = new CommunicationData.SendData.LoadCharacter();
+        data.exp = model.exp;
+        data.lv =1;
+        data.position = this.transform.position;
+        data.weapon = new Weapon();
+        return CharacterManager.instance.SendOne(this.id, JSON.stringify(data));
     }
 
 

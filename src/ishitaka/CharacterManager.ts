@@ -9,6 +9,8 @@ import {Character} from './Character'
 import {Player} from './Player'
 import {Enemy} from './Enemy'
 import { CommunicationData } from './CommunicationData';
+import WebSocket = require('ws');
+import { Vector3 } from './Vector3';
 
 /**
  * キャラクタマネージャ
@@ -102,6 +104,13 @@ export class CharacterManager{
     }
 
     /**
+     * ユーザーデータの読み込み
+     * @public
+     * @returns {boolean}
+     * @memberof CharacterManager
+     */
+
+    /**
      * 更新処理
      * @public
      * @param {number} _elapsedTime 経過時間
@@ -188,6 +197,38 @@ export class CharacterManager{
     }
 
     /**
+     * 個人に送信
+     * @public
+     * @param {number} _characterId
+     * @param {string} _sendData
+     * @returns {boolean}
+     * @memberof CharacterManager
+     */
+    public SendOne(_characterId: number, _sendData: string): boolean{
+        const player = this.FindPlayer(_characterId);
+        if(typeof player === 'undefined') return false;
+        return player.SendToClient(_sendData);
+    }
+
+  
+    /**
+     * 全員に送信
+     * @public
+     * @param {string} _sendData 送信データ
+     * @returns {boolean}
+     * @memberof CharacterManager
+     */
+    public SendAll(_sendData: string): boolean {
+        let isSuccess: boolean = true;
+        this.playerArray_.forEach((player: Player) => {
+            if(!player.SendToClient(_sendData)) {
+                isSuccess = false;
+            }
+        });
+        return isSuccess;
+    }
+
+    /**
      * 受信
      * @public
      * @param {string} _receiveData 受信データ
@@ -196,19 +237,43 @@ export class CharacterManager{
      */
     public Receive(_receiveData:string) : boolean {
         const data = CommunicationData.Converter.Convert(_receiveData);
+        let isSuccess = true;
+        // コンバートエラー
         if(typeof data === 'undefined' || !data) return false;
-        switch(data.command){
-            case CommunicationData.SendData.CharacterTransform.id: 
-            
-            break;
+
+        // 移動処理
+        if(data instanceof CommunicationData.ReceiveData.CharacterTransform){
+            const user: Player| undefined = this.FindPlayer(data.user_id);
+            if(user !== undefined) {
+                user.transform.position = new Vector3(data.x,data.y,data.z);
+                user.dir = data.dir;
+            }
+
+            let sendData:CommunicationData.SendData.CharacterTransform = new CommunicationData.SendData.CharacterTransform();
+            sendData.x = data.x;
+            sendData.y = data.y;
+            sendData.z = data.z;
+            sendData.dir = data.dir;
+            sendData.user_id = data.user_id;
+            isSuccess = this.SendAll(JSON.stringify(sendData));
         }
-        this.characterArray_.forEach((_character: Character) => {
-            
-        })
-        // TODO:        
-        return true;
+        return isSuccess;
     }
 
+    /**
+     * プレイヤーの初期設定
+     * @public
+     * @param {WebSocket} _ws ウェブソケット
+     * @returns {void}
+     */
+    public LoadCharacter(_ws: WebSocket, _characterId: number): boolean{
+        // ソケットの設定
+        const player: Player | undefined = this.playerArray_.find((_player: Player) => { return _player.id === _characterId; })
+        if(typeof player === 'undefined') return false;
+        player.webSocket = _ws;
+        player.LoadSaveData();
+        return true;
+    }
 
     /**
      * キャラクタの取得
@@ -264,5 +329,17 @@ export class CharacterManager{
         _character.id = (lastCharacter === undefined) ? (0) : (lastCharacter.id + 1);
         this.characterArray_[_character.id] = _character;
         return true;
+    }
+
+
+    /**
+     * IDからプレイヤーの検索
+     * @privet 
+     * @param {number} プレイヤーのID
+     * @returns {Player} 検索結果
+     * @memberof CharacterManager
+     */
+    private FindPlayer(_characterId: number): Player | undefined{
+        return this.playerArray_.find((player: Player) => player.id === _characterId);
     }
 }
