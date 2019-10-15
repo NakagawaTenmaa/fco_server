@@ -254,7 +254,8 @@ export class Enemy implements Character{
      * @memberof Enemy
      */
     private OnUseSkill() : void {
-        // TODO:スキル使用
+        // スキル使用
+        this.SendUseSkill();
 
         console.log('enemy [id:' + this.characterId_.toString() + '] is use skill.');
     }
@@ -513,7 +514,6 @@ export class Enemy implements Character{
 
         return CharacterManager.instance.Send(this.id, _toMapId, JSON.stringify(data));
     }
-
     /**
      * 簡易表示情報送信
      * @private
@@ -528,6 +528,21 @@ export class Enemy implements Character{
         data.hp = 100.0 * this.status.hitPoint / this.status.maxHitPoint;
         data.mp = 100.0 * this.status.magicPoint / this.status.maxMagicPoint;
         data.status = this.status.abnormalConditionStatus.flag;
+
+        return CharacterManager.instance.Send(this.id, this.mapId, JSON.stringify(data));
+    }
+    /**
+     * スキル使用情報送信
+     * @private
+     * @returns {boolean} true:成功 false:失敗
+     * @memberof Enemy
+     */
+    private SendUseSkill() : boolean {
+        const data : CommunicationData.SendData.SkillUse =
+            new CommunicationData.SendData.SkillUse();
+
+        data.user_id = this.characterId_;
+        data.skill_id = this.enemyStatus_.tribeStatus.useSkillId;
 
         return CharacterManager.instance.Send(this.id, this.mapId, JSON.stringify(data));
     }
