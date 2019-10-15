@@ -219,7 +219,7 @@ export class EnemyTribeDataAccessor implements DatabaseAccessor{
     }
 
     /**
-     * データベースを読み込む
+     * データを読み込む [非同期]
      * @public
      * @returns {Promise<boolean>} true:成功 false:失敗
      * @memberof EnemyTribeDataAccessor
