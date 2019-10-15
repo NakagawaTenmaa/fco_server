@@ -1,6 +1,5 @@
 import { Server } from 'ws';
-import io from 'socket.io-client';
-import {IsThere, MakeOk, DuplicateLogin, NotUser, LoginOK, UserData} from '../model/packet';
+import { IsThere, MakeOk, DuplicateLogin, NotUser, LoginOK } from '../model/packet';
 import { loginController } from './../controller/loginController';
 import { CharacterManager } from '../ishitaka/CharacterManager';
 import { Player } from '../ishitaka/Player';
@@ -9,32 +8,27 @@ import { Player } from '../ishitaka/Player';
 // ログインルーター
 export class loginRouter{
     controller: loginController;
-    socket: SocketIOClient.Socket;
     wss: Server;
 
     // コンストラクタ
     constructor(){
         this.controller = new loginController();
-        this.socket = io('http://localhost:10001');
         this.wss = new Server({port: 8000});
     }
 
     // 更新
     public loginUpdate(){
-        console.log("login server open");
-        this.socket.on('connect', () => {
-            this.wss.on('connection', (ws) => {
-                console.log('connection client');
-                ws.on('message', (msg: any) => {
-                    let json = JSON.parse(msg);
-                    switch(json.command){
-                        // ユーザーの作成
-                        case 101: this.resultCreateUser(json, ws); break;
-                        // ユーザーのログイン
-                        case 102: this.resultLoginUser(json, ws); break;
-                    }
-                })  
-            })
+        this.wss.on('connection', (ws) => {
+            console.log('connection client');
+            ws.on('message', (msg: any) => {
+                let json = JSON.parse(msg);
+                switch(json.command){
+                    // ユーザーの作成
+                    case 101: this.resultCreateUser(json, ws); break;
+                    // ユーザーのログイン
+                    case 102: this.resultLoginUser(json, ws); break;
+                }
+            })  
         })
     }
 
@@ -68,6 +62,7 @@ export class loginRouter{
         else {
             const characterManager: CharacterManager = CharacterManager.instance;
             let player: Player = new Player();
+
             player.dbId = result;
             characterManager.AddCharacter(player);
 

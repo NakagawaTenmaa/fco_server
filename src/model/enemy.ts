@@ -1,4 +1,5 @@
 import { BaseModel } from './modelBase'
+import { EnemyTribeData } from '../ishitaka/DatabaseAccessors/EnemyTribeDataAccessor';
 
 // 敵のモデル
 export class EnemyModel extends BaseModel{
@@ -8,45 +9,27 @@ export class EnemyModel extends BaseModel{
     }
 
     // 敵の一覧の取得 連想配列を返す
-    public async getEnemyList(): Promise<any>{
-        const enemy = await this.findAll();
-        let enemys: {[key: number]: any} = {};
-        enemy.forEach((_enemy: any) => { 
-            enemys[_enemy.id] = {
-                lv:         0,
-                name:       _enemy.name,
-                hp:         _enemy.hp,
-                mp:         _enemy.mp,
-                str:        _enemy.str,
-                vit:        _enemy.vit,
-                int:        _enemy.int,
-                mnd:        _enemy.mnd,
-                dex:        _enemy.dex,
-                agi:        _enemy.agi,
-                model_id:   _enemy.model_id
-            }; 
-        });
-/*
-        let eme: Array<Enemy> = [];
-        enemy.forEach((_enemy: any) => { 
-            eme.push({
-                lv:         0,
-                name:       _enemy.name,
-                hp:         _enemy.hp,
-                mp:         _enemy.mp,
-                str:        _enemy.str,
-                vit:        _enemy.vit,
-                int:        _enemy.int,
-                mnd:        _enemy.mnd,
-                dex:        _enemy.dex,
-                agi:        _enemy.agi,
-                model_id:   _enemy.model_id
-            }); 
-        });
+    public async getEnemyList(): Promise<EnemyTribeData[]>{
+        const enemyModel = await this.findAll();
+        let enemys: Array<EnemyTribeData> = [];
+        enemyModel.forEach((_enemy: any) => {
+            enemys.push(new EnemyTribeData(
+                _enemy.name,
+                0,
+                _enemy.hp,
+                _enemy.mp,
+                _enemy.str,
+                _enemy.vit,
+                _enemy.int,
+                _enemy.mnd,
+                _enemy.dex,
+                _enemy.agi
+            ));
+        })
 
-        console.log(enemys);
-        return eme as Enemy;
-        */
+        enemys.forEach(element => {
+            console.log(element);
+        });
        return enemys;
     }
 }
