@@ -19,6 +19,23 @@ import {Matrix4x4} from './Matrix4x4'
 import {SkillData, SkillDataAccessor} from './DatabaseAccessors/SkillDataAccessor'
 
 /**
+ * 敵更新モード
+ * @enum {number}
+ */
+enum EnemyUpdateMode{
+    /**
+     * 通常モード
+     * @memberof EnemyUpdateMode
+     */
+    Normal,
+    /**
+     * 戦闘モード
+     * @memberof EnemyUpdateMode
+     */
+    Battle
+}
+
+/**
  * 敵
  * @export
  * @class Enemy
@@ -96,6 +113,13 @@ export class Enemy implements Character{
      */
     public get status() : CharacterStatus { return this.enemyStatus_; }
     /**
+     * 更新モード
+     * @private
+     * @type {EnemyUpdateMode}
+     * @memberof Enemy
+     */
+    private updateMode_ : EnemyUpdateMode;
+    /**
      * 現在の更新メソッド
      * @private
      * @type {function}
@@ -136,6 +160,7 @@ export class Enemy implements Character{
         this.mapId_ = -1;
         this.transform_ = new Transform();
         this.enemyStatus_ = new EnemyStatus(this);
+        this.updateMode_ = EnemyUpdateMode.Normal;
         this.currentUpdateMethod_ = this.UpdateOfNormal;
         this.restTime_ = 0;
         this.battleCharacterId_ = 0;
@@ -196,6 +221,7 @@ export class Enemy implements Character{
      * @memberof Enemy
      */
     public OnNormal() : void {
+        this.updateMode_ = EnemyUpdateMode.Normal;
         this.currentUpdateMethod_ = this.UpdateOfNormal;
         
         console.log('enemy [id:' + this.characterId_.toString() + '] is normal mode.');
@@ -206,6 +232,7 @@ export class Enemy implements Character{
      * @memberof Enemy
      */
     public OnBattle() : void {
+        this.updateMode_ = EnemyUpdateMode.Battle;
         this.currentBattleMethod_ = this.ButtleOfActionJudge;
         this.currentUpdateMethod_ = this.UpdateOfBattle;
 
