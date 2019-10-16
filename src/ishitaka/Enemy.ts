@@ -198,7 +198,7 @@ export class Enemy implements Character{
     public OnNormal() : void {
         this.currentUpdateMethod_ = this.UpdateOfNormal;
         
-        console.log('enemy [id:' + this.characterId_.toString() + ']  is normal mode.');
+        console.log('enemy [id:' + this.characterId_.toString() + '] is normal mode.');
     }
     /**
      * 戦闘するときの処理
@@ -314,9 +314,9 @@ export class Enemy implements Character{
      * @memberof Enemy
      */
     private UpdateOfNormal(_elapsedTime:number) : boolean {
-        // TODO:
-        this.enemyStatus_.hitPoint -= 2.0;
-        console.log('enemy id:' + this.characterId_.toString() + ', hp:' + this.enemyStatus_.hitPoint.toString());
+        this.status.hitPoint -= 1.0;
+        // TODO:通常移動
+        // TODO:バトルに移行するか判定
 
         this.SendTransform(this.mapId);
         this.SendSimpleDisplay();
