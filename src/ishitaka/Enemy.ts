@@ -250,21 +250,10 @@ export class Enemy implements Character{
 
         this.currentBattleMethod_ = this.ButtleOfSkillCastTimeConsumption;
 
-        console.log('enemy [id:' + this.characterId_.toString() + '] change battle mode of skill use.');
-    }
-
-    /**
-     * スキルの使用
-     * @private
-     * @param {number} _elapsedTime 経過時間
-     * @returns {boolean} true:継続 false:終了
-     * @memberof Enemy
-     */
-    private OnUseSkill() : void {
-        // スキル使用
+        // スキル使用情報送信
         this.SendUseSkill();
 
-        console.log('enemy [id:' + this.characterId_.toString() + '] is use skill.');
+        console.log('enemy [id:' + this.characterId_.toString() + '] change battle mode of skill use.');
     }
 
 
@@ -439,7 +428,7 @@ export class Enemy implements Character{
         this.restTime_ -= _elapsedTime;
         if(this.restTime_ < 0.0){
             // スキル使用
-            this.OnUseSkill();
+            this.UseSkill();
             // リキャストタイム消費モードへ
             const skill:SkillData|undefined = SkillDataAccessor.instance.Find(this.enemyStatus_.tribeStatus.useSkillId);
             if(skill === undefined){
@@ -465,6 +454,17 @@ export class Enemy implements Character{
             this.currentBattleMethod_ = this.ButtleOfActionJudge;
         }
         return true;
+    }
+    
+    /**
+     * スキル使用
+     * @private
+     * @param {number} _elapsedTime 経過時間
+     * @returns {boolean} true:継続 false:終了
+     * @memberof Enemy
+     */
+    private UseSkill() : void {
+        console.log('enemy [id:' + this.characterId_.toString() + '] is use skill.');
     }
 
 
