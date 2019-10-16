@@ -15,67 +15,157 @@ import {DatabaseAccessor} from './DatabaseAccessor'
 export class ItemData{
     /**
      * 名前
-     * @public
+     * @private
      * @type {string}
      * @memberof ItemData
      */
-    public name_ : string;
+    private name_ : string;
+    /**
+     * 名前
+     * @public
+     * @readonly
+     * @type {string}
+     * @memberof ItemData
+     */
+    public get name() : string {
+        return this.name_;
+    }
+    /**
+     * 種別
+     * @private
+     * @type {string}
+     * @memberof ItemData
+     */
+    private type_ : string;
     /**
      * 種別
      * @public
+     * @readonly
      * @type {string}
      * @memberof ItemData
      */
-    public type_ : string;
+    public get type() : string {
+        return this.type_;
+    }
+    /**
+     * 説明文
+     * @private
+     * @type {string}
+     * @memberof ItemData
+     */
+    private explanation_ : string;
     /**
      * 説明文
      * @public
+     * @readonly
      * @type {string}
      * @memberof ItemData
      */
-    public explanation_ : string;
+    public get explanation() : string {
+        return this.explanation_;
+    }
+    /**
+     * 定価
+     * @private
+     * @type {number}
+     * @memberof ItemData
+     */
+    private price_ : number;
     /**
      * 定価
      * @public
+     * @readonly
      * @type {number}
      * @memberof ItemData
      */
-    public price_ : number;
+    public get price() : number {
+        return this.price_;
+    }
+    /**
+     * 体力回復値
+     * @private
+     * @type {number}
+     * @memberof ItemData
+     */
+    private hitPointRecovery_ : number;
     /**
      * 体力回復値
      * @public
+     * @readonly
      * @type {number}
      * @memberof ItemData
      */
-    public hitPointRecovery_ : number;
+    public get hitPointRecovery() : number {
+        return this.hitPointRecovery_;
+    }
+    /**
+     * 魔力回復値
+     * @private
+     * @type {number}
+     * @memberof ItemData
+     */
+    private magicPointRecovery_ : number;
     /**
      * 魔力回復値
      * @public
+     * @readonly
      * @type {number}
      * @memberof ItemData
      */
-    public magicPointRecovery_ : number;
+    public get magicPointRecovery() : number {
+        return this.magicPointRecovery_;
+    }
+    /**
+     * 効果フラグ [バフ、デバフ等]
+     * @private
+     * @type {number}
+     * @memberof ItemData
+     */
+    private effectFlag_ : number;
     /**
      * 効果フラグ [バフ、デバフ等]
      * @public
+     * @readonly
      * @type {number}
      * @memberof ItemData
      */
-    public effectFlag_ : number;
+    public get effectFlag() : number {
+        return this.effectFlag_;
+    }
+    /**
+     * 効果対象
+     * @private
+     * @type {number}
+     * @memberof ItemData
+     */
+    private effectTarget_ : number;
     /**
      * 効果対象
      * @public
+     * @readonly
      * @type {number}
      * @memberof ItemData
      */
-    public effectTarget_ : number;
+    public get effectTarget() : number {
+        return this.effectTarget_;
+    }
+    /**
+     * 効果範囲半径
+     * @private
+     * @type {number}
+     * @memberof ItemData
+     */
+    private effectRangeRadius_ : number;
     /**
      * 効果範囲半径
      * @public
+     * @readonly
      * @type {number}
      * @memberof ItemData
      */
-    public effectRangeRadius_ : number;
+    public get effectRangeRadius() : number {
+        return this.effectRangeRadius_;
+    }
 
 
     /**
@@ -207,7 +297,7 @@ export class ItemDataAccessor implements DatabaseAccessor{
                 _id : number,
                 _array : ItemData[]
             ) : boolean {
-                return (_key === _data.name_);
+                return (_key === _data.name);
             }
         ).shift();
     }

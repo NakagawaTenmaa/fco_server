@@ -16,6 +16,7 @@ import {CommunicationData} from './CommunicationData';
 import {EnemyPopAreaData, EnemyPopAreaDataAccessor} from './DatabaseAccessors/EnemyPopAreaDataAccessor'
 import {Vector3} from './Vector3'
 import {Matrix4x4} from './Matrix4x4'
+import {SkillData, SkillDataAccessor} from './DatabaseAccessors/SkillDataAccessor'
 
 /**
  * 敵
@@ -238,8 +239,14 @@ export class Enemy implements Character{
      * @memberof Enemy
      */
     public OnChangeBattleModeOfSkillUse() : void {
-        // TODO: キャストタイム設定
-        this.restTime_ = 1000.0;
+        const skill:SkillData|undefined = SkillDataAccessor.instance.Find(this.enemyStatus_.tribeStatus.useSkillId);
+        if(skill === undefined){
+            console.error('enemy [id:' + this.characterId_.toString() + '] don\'t use skill.');
+            return;
+        }
+
+        // キャストタイム設定
+        this.restTime_ = skill.castTime;
 
         this.currentBattleMethod_ = this.ButtleOfSkillCastTimeConsumption;
 
@@ -434,7 +441,12 @@ export class Enemy implements Character{
             // スキル使用
             this.OnUseSkill();
             // リキャストタイム消費モードへ
-            this.restTime_ = 2000.0;
+            const skill:SkillData|undefined = SkillDataAccessor.instance.Find(this.enemyStatus_.tribeStatus.useSkillId);
+            if(skill === undefined){
+                console.error('enemy [id:' + this.characterId_.toString() + '] don\'t use skill.');
+                return true;
+            }
+            this.restTime_ = skill.recastTime;
             this.currentBattleMethod_ = this.ButtleOfSkillRecastTimeConsumption
         }
         return true;
@@ -471,16 +483,16 @@ export class Enemy implements Character{
             return false;
         }
 
-        this.mapId_ = area.mapID_;
+        this.mapId_ = area.mapId;
 
         this.transform.worldMatrix = Matrix4x4.CreateRotationMatrix(2.0*Math.PI * (Math.random()-0.5));
         {
             const direction:number = 2.0*Math.PI * (Math.random()-0.5);
-            const delta:number = area.popAreaRadius_ * Math.random();
+            const delta:number = area.popAreaRadius * Math.random();
             this.transform.position = new Vector3(
-                area.positionX_ + delta*Math.cos(direction),
-                area.positionY_,
-                area.positionZ_ + delta*Math.sin(direction)
+                area.positionX + delta*Math.cos(direction),
+                area.positionY,
+                area.positionZ + delta*Math.sin(direction)
             );
         }
 

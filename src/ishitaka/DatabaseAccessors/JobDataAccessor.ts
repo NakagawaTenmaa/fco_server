@@ -15,123 +15,293 @@ import {DatabaseAccessor} from './DatabaseAccessor'
 export class JobData{
     /**
      * 職業名
-     * @public
+     * @private
      * @type {string}
      * @memberof JobData
      */
-    public name_ : string;
+    private name_ : string;
+    /**
+     * 職業名
+     * @public
+     * @readonly
+     * @type {string}
+     * @memberof JobData
+     */
+    public get name() : string {
+        return this.name_;
+    }
+    /**
+     * 最大体力オフセット
+     * @private
+     * @type {number}
+     * @memberof JobData
+     */
+    private maxHitPointOffset_ : number;
     /**
      * 最大体力オフセット
      * @public
+     * @readonly
      * @type {number}
      * @memberof JobData
      */
-    public maxHitPointOffset_ : number;
+    public get maxHitPointOffset() : number {
+        return this.maxHitPointOffset_;
+    }
+    /**
+     * 最大体力増加量
+     * @private
+     * @type {number}
+     * @memberof JobData
+     */
+    private maxHitPointRate_ : number;
     /**
      * 最大体力増加量
      * @public
+     * @readonly
      * @type {number}
      * @memberof JobData
      */
-    public maxHitPointRate_ : number;
+    public get maxHitPointRate() : number {
+        return this.maxHitPointRate_;
+    }
+    /**
+     * 最大魔力オフセット
+     * @private
+     * @type {number}
+     * @memberof JobData
+     */
+    private maxMagicPointOffset_ : number;
     /**
      * 最大魔力オフセット
      * @public
+     * @readonly
      * @type {number}
      * @memberof JobData
      */
-    public maxMagicPointOffset_ : number;
+    public get maxMagicPointOffset() : number {
+        return this.maxMagicPointOffset_;
+    }
+    /**
+     * 最大魔力増加量
+     * @private
+     * @type {number}
+     * @memberof JobData
+     */
+    private maxMagicPointRate_ : number;
     /**
      * 最大魔力増加量
      * @public
+     * @readonly
      * @type {number}
      * @memberof JobData
      */
-    public maxMagicPointRate_ : number;
+    public get maxMagicPointRate() : number {
+        return this.maxMagicPointRate_;
+    }
+    /**
+     * 物理攻撃力オフセット
+     * @private
+     * @type {number}
+     * @memberof JobData
+     */
+    private strengthOffset_ : number;
     /**
      * 物理攻撃力オフセット
      * @public
+     * @readonly
      * @type {number}
      * @memberof JobData
      */
-    public strengthOffset_ : number;
+    public get strengthOffset() : number {
+        return this.strengthOffset_;
+    }
+    /**
+     * 物理攻撃力増加量
+     * @private
+     * @type {number}
+     * @memberof JobData
+     */
+    private strengthRate_ : number;
     /**
      * 物理攻撃力増加量
      * @public
+     * @readonly
      * @type {number}
      * @memberof JobData
      */
-    public strengthRate_ : number;
+    public get strengthRate() : number {
+        return this.strengthRate_;
+    }
+    /**
+     * 物理防御力オフセット
+     * @private
+     * @type {number}
+     * @memberof JobData
+     */
+    private vitalityOffset_ : number;
     /**
      * 物理防御力オフセット
      * @public
+     * @readonly
      * @type {number}
      * @memberof JobData
      */
-    public vitalityOffset_ : number;
+    public get vitalityOffset() : number {
+        return this.vitalityOffset_;
+    }
+    /**
+     * 物理防御力増加量
+     * @private
+     * @type {number}
+     * @memberof JobData
+     */
+    private vitalityRate_ : number;
     /**
      * 物理防御力増加量
      * @public
+     * @readonly
      * @type {number}
      * @memberof JobData
      */
-    public vitalityRate_ : number;
+    public get vitalityRate() : number {
+        return this.vitalityRate_;
+    }
+    /**
+     * 魔法攻撃力オフセット
+     * @private
+     * @type {number}
+     * @memberof JobData
+     */
+    private intelligenceOffset_ : number;
     /**
      * 魔法攻撃力オフセット
      * @public
+     * @readonly
      * @type {number}
      * @memberof JobData
      */
-    public intelligenceOffset_ : number;
+    public get intelligenceOffset() : number {
+        return this.intelligenceOffset_;
+    }
+    /**
+     * 魔法攻撃力増加量
+     * @private
+     * @type {number}
+     * @memberof JobData
+     */
+    private intelligenceRate_ : number;
     /**
      * 魔法攻撃力増加量
      * @public
+     * @readonly
      * @type {number}
      * @memberof JobData
      */
-    public intelligenceRate_ : number;
+    public get intelligenceRate() : number {
+        return this.intelligenceRate_;
+    }
+    /**
+     * 魔法防御力オフセット
+     * @private
+     * @type {number}
+     * @memberof JobData
+     */
+    private mindOffset_ : number;
     /**
      * 魔法防御力オフセット
      * @public
+     * @readonly
      * @type {number}
      * @memberof JobData
      */
-    public mindOffset_ : number;
+    public get mindOffset() : number {
+        return this.mindOffset_;
+    }
+    /**
+     * 魔法防御力増加量
+     * @private
+     * @type {number}
+     * @memberof JobData
+     */
+    private mindRate_ : number;
     /**
      * 魔法防御力増加量
      * @public
+     * @readonly
      * @type {number}
      * @memberof JobData
      */
-    public mindRate_ : number;
+    public get mindRate() : number {
+        return this.mindRate_;
+    }
+    /**
+     * 器用さオフセット
+     * @private
+     * @type {number}
+     * @memberof JobData
+     */
+    private dexterityOffset_ : number;
     /**
      * 器用さオフセット
      * @public
+     * @readonly
      * @type {number}
      * @memberof JobData
      */
-    public dexterityOffset_ : number;
+    public get dexterityOffset() : number {
+        return this.dexterityOffset_;
+    }
+    /**
+     * 器用さ増加量
+     * @private
+     * @type {number}
+     * @memberof JobData
+     */
+    private dexterityRate_ : number;
     /**
      * 器用さ増加量
      * @public
+     * @readonly
      * @type {number}
      * @memberof JobData
      */
-    public dexterityRate_ : number;
+    public get dexterityRate() : number {
+        return this.dexterityRate_;
+    }
+    /**
+     * 敏捷性オフセット
+     * @private
+     * @type {number}
+     * @memberof JobData
+     */
+    private agilityOffset_ : number;
     /**
      * 敏捷性オフセット
      * @public
+     * @readonly
      * @type {number}
      * @memberof JobData
      */
-    public agilityOffset_ : number;
+    public get agilityOffset() : number {
+        return this.agilityOffset_;
+    }
+    /**
+     * 敏捷性増加量
+     * @private
+     * @type {number}
+     * @memberof JobData
+     */
+    private agilityRate_ : number;
     /**
      * 敏捷性増加量
      * @public
+     * @readonly
      * @type {number}
      * @memberof JobData
      */
-    public agilityRate_ : number;
+    public get agilityRate() : number {
+        return this.agilityRate_;
+    }
 
 
     /**
@@ -234,7 +404,7 @@ export class JobDataAccessor implements DatabaseAccessor{
      * @type {Array<JobData>}
      * @memberof JobDataAccessor
      */
-    private jobDataArray_ : Array<JobData>;
+    private dataArray_ : Array<JobData>;
 
 
     /**
@@ -244,7 +414,7 @@ export class JobDataAccessor implements DatabaseAccessor{
      * @memberof JobDataAccessor
      */
     private constructor(){
-        this.jobDataArray_ = new Array<JobData>();
+        this.dataArray_ = new Array<JobData>();
     }
 
     /**
@@ -277,13 +447,17 @@ export class JobDataAccessor implements DatabaseAccessor{
      * @memberof JobDataAccessor
      */
     public Find(_key:number|string) : JobData|undefined {
-        return this.jobDataArray_.filter(
+        if(typeof(_key) === 'number'){
+            return this.dataArray_[_key];
+        }
+
+        return this.dataArray_.filter(
             function(
                 _data : JobData,
                 _id : number,
                 _array : JobData[]
             ) : boolean {
-                return ((_key === _id) || (_key === _data.name_))
+                return (_key === _data.name)
             }
         ).shift();
     }
@@ -308,7 +482,7 @@ export class JobDataAccessor implements DatabaseAccessor{
             90, 10
         );
 
-        this.jobDataArray_[0] = testJob;
+        this.dataArray_[0] = testJob;
 
         // TODO:データベースから情報を読み取る
         console.log('Synchronize of the job data.');
