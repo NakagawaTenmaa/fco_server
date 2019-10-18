@@ -57,6 +57,21 @@ export class PartyManager{
 
 
     /**
+     * 作成
+     * @param {number} _id 作成するパーティのID
+     * @returns {Party} 作成したパーティ
+     * @memberof PartyManager
+     */
+    public Create(_id:number) : Party {
+        const find:Party|undefined = this.partyArray_[_id];
+        if(find === undefined){
+            const party:Party = new Party();
+            this.partyArray_[_id] = party;
+            return party;
+        }
+        return find;
+    }
+    /**
      * 検索
      * @param {number} _id 探すパーティのID
      * @returns {(Party|undefined)} 対応するパーティ 見つからなければundefined
