@@ -10,11 +10,37 @@ import {Transform} from './Transform'
 import {CharacterEffect} from './CharacterEffect'
 
 /**
+ * キャラクタタイプ
+ * @export
+ * @enum {number}
+ */
+export enum CharacterType{
+    /**
+     * プレイヤ
+     * @memberof CharacterType
+     */
+    Player,
+    /**
+     * 敵
+     * @memberof CharacterType
+     */
+    Enemy
+}
+
+/**
  * キャラクタ
  * @export
  * @interface Character
  */
 export interface Character{
+    /**
+     * キャラクタ種類
+     * @public
+     * @readonly
+     * @type {CharacterType}
+     * @memberof Character
+     */
+    readonly type : CharacterType;
     /**
      * キャラクタID
      * @public
@@ -23,6 +49,14 @@ export interface Character{
      * @memberof Character
      */
     readonly id : number;
+    /**
+     * 戦場ID
+     * @public
+     * @readonly
+     * @type {number}
+     * @memberof Character
+     */
+    readonly battlefieldId : number;
     /**
      * マップID
      * @readonly
