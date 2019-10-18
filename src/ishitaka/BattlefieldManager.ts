@@ -57,6 +57,21 @@ export class BattlefieldManager{
 
 
     /**
+     * 作成
+     * @param {number} _id 作成する戦場のID
+     * @returns {Battlefield} 作成した戦場
+     * @memberof BattlefieldManager
+     */
+    public Create(_id:number) : Battlefield {
+        const find:Battlefield|undefined = this.battlefieldArray_[_id];
+        if(find === undefined){
+            const field:Battlefield = new Battlefield();
+            this.battlefieldArray_[_id] = field;
+            return field;
+        }
+        return find;
+    }
+    /**
      * 検索
      * @param {number} _id 探す戦場のID
      * @returns {(Battlefield|undefined)} 対応する戦場 見つからなければundefined
