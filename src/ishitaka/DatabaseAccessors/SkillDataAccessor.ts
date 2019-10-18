@@ -31,6 +31,23 @@ export class SkillData{
         return this.name_;
     }
     /**
+     * スキルタイプ
+     * @private
+     * @type {number}
+     * @memberof SkillData
+     */
+    private type_ : number;
+    /**
+     * スキルタイプ
+     * @public
+     * @readonly
+     * @type {number}
+     * @memberof SkillData
+     */
+    public get type() : number {
+        return this.type_;
+    }
+    /**
      * キャストタイム
      * @private
      * @type {number}
@@ -241,6 +258,7 @@ export class SkillData{
      * @public
      * @constructor
      * @param {string} _name 名前
+     * @param {number} _type スキルタイプ
      * @param {number} _castTime キャストタイム
      * @param {number} _recastTime リキャストタイム
      * @param {number} _consumptionHitPoint 消費体力
@@ -257,6 +275,7 @@ export class SkillData{
      */
     public constructor(
         _name : string,
+        _type : number,
         _castTime : number,
         _recastTime : number,
         _consumptionHitPoint : number,
@@ -271,6 +290,7 @@ export class SkillData{
         _effectRangeScale : number
     ){
         this.name_ = _name;
+        this.type_ = _type;
         this.castTime_ = _castTime;
         this.recastTime_ = _recastTime;
         this.consumptionHitPoint_ = _consumptionHitPoint;
@@ -392,6 +412,7 @@ export class SkillDataAccessor implements DatabaseAccessor{
         // テスト用データ
         this.dataArray_[0] = new SkillData(
             '通常攻撃',
+            0,
             0.5,
             1.0,
             0, 0,
