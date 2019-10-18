@@ -6,6 +6,7 @@
  */
 
 import {DatabaseAccessor} from './DatabaseAccessor'
+import { EnemyModel } from '../../model/enemy'
 
 /**
  * 敵種族情報
@@ -235,6 +236,7 @@ export class EnemyTribeDataAccessor implements DatabaseAccessor{
      * @memberof EnemyTribeDataAccessor
      */
     public async Load() : Promise<boolean> {
+       
         // テスト用データ
         const testTribe:EnemyTribeData = new EnemyTribeData(
             'test',
@@ -247,8 +249,12 @@ export class EnemyTribeDataAccessor implements DatabaseAccessor{
             50
         );
 
-        this.enemyTribeDataArray_[0] = testTribe;
-        //this.enemyTribeDataArray_ = await GetEnemyData();
+        //this.enemyTribeDataArray_[0] = testTribe;
+        
+        const enemy: EnemyModel = new EnemyModel();
+        this.enemyTribeDataArray_ = await enemy.getEnemyList();
+
+        console.log(this.enemyTribeDataArray_);
 
         // TODO:データベースから情報を読み取る
         console.log('Synchronize of the enemy tribe data.');

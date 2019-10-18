@@ -2,10 +2,14 @@ import { connection } from './model/setting';
 import { loginRouter } from './router/loginRouter';
 import { playRouter } from './router/playRouter';
 import { chatUpdate } from './router/chatRouter'
+import { EnemyTribeDataAccessor } from './ishitaka/DatabaseAccessors/EnemyTribeDataAccessor'
+
 
 // ルートの作成
 const login: loginRouter = new loginRouter();
 const play: playRouter = new playRouter();
+
+EnemyTribeDataAccessor.instance.Load();
 
 // サーバーの処理
 login.loginUpdate();

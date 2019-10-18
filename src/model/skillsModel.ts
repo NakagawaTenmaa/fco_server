@@ -1,7 +1,5 @@
 import { BaseModel } from "./modelBase";
 
-
-
 /**
  * スキルのモデル
  * @export
@@ -15,10 +13,14 @@ export class SkillModel extends BaseModel{
      * @returns {Promise<any>}
      * @memberof SkillModel
      */
-    public async getSkillList(): Promise<any>{
+    public async getSkillList(): Promise<any[]>{
         const skillModel = await this.findAll();
-        let skill = "";
+        let skill: Array<any> = [];
+        skillModel.forEach((_skill: any) => {
+            skill.push({
 
+            });
+        });
         return skill;
     }
 }
