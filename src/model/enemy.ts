@@ -16,6 +16,7 @@ export class EnemyModel extends BaseModel{
             enemys.push(new EnemyTribeData(
                 _enemy.name,
                 0,
+                _enemy.model_id,
                 _enemy.hp,
                 _enemy.mp,
                 _enemy.str,
