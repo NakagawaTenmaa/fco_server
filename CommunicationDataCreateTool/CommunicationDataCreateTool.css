@@ -1,0 +1,96 @@
+*{
+    font-family: 'Times New Roman', Times, serif;
+}
+
+.OutputFileInputText{
+    padding: 0px 0px 0px 4px;
+}
+.FilenameInput{
+    width: 400px;
+}
+.IsAlertInput{
+    margin: 0px;
+}
+
+.AllCommuDataTable{
+    margin: 3px;
+    background-color: black;
+}
+.AllCommuDataTable tr{
+    margin: 0px;
+    background-color: white;
+
+    width: 760px;
+}
+
+.CommuDataTable{
+    margin: 1px;
+    background-color: gray;
+
+    width: 750px;
+}
+.CommuDataTable tr{
+    margin: 0px;
+    background-color: white;
+}
+
+
+.Headers{
+    margin: 5px 0px;
+}
+.AllCommuDataHeader{
+    background-color: lightgreen;
+}
+
+.TypeName{
+    font-size: 20px;
+    font-weight: bold;
+}
+.DataTypeTitle{
+    background-color: lightblue;
+}
+.DataTypeInput{
+    width: 380px;
+    font-size: 20px;
+    font-weight: bold;
+}
+.TypeIdInput{
+    width: 70px;
+    font-size: 20px;
+    font-weight: bold;
+}
+.DataCommentInput{
+    width: 470px;
+}
+
+.NameTitle{
+    width: 150px;
+    background-color: lightgoldenrodyellow;
+}
+.NameInput{
+    width: 150px;
+    margin: 0px;
+    padding: 0px;
+}
+.TypeTitle{
+    width: 150px;
+    background-color: lightgoldenrodyellow;
+}
+.TypeInput{
+    width: 150px;
+    margin: 0px;
+    padding: 0px;
+}
+.CommentTitle{
+    width: 300px;
+    background-color: lightgoldenrodyellow;
+}
+.CommentInput{
+    width: 300px;
+    margin: 0px;
+    padding: 0px;
+}
+
+.RightButtons{
+    width: 140px;
+}

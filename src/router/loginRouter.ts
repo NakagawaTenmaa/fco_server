@@ -14,6 +14,7 @@ export class loginRouter{
     constructor(){
         this.controller = new loginController();
         this.wss = new Server({port: 8000});
+        console.log("new login");
     }
 
     // 更新

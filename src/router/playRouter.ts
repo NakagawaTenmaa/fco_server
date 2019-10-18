@@ -5,6 +5,7 @@ import WebSocket = require('ws');
 
 
 
+
 export class playRouter{
     //controller: playController = new playController();
     wss: Server;
@@ -17,6 +18,7 @@ export class playRouter{
         this.wss = new Server({port: 8001});
         this.characterManager.Initialize();
         this.time = new Date().getTime();
+        console.log("new play");
     }
     
 

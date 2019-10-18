@@ -294,7 +294,7 @@ export class Enemy implements Character{
 
         if(tribeData === undefined){
             if((typeof _tribeKey) === 'number'){
-                console.error('Couldn\'t find enemy data. [id:' + _tribeKey.toString() + ']');
+                //console.error('Couldn\'t find enemy data. [id:' + _tribeKey.toString() + ']');
             }
             else if((typeof _tribeKey) === 'string'){
                 console.error('Couldn\'t find enemy data. [name:' + _tribeKey + ']');
@@ -467,7 +467,7 @@ export class Enemy implements Character{
 
         const area:EnemyPopAreaData|undefined = EnemyPopAreaDataAccessor.instance.Find(0);
         if(area === undefined){
-            console.error('Couldn\'t get pop area.');
+            //console.error('Couldn\'t get pop area.');
             return false;
         }
 
