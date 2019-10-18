@@ -8,9 +8,11 @@
 import {Character} from './Character'
 import {Player} from './Player'
 import {Enemy} from './Enemy'
-import { CommunicationData } from './CommunicationData';
+import {CommunicationData} from './CommunicationData';
 import WebSocket = require('ws');
-import { Vector3 } from './Vector3';
+import {Vector3} from './Vector3';
+import {PartyManager} from './PartyManager';
+import {Party} from './Party';
 
 /**
  * キャラクタマネージャ
@@ -335,6 +337,13 @@ export class CharacterManager{
 
         _character.id = checkId;
         this.characterArray_[_character.id] = _character;
+
+        if(_character instanceof Player){
+            // パーティを追加
+            const party:Party = PartyManager.instance.Create(checkId);
+            party.AddPlayer(_character);
+        }
+
         return true;
     }
 
