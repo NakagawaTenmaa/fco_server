@@ -5,7 +5,7 @@
  * @license Copyright(c) 2019 Ishikawa Takayoshi All Rights Reserved.
  */
 
-import {Character} from './Character'
+import {Character,CharacterType} from './Character'
 import {CharacterStatus} from './CharacterStatus'
 import {PlayerStatus} from './PlayerStatus'
 import {Transform} from './Transform'
@@ -42,6 +42,16 @@ export class Player implements Character{
     public get dbId(): number { return this.dbId_; }
     public set dbId(_id: number) { this.dbId_ = _id; }
     /**
+     * キャラクタ種類
+     * @public
+     * @readonly
+     * @type {CharacterType}
+     * @memberof Player
+     */
+    public get type() : CharacterType {
+        return CharacterType.Player;
+    }
+    /**
      * キャラクタID
      * @private
      * @type {number}
@@ -56,6 +66,57 @@ export class Player implements Character{
      */
     public get id() : number { return this.characterId_; }
     public set id(_id:number){ this.characterId_ = _id; }
+    /**
+     * パーティID
+     * @private
+     * @type {number}
+     * @memberof Player
+     */
+    private partyId_ : number;
+    /**
+     * パーティID
+     * @public
+     * @readonly
+     * @type {number}
+     * @memberof Player
+     */
+    private get partyId() : number {
+        return this.partyId_;
+    }
+    /**
+     * パーティ優先度
+     * @private
+     * @type {number}
+     * @memberof Player
+     */
+    private partyPriority_ : number;
+    /**
+     * パーティ優先度
+     * @public
+     * @readonly
+     * @type {number}
+     * @memberof Player
+     */
+    private get partyPriority() : number {
+        return this.partyPriority_;
+    }
+    /**
+     * 戦場ID
+     * @private
+     * @type {number}
+     * @memberof Player
+     */
+    private battlefieldId_ : number;
+    /**
+     * 戦場ID
+     * @public
+     * @readonly
+     * @type {number}
+     * @memberof Player
+     */
+    public get battlefieldId() : number {
+        return this.battlefieldId_;
+    }
     /**
      * マップID
      * @private
@@ -117,6 +178,9 @@ export class Player implements Character{
         this.ws_ = null;
         this.dbId_ = -1;
         this.characterId_ = -1;
+        this.partyId_ = -1;
+        this.partyPriority_ = -1;
+        this.battlefieldId_ = -1;
         this.mapId_ = 0;
         this.transform_ = new Transform();
         this.playerStatus_ = new PlayerStatus();

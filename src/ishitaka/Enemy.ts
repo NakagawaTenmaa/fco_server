@@ -5,7 +5,7 @@
  * @license Copyright(c) 2019 Ishikawa Takayoshi All Rights Reserved.
  */
 
-import {Character} from './Character'
+import {Character,CharacterType} from './Character'
 import {CharacterStatus} from './CharacterStatus'
 import {EnemyStatus} from './EnemyStatus'
 import {Transform} from './Transform'
@@ -51,7 +51,17 @@ export class Enemy implements Character{
      */
     private static readonly repopulateInterval_ : number = 3000.0;
 
-
+    
+    /**
+     * キャラクタ種類
+     * @public
+     * @readonly
+     * @type {CharacterType}
+     * @memberof Enemy
+     */
+    public get type() : CharacterType {
+        return CharacterType.Enemy;
+    }
     /**
      * キャラクタID
      * @private
@@ -67,6 +77,23 @@ export class Enemy implements Character{
      */
     public get id() : number { return this.characterId_; }
     public set id(_id:number){ this.characterId_ = _id; }
+    /**
+     * 戦場ID
+     * @private
+     * @type {number}
+     * @memberof Enemy
+     */
+    private battlefieldId_ : number;
+    /**
+     * 戦場ID
+     * @public
+     * @readonly
+     * @type {number}
+     * @memberof Enemy
+     */
+    public get battlefieldId() : number {
+        return this.battlefieldId_;
+    }
     /**
      * マップID
      * @private
@@ -157,6 +184,7 @@ export class Enemy implements Character{
      */
     public constructor(){
         this.characterId_ = -1;
+        this.battlefieldId_ = -1;
         this.mapId_ = -1;
         this.transform_ = new Transform();
         this.enemyStatus_ = new EnemyStatus(this);
