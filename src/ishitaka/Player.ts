@@ -17,6 +17,9 @@ import WebSocket = require('ws')
 import {  } from '../model/characterDataModel';
 import { Vector3 } from './Vector3'
 import { Weapon } from '../controller/object/playerWeapon'
+import {PartyManager} from './PartyManager'
+import {Party} from './Party'
+
 /**
  * プレイヤー
  * @export
@@ -76,12 +79,14 @@ export class Player implements Character{
     /**
      * パーティID
      * @public
-     * @readonly
      * @type {number}
      * @memberof Player
      */
-    private get partyId() : number {
+    public get partyId() : number {
         return this.partyId_;
+    }
+    public set partyId(_id:number){
+        this.partyId_ = _id;
     }
     /**
      * パーティ優先度
@@ -97,8 +102,11 @@ export class Player implements Character{
      * @type {number}
      * @memberof Player
      */
-    private get partyPriority() : number {
+    public get partyPriority() : number {
         return this.partyPriority_;
+    }
+    public set partyPriority(_priority:number){
+        this.partyPriority_ = _priority;
     }
     /**
      * 戦場ID
@@ -110,12 +118,14 @@ export class Player implements Character{
     /**
      * 戦場ID
      * @public
-     * @readonly
      * @type {number}
      * @memberof Player
      */
     public get battlefieldId() : number {
         return this.battlefieldId_;
+    }
+    public set battlefieldId(_id:number){
+        this.battlefieldId_ = _id;
     }
     /**
      * マップID
@@ -274,6 +284,68 @@ export class Player implements Character{
      */
     public ReceiveAnEffect(_effect:CharacterEffect) : boolean {
         return _effect.Show(this);
+    }
+
+    /**
+     * パーティに参加する
+     * @public
+     * @param {number} _partyId 参加するパーティのID
+     * @returns {boolean} true:参加した false:参加しなかった
+     * @memberof Player
+     */
+    public JoinParty(_partyId:number) : boolean {
+        const beforeParty:Party|undefined = PartyManager.instance.Search(this.partyId_);
+        if(beforeParty === undefined){
+            return false;
+        }
+        if(!(beforeParty.RemovePlayer(this))){
+            return false;
+        }
+
+        let afterParty:Party|undefined = PartyManager.instance.Search(_partyId);
+        if(afterParty === undefined){
+            afterParty = PartyManager.instance.Create(_partyId);
+        }
+
+        const isSuccess:boolean = afterParty.AddPlayer(this);
+        if(isSuccess){
+            this.partyId_ = _partyId;
+        }
+        else{
+            console.error('Couldn\'t join the party.');
+        }
+
+        return isSuccess;
+    }
+    /**
+     * パーティから去る
+     * @public
+     * @returns {boolean} true:去った false:去らなかった
+     * @memberof Player
+     */
+    public leaveParty() : boolean {
+        const beforeParty:Party|undefined = PartyManager.instance.Search(this.partyId_);
+        if(beforeParty === undefined){
+            return false;
+        }
+        if(!(beforeParty.RemovePlayer(this))){
+            return false;
+        }
+
+        let afterParty:Party|undefined = PartyManager.instance.Search(this.characterId_);
+        if(afterParty === undefined){
+            afterParty = PartyManager.instance.Create(this.characterId_);
+        }
+
+        const isSuccess:boolean = afterParty.AddPlayer(this);
+        if(isSuccess){
+            this.partyId_ = this.characterId_;
+        }
+        else{
+            console.error('Couldn\'t join the party.');
+        }
+
+        return isSuccess;
     }
 
     
