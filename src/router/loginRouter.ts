@@ -22,6 +22,7 @@ export class loginRouter{
         this.wss.on('connection', (ws) => {
             console.log('connection client');
             ws.on('message', (msg: any) => {
+                console.log(msg);
                 let json = JSON.parse(msg);
                 switch(json.command){
                     // ユーザーの作成
