@@ -65,7 +65,7 @@ export class BattlefieldManager{
     public Create(_id:number) : Battlefield {
         const find:Battlefield|undefined = this.battlefieldArray_[_id];
         if(find === undefined){
-            const field:Battlefield = new Battlefield();
+            const field:Battlefield = new Battlefield(_id);
             this.battlefieldArray_[_id] = field;
             return field;
         }

@@ -14,21 +14,38 @@ import {Character,CharacterType} from './Character'
  */
 export class Battlefield{
     /**
-     * 戦場キャラクタID配列
+     * 戦場ID
      * @private
-     * @type {Array<number>}
-     * @memberof Battlefield
+     * @type {number}
+     * @memberof Party
      */
-    private characterIdArray_ : Array<number>;
+    private id_ : number;
     /**
-     * 戦場キャラクタID配列
+     * 戦場ID
      * @public
      * @readonly
-     * @type {Array<number>}
+     * @type {number}
+     * @memberof Party
+     */
+    public get id() : number {
+        return this.id_;
+    }
+    /**
+     * 戦場キャラクタID配列
+     * @private
+     * @type {Array<Character>}
      * @memberof Battlefield
      */
-    public get characterIdArray() : Array<number> {
-        return this.characterIdArray_.concat([]);
+    private characterArray_ : Array<Character>;
+    /**
+     * 戦場キャラクタ配列
+     * @public
+     * @readonly
+     * @type {Array<Character>}
+     * @memberof Battlefield
+     */
+    public get characterArray() : Array<Character> {
+        return this.characterArray_.concat([]);
     }
     /**
      * プレイヤの数
@@ -67,13 +84,15 @@ export class Battlefield{
 
 
     /**
-     * デフォルトコンストラクタ
+     * コンストラクタ
      * @public
      * @constructor
+     * @param {number} _id 戦場ID
      * @memberof Battlefield
      */
-    public constructor(){
-        this.characterIdArray_ = new Array<number>();
+    public constructor(_id:number){
+        this.id_ = _id;
+        this.characterArray_ = new Array<Character>();
         this.playerCount_ = 0;
         this.enemyCount_ = 0;
     }
@@ -86,14 +105,14 @@ export class Battlefield{
      */
     public AddCharacter(_character:Character) : boolean {
         // キャラクタがいるか探す
-        const index:number = this.characterIdArray_.indexOf(_character.id);
+        const index:number = this.characterArray_.indexOf(_character);
         if(index >= 0){
             // 既に追加されている
             return false;
         }
 
         // 追加
-        this.characterIdArray_.push(_character.id);
+        this.characterArray_.push(_character);
 
         // 種類に合わせてカウントアップ
         switch(_character.type){
@@ -119,14 +138,14 @@ export class Battlefield{
      */
     public RemoveCharacter(_character:Character) : boolean {
         // キャラクタがいるか探す
-        const index:number = this.characterIdArray_.indexOf(_character.id);
+        const index:number = this.characterArray_.indexOf(_character);
         if(index < 0){
             // ここにはいない
             return false;
         }
 
         // 削除
-        this.characterIdArray_.splice(index, 1);
+        this.characterArray_.splice(index, 1);
 
         // 種類に合わせてカウントダウン
         switch(_character.type){

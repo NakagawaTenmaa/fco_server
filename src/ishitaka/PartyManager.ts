@@ -65,7 +65,7 @@ export class PartyManager{
     public Create(_id:number) : Party {
         const find:Party|undefined = this.partyArray_[_id];
         if(find === undefined){
-            const party:Party = new Party();
+            const party:Party = new Party(_id);
             this.partyArray_[_id] = party;
             return party;
         }

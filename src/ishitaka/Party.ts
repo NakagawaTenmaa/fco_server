@@ -5,7 +5,6 @@
  * @license Copyright(c) 2019 Ishikawa Takayoshi All Rights Reserved.
  */
 
-import {CharacterManager} from './CharacterManager'
 import {Character} from './Character'
 import {Player} from './Player'
 
@@ -16,21 +15,38 @@ import {Player} from './Player'
  */
 export class Party{
     /**
-     * パーティキャラクタID配列
+     * パーティID
      * @private
-     * @type {Array<number>}
+     * @type {number}
      * @memberof Party
      */
-    private characterIdArray_ : Array<number>;
+    private id_ : number;
     /**
-     * パーティキャラクタID配列
+     * パーティID
      * @public
      * @readonly
-     * @type {Array<number>}
+     * @type {number}
      * @memberof Party
      */
-    public get characterIdArray() : Array<number> {
-        return this.characterIdArray_.concat([]);
+    public get id() : number {
+        return this.id_;
+    }
+    /**
+     * パーティキャラクタ配列
+     * @private
+     * @type {Array<Character>}
+     * @memberof Party
+     */
+    private characterArray_ : Array<Character>;
+    /**
+     * パーティキャラクタ配列
+     * @public
+     * @readonly
+     * @type {Array<Character>}
+     * @memberof Party
+     */
+    public get characterArray() : Array<Character> {
+        return this.characterArray_.concat([]);
     }
     /**
      * 優先度をリセットする
@@ -42,13 +58,15 @@ export class Party{
 
 
     /**
-     * デフォルトコンストラクタ
+     * コンストラクタ
      * @public
      * @constructor
+     * @param {number} _id パーティID
      * @memberof Party
      */
-    public constructor(){
-        this.characterIdArray_ = new Array<number>();
+    public constructor(_id:number){
+        this.id_ = _id;
+        this.characterArray_ = new Array<Character>();
         this.isResetPriority_ = false;
     }
 
@@ -60,7 +78,7 @@ export class Party{
      */
     public AddPlayer(_player:Player) : boolean {
         // キャラクタがいるか探す
-        const index:number = this.characterIdArray_.indexOf(_player.id);
+        const index:number = this.characterArray_.indexOf(_player);
         if(index >= 0){
             // 既に追加されている
             return false;
@@ -72,10 +90,10 @@ export class Party{
         }
 
         // 優先度を最後にする
-        _player.partyPriority = this.characterIdArray_.length;
+        _player.partyPriority = this.characterArray_.length;
 
         // 追加
-        this.characterIdArray_.push(_player.id);
+        this.characterArray_.push(_player);
         return true;
     }
     /**
@@ -86,14 +104,14 @@ export class Party{
      */
     public RemovePlayer(_player:Player) : boolean {
         // キャラクタがいるか探す
-        const index:number = this.characterIdArray_.indexOf(_player.id);
+        const index:number = this.characterArray_.indexOf(_player);
         if(index < 0){
             // ここにはいない
             return false;
         }
 
         // 削除
-        this.characterIdArray_.splice(index, 1);
+        this.characterArray_.splice(index, 1);
 
         this.isResetPriority_ = true;
         return true;
@@ -107,20 +125,18 @@ export class Party{
      */
     private ResetPriority() : boolean {
         let isSuccess:boolean = true;
-        const characterManager:CharacterManager = CharacterManager.instance;
 
         // 優先度をインデックスでリセット
-        this.characterIdArray_.forEach(function(
-            _id : number,
+        this.characterArray_.forEach(function(
+            _character : Character,
             _index : number,
-            _array : number[]
+            _array : Character[]
         ) : void {
-            const character:Character|undefined = characterManager.GetCharacter(_id);
-            if(character === undefined){
+            if(_character === undefined){
                 isSuccess = false;
                 return;
             }
-            const player:Player = character as Player;
+            const player:Player = _character as Player;
             player.partyPriority = _index;
         });
 
