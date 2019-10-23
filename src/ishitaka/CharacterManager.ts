@@ -106,13 +106,6 @@ export class CharacterManager{
     }
 
     /**
-     * ユーザーデータの読み込み
-     * @public
-     * @returns {boolean}
-     * @memberof CharacterManager
-     */
-
-    /**
      * 更新処理
      * @public
      * @param {number} _elapsedTime 経過時間
@@ -371,5 +364,9 @@ export class CharacterManager{
      */
     private FindPlayer(_characterId: number): Player | undefined{
         return this.playerArray_.find((player: Player) => player.id === _characterId);
+    }
+
+    private ReceiveUseSkill(_useSkill:any/*CommunicationData.ReceiveData.UseSkillCtoS*/){
+        const useCharacter:Character = this.characterArray_[_useSkill.user_id];
     }
 }

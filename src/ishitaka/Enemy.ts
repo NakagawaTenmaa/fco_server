@@ -17,6 +17,7 @@ import {EnemyPopAreaData, EnemyPopAreaDataAccessor} from './DatabaseAccessors/En
 import {Vector3} from './Vector3'
 import {Matrix4x4} from './Matrix4x4'
 import {SkillData, SkillDataAccessor} from './DatabaseAccessors/SkillDataAccessor'
+import {EnemyTarget} from './EnemyTarget'
 
 /**
  * 敵更新モード
@@ -94,6 +95,13 @@ export class Enemy implements Character{
     public get battlefieldId() : number {
         return this.battlefieldId_;
     }
+    /**
+     * ターゲット情報
+     * @private
+     * @type {Array<EnemyTarget>}
+     * @memberof Enemy
+     */
+    private targetArray_ : Array<EnemyTarget>;
     /**
      * マップID
      * @private
@@ -185,6 +193,7 @@ export class Enemy implements Character{
     public constructor(){
         this.characterId_ = -1;
         this.battlefieldId_ = -1;
+        this.targetArray_ = new Array<EnemyTarget>()
         this.mapId_ = -1;
         this.transform_ = new Transform();
         this.enemyStatus_ = new EnemyStatus(this);
@@ -231,6 +240,18 @@ export class Enemy implements Character{
     }
 
 
+    /**
+     * スキル使用
+     * @public
+     * @param {number} _skillId 使うスキルのID
+     * @param {number} _receiverId スキルを受けるキャラクタのID
+     * @returns {boolean} true:成功 false:失敗
+     * @memberof Enemy
+     */
+    public UseSkill(_skillId:number, _receiverId:number) : boolean {
+        // TODO:
+        return true;
+    }
     /**
      * 効果を受ける
      * @public
@@ -482,8 +503,8 @@ export class Enemy implements Character{
     private ButtleOfSkillCastTimeConsumption(_elapsedTime:number) : boolean {
         this.restTime_ -= _elapsedTime;
         if(this.restTime_ < 0.0){
-            // スキル使用
-            this.UseSkill();
+            // Comment: 攻撃判定はクライアントが行う
+
             // リキャストタイム消費モードへ
             const skill:SkillData|undefined = SkillDataAccessor.instance.Find(this.enemyStatus_.tribeStatus.useSkillId);
             if(skill === undefined){
@@ -509,17 +530,6 @@ export class Enemy implements Character{
             this.currentBattleMethod_ = this.ButtleOfActionJudge;
         }
         return true;
-    }
-    
-    /**
-     * スキル使用
-     * @private
-     * @param {number} _elapsedTime 経過時間
-     * @returns {boolean} true:継続 false:終了
-     * @memberof Enemy
-     */
-    private UseSkill() : void {
-        console.log('enemy [id:' + this.characterId_.toString() + '] is use skill.');
     }
 
 

@@ -109,6 +109,15 @@ export interface Character{
 
 
     /**
+     * スキル使用
+     * @public
+     * @param {number} _skillId 使うスキルのID
+     * @param {number} _receiverId スキルを受けるキャラクタのID
+     * @returns {boolean} true:成功 false:失敗
+     * @memberof Character
+     */
+    UseSkill(_skillId:number, _receiverId:number) : boolean;
+    /**
      * 効果を受ける
      * @public
      * @param {CharacterEffect} _effect 効果

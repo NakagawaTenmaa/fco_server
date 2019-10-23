@@ -128,6 +128,25 @@ export class Player implements Character{
         this.battlefieldId_ = _id;
     }
     /**
+     * ターゲットID
+     * @private
+     * @type {number}
+     * @memberof Player
+     */
+    private targetId_ : number;
+    /**
+     * ターゲットID
+     * @public
+     * @type {number}
+     * @memberof Player
+     */
+    public get targetId() : number {
+        return this.targetId_;
+    }
+    public set targetId(_id:number){
+        this.targetId_ = _id;
+    }
+    /**
      * マップID
      * @private
      * @type {number}
@@ -191,6 +210,7 @@ export class Player implements Character{
         this.partyId_ = -1;
         this.partyPriority_ = -1;
         this.battlefieldId_ = -1;
+        this.targetId_ = -1;
         this.mapId_ = 0;
         this.transform_ = new Transform();
         this.playerStatus_ = new PlayerStatus();
@@ -275,6 +295,18 @@ export class Player implements Character{
     }
 
 
+    /**
+     * スキル使用
+     * @public
+     * @param {number} _skillId 使うスキルのID
+     * @param {number} _receiverId スキルを受けるキャラクタのID
+     * @returns {boolean} true:成功 false:失敗
+     * @memberof Player
+     */
+    public UseSkill(_skillId:number, _receiverId:number) : boolean {
+        // TODO:
+        return true;
+    }
     /**
      * 効果を受ける
      * @public
