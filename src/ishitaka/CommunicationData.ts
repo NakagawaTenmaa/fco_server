@@ -141,7 +141,7 @@ export namespace CommunicationData{
              * @type {number}
              * @memberof SimpleDisplayOfCharacter
              */
-            public static readonly id : number = 205;
+            public static readonly id : number = 206;
             /**
              * コマンドID
              * @public
@@ -371,7 +371,7 @@ export namespace CommunicationData{
         }
 
         // プレイヤーの状態
-        export class PlayerStatus{
+        export class PlayerStatus implements Receive{
             public readonly command: number = 205;
             public static id = 205;
             public user_id: number = 0;
@@ -382,19 +382,19 @@ export namespace CommunicationData{
         }
 
         // セーブデータの読み込み
-        export class LoadCharacter{
+        export class LoadCharacter implements Receive{
             public readonly command: number = 209;
             public static id = 209;
             public user_id = 0;
         }
 
-        export class LogoutCharacter {
+        export class LogoutCharacter implements Receive {
             public readonly command: number = 0;
             public static id = 0;
             public user_id = 0;
         }
 
-        export type AllTypes = CharacterTransform | InitCharacter;
+        export type AllTypes = CharacterTransform | InitCharacter | PlayerStatus | LoadCharacter | LogoutCharacter;
     }
 
     export type AllTypes = SendData.AllTypes | ReceiveData.AllTypes;
@@ -468,6 +468,7 @@ export namespace CommunicationData{
                     data.y = parse.y;
                     data.z = parse.z;
                     data.dir = parse.dir;
+                    data.user_id = parse.user_id;
                     return data;
                 }
                 case ReceiveData.InitCharacter.id:
@@ -482,7 +483,27 @@ export namespace CommunicationData{
                     data.user_id = parse.user_id;
                     return data;
                 }
-                
+                case ReceiveData.PlayerStatus.id:
+                {
+                    const data: ReceiveData.PlayerStatus = new ReceiveData.PlayerStatus();
+                    data.user_id = parse.user_id;
+                    data.hp = parse.hp;
+                    data.mp = parse.mp;
+                    data.status = parse.static;
+                    return data;
+                }
+                case ReceiveData.LoadCharacter.id:
+                {
+                    const data: ReceiveData.LoadCharacter = new ReceiveData.LoadCharacter();
+                    data.user_id = parse.user_id;
+                    return data;
+                }
+                case ReceiveData.LogoutCharacter.id:
+                {
+                    const data: ReceiveData.LogoutCharacter = new ReceiveData.LogoutCharacter();
+                    data.user_id = parse.user_id;
+                    return data;
+                }
             }
             console.error("Convert Error");
             return undefined;

@@ -238,6 +238,7 @@ export class CharacterManager{
     public Receive(_receiveData:string) : boolean {
         const data = CommunicationData.Converter.Convert(_receiveData);
         let isSuccess = true;
+        
         // コンバートエラー
         if(typeof data === 'undefined' || !data) return false;
 
