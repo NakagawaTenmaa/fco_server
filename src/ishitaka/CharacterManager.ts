@@ -271,19 +271,14 @@ export class CharacterManager{
     }
 
     /**
-     * キャラクタの取得
+     * キャラクタの検索
      * @public
-     * @param {number} _searchCharacterId 取得するキャラクタのID
-     * @returns {Character|undefined} 指定したIDのキャラクタ
+     * @param {number} _searchCharacterId 検索するキャラクタのID
+     * @returns {Character|undefined} 対応するキャラクタ 居なければundefined
      * @memberof CharacterManager
      */
-    public GetCharacter(_searchCharacterId:number) : Character|undefined {
-        if(_searchCharacterId in this.characterArray_){
-            return this.characterArray_[_searchCharacterId];
-        }
-        else{
-            return undefined;
-        }
+    public FindCharacter(_searchCharacterId:number) : Character|undefined {
+        return this.characterArray_[_searchCharacterId];
     }
 
     /**

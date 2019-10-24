@@ -326,7 +326,7 @@ export class Player implements Character{
             console.error("Couldn't find a skill effect. [skill id : " + _skillId.toString() + "]");
             return false;
         }
-        const receiver:Character|undefined = CharacterManager.instance.GetCharacter(_receiverId);
+        const receiver:Character|undefined = CharacterManager.instance.FindCharacter(_receiverId);
         if(receiver === undefined){
             console.error("Couldn't find a receiver. [id : " + _receiverId.toString() + "]");
             return false;

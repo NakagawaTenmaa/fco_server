@@ -270,7 +270,7 @@ export class Enemy implements Character{
             console.error("Couldn't find a skill effect. [skill id : " + _skillId.toString() + "]");
             return false;
         }
-        const receiver:Character|undefined = CharacterManager.instance.GetCharacter(_receiverId);
+        const receiver:Character|undefined = CharacterManager.instance.FindCharacter(_receiverId);
         if(receiver === undefined){
             console.error("Couldn't find a receiver. [id : " + _receiverId.toString() + "]");
             return false;
@@ -474,7 +474,7 @@ export class Enemy implements Character{
      */
     private ButtleOfMove(_elapsedTime:number) : boolean {
         // 相手の場所に近づく
-        const battleCharacter:Character|undefined = CharacterManager.instance.GetCharacter(this.battleCharacterId_);
+        const battleCharacter:Character|undefined = CharacterManager.instance.FindCharacter(this.battleCharacterId_);
         if(battleCharacter !== undefined){
             const battleCharacterInLocal:Matrix4x4 = battleCharacter.transform.worldMatrix.invertMatrix.Multiplication(this.transform_.worldMatrix);
             const toPosition:Vector3 = battleCharacterInLocal.column4.xyz;
