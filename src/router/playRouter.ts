@@ -35,7 +35,7 @@ export class playRouter{
             console.log("client_connection");
 
             ws.on('message', (msg: WebSocket.Data) => {
-                console.log('msg : ' + msg);
+                //console.log('msg : ' + msg);
                 const data = CommunicationData.Converter.Convert(msg.toString());
   
                 // コンバートエラー

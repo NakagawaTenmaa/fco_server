@@ -388,6 +388,7 @@ export namespace CommunicationData{
             public user_id = 0;
         }
 
+        // ログアウト
         export class LogoutCharacter implements Receive {
             public readonly command: number = 0;
             public static id = 0;

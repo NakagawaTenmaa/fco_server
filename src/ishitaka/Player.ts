@@ -198,7 +198,7 @@ export class Player implements Character{
         }
         */
         this.ws_.send(_sendData);
-        console.log('send:'+_sendData+' -> user_id:'+this.id.toString());
+        //console.log('send:'+_sendData+' -> user_id:'+this.id.toString());
         return true;
     }
 
