@@ -366,7 +366,14 @@ export class CharacterManager{
         return this.playerArray_.find((player: Player) => player.id === _characterId);
     }
 
+    /**
+     * スキル使用情報の取得
+     * @private
+     * @param {CommunicationData.ReceiveData.UseSkillCtoS} _useSkill スキル使用情報
+     * @memberof CharacterManager
+     */
     private ReceiveUseSkill(_useSkill:any/*CommunicationData.ReceiveData.UseSkillCtoS*/){
         const useCharacter:Character = this.characterArray_[_useSkill.user_id];
+        useCharacter.UseSkill(_useSkill.skill_id, _useSkill.receiver_id);
     }
 }
