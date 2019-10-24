@@ -296,6 +296,18 @@ export class Player implements Character{
 
 
     /**
+     * スキルが使用できるか?
+     * @public
+     * @param {number} _skillId 確認するスキルのID
+     * @returns {boolean} true:できる false:できない
+     * @memberof Player
+     */
+    public IsUsableSkill(_skillId:number) : boolean {
+        // TODO:
+        return true;
+    }
+
+    /**
      * スキル使用
      * @public
      * @param {number} _skillId 使うスキルのID
@@ -304,6 +316,10 @@ export class Player implements Character{
      * @memberof Player
      */
     public UseSkill(_skillId:number, _receiverId:number) : boolean {
+        if(!(this.IsUsableSkill(_skillId))){
+            console.error("Couldn't use a skill. [skill id : " + _skillId.toString() + "]");
+            return false;
+        }
         // TODO:
         return true;
     }

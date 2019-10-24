@@ -374,6 +374,12 @@ export class CharacterManager{
      */
     private ReceiveUseSkill(_useSkill:any/*CommunicationData.ReceiveData.UseSkillCtoS*/){
         const useCharacter:Character = this.characterArray_[_useSkill.user_id];
-        useCharacter.UseSkill(_useSkill.skill_id, _useSkill.receiver_id);
+        
+        if(useCharacter.UseSkill(_useSkill.skill_id, _useSkill.receiver_id)){
+            // TODO:成功時処理
+        }
+        else{
+            // TODO:失敗時処理
+        }
     }
 }

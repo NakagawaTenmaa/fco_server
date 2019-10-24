@@ -241,6 +241,17 @@ export class Enemy implements Character{
 
 
     /**
+     * スキルが使用できるか?
+     * @public
+     * @param {number} _skillId 確認するスキルのID
+     * @returns {boolean} true:できる false:できない
+     * @memberof Enemy
+     */
+    IsUsableSkill(_skillId:number) : boolean {
+        return (_skillId === this.enemyStatus_.tribeStatus.useSkillId);
+    }
+
+    /**
      * スキル使用
      * @public
      * @param {number} _skillId 使うスキルのID
@@ -249,6 +260,10 @@ export class Enemy implements Character{
      * @memberof Enemy
      */
     public UseSkill(_skillId:number, _receiverId:number) : boolean {
+        if(!(this.IsUsableSkill(_skillId))){
+            console.error("Couldn't use a skill. [skill id : " + _skillId.toString() + "]");
+            return false;
+        }
         // TODO:
         return true;
     }

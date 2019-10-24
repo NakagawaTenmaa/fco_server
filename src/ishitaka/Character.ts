@@ -107,6 +107,15 @@ export interface Character{
      */
     Finalize() : boolean;
 
+    
+    /**
+     * スキルが使用できるか?
+     * @public
+     * @param {number} _skillId 確認するスキルのID
+     * @returns {boolean} true:できる false:できない
+     * @memberof Character
+     */
+    IsUsableSkill(_skillId:number) : boolean;
 
     /**
      * スキル使用
