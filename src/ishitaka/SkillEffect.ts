@@ -45,7 +45,28 @@ export class SkillEffect implements CharacterEffect{
      * @memberof CharacterEffect
      */
     public Show(_user:Character, _receiver:Character) : boolean {
-        // TODO:
+        // HP,MPチェック
+        if(_user.status.hitPoint <= this.skillData_.consumptionHitPoint){
+            console.error("Don't have enough hit point.");
+            return false;
+        }
+        if(_user.status.magicPoint <= this.skillData_.consumptionMagicPoint){
+            console.error("Don't have enough magic point.");
+            return false;
+        }
+        // HP,MP消費
+        _user.status.hitPoint = _user.status.hitPoint - this.skillData_.consumptionHitPoint;
+        _user.status.magicPoint = _user.status.magicPoint - this.skillData_.consumptionMagicPoint;
+
+        // 物理と魔法の攻撃値計算
+        const physicalAttack:number = this.skillData_.fixedPhysicalDamage + this.skillData_.strengthPhysicalDamageRate*_user.status.strength;
+        const magicalAttack:number = this.skillData_.fixedMagicalDamage + this.skillData_.intelligenceMagicalDamageRate*_user.status.intelligence;
+        // ダメージ算出
+        const damage:number = physicalAttack/_receiver.status.vitality + magicalAttack/_receiver.status.mind;
+        
+        // ダメージ反映
+        _receiver.status.hitPoint = _receiver.status.hitPoint - damage;
+
         return true;
     }
 }
