@@ -126,12 +126,4 @@ export interface Character{
      * @memberof Character
      */
     UseSkill(_skillId:number, _receiverId:number) : boolean;
-    /**
-     * 効果を受ける
-     * @public
-     * @param {CharacterEffect} _effect 効果
-     * @returns {boolean} true:成功 false:失敗
-     * @memberof Character
-     */
-    ReceiveAnEffect(_effect:CharacterEffect) : boolean;
 }

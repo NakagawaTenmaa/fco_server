@@ -9,7 +9,6 @@ import {Character,CharacterType} from './Character'
 import {CharacterStatus} from './CharacterStatus'
 import {EnemyStatus} from './EnemyStatus'
 import {Transform} from './Transform'
-import {CharacterEffect} from './CharacterEffect'
 import {EnemyTribeData,EnemyTribeDataAccessor} from './DatabaseAccessors/EnemyTribeDataAccessor'
 import {CharacterManager} from './CharacterManager'
 import {CommunicationData} from './CommunicationData';
@@ -18,6 +17,8 @@ import {Vector3} from './Vector3'
 import {Matrix4x4} from './Matrix4x4'
 import {SkillData, SkillDataAccessor} from './DatabaseAccessors/SkillDataAccessor'
 import {EnemyTarget} from './EnemyTarget'
+import {SkillEffectManager} from './SkillEffectManager'
+import {SkillEffect} from './SkillEffect'
 
 /**
  * 敵更新モード
@@ -264,18 +265,18 @@ export class Enemy implements Character{
             console.error("Couldn't use a skill. [skill id : " + _skillId.toString() + "]");
             return false;
         }
-        // TODO:
-        return true;
-    }
-    /**
-     * 効果を受ける
-     * @public
-     * @param {CharacterEffect} _effect 効果
-     * @returns {boolean} true:成功 false:失敗
-     * @memberof Enemy
-     */
-    public ReceiveAnEffect(_effect:CharacterEffect) : boolean {
-        return _effect.Show(this);
+        const skillEffect:SkillEffect|undefined = SkillEffectManager.instance.FindSkillEffect(_skillId);
+        if(skillEffect === undefined){
+            console.error("Couldn't find a skill effect. [skill id : " + _skillId.toString() + "]");
+            return false;
+        }
+        const receiver:Character|undefined = CharacterManager.instance.GetCharacter(_receiverId);
+        if(receiver === undefined){
+            console.error("Couldn't find a receiver. [id : " + _receiverId.toString() + "]");
+            return false;
+        }
+        
+        return skillEffect.Show(this, receiver);
     }
 
 
