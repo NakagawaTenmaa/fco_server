@@ -96,8 +96,10 @@ export class EnemyStatus implements CharacterStatus {
     }
     public set hitPoint(_hitPoint:number){
         if(_hitPoint <= 0.0){
-            this.hitPoint_ = 0.0;
-            this.enemy_.OnDead();
+            if(!(this.isDead)){
+                this.enemy_.OnDead();
+            }
+            this.hitPoint_ = -1.0;
             return;
         }
 
@@ -207,6 +209,18 @@ export class EnemyStatus implements CharacterStatus {
             this.tribeStatus_.agility +
             this.abnormalConditionStatus_.agility
         );
+    }
+
+    
+    /**
+     * 死んでいるか?
+     * @public
+     * @readonly
+     * @type {boolean}
+     * @memberof EnemyStatus
+     */
+    public get isDead() : boolean {
+        return (this.hitPoint <= 0.0);
     }
 
 

@@ -10,11 +10,37 @@ import {Transform} from './Transform'
 import {CharacterEffect} from './CharacterEffect'
 
 /**
+ * キャラクタタイプ
+ * @export
+ * @enum {number}
+ */
+export enum CharacterType{
+    /**
+     * プレイヤ
+     * @memberof CharacterType
+     */
+    Player,
+    /**
+     * 敵
+     * @memberof CharacterType
+     */
+    Enemy
+}
+
+/**
  * キャラクタ
  * @export
  * @interface Character
  */
 export interface Character{
+    /**
+     * キャラクタ種類
+     * @public
+     * @readonly
+     * @type {CharacterType}
+     * @memberof Character
+     */
+    readonly type : CharacterType;
     /**
      * キャラクタID
      * @public
@@ -23,6 +49,14 @@ export interface Character{
      * @memberof Character
      */
     readonly id : number;
+    /**
+     * 戦場ID
+     * @public
+     * @readonly
+     * @type {number}
+     * @memberof Character
+     */
+    readonly battlefieldId : number;
     /**
      * マップID
      * @readonly
@@ -73,13 +107,23 @@ export interface Character{
      */
     Finalize() : boolean;
 
+    
+    /**
+     * スキルが使用できるか?
+     * @public
+     * @param {number} _skillId 確認するスキルのID
+     * @returns {boolean} true:できる false:できない
+     * @memberof Character
+     */
+    IsUsableSkill(_skillId:number) : boolean;
 
     /**
-     * 効果を受ける
+     * スキル使用
      * @public
-     * @param {CharacterEffect} _effect 効果
+     * @param {number} _skillId 使うスキルのID
+     * @param {number} _receiverId スキルを受けるキャラクタのID
      * @returns {boolean} true:成功 false:失敗
      * @memberof Character
      */
-    ReceiveAnEffect(_effect:CharacterEffect) : boolean;
+    UseSkill(_skillId:number, _receiverId:number) : boolean;
 }

@@ -38,4 +38,13 @@ export interface CharacterStatus extends Status {
      * @memberof Status
      */
     magicPoint : number;
+
+    /**
+     * 死んでいるか?
+     * @public
+     * @readonly
+     * @type {boolean}
+     * @memberof CharacterStatus
+     */
+    readonly isDead : boolean;
 }

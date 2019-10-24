@@ -15,81 +15,191 @@ import {DatabaseAccessor} from './DatabaseAccessor'
 export class OrnamentData{
     /**
      * 名前
-     * @public
+     * @private
      * @type {string}
      * @memberof OrnamentData
      */
-    public name_ : string;
+    private name_ : string;
+    /**
+     * 名前
+     * @public
+     * @readonly
+     * @type {string}
+     * @memberof OrnamentData
+     */
+    public get name() : string {
+        return this.name_;
+    }
+    /**
+     * 種別
+     * @private
+     * @type {string}
+     * @memberof OrnamentData
+     */
+    private type_ : string;
     /**
      * 種別
      * @public
+     * @readonly
      * @type {string}
      * @memberof OrnamentData
      */
-    public type_ : string;
+    public get type() : string {
+        return this.type_;
+    }
+    /**
+     * 説明文
+     * @private
+     * @type {string}
+     * @memberof OrnamentData
+     */
+    private explanation_ : string;
     /**
      * 説明文
      * @public
+     * @readonly
      * @type {string}
      * @memberof OrnamentData
      */
-    public explanation_ : string;
+    public get explanation() : string {
+        return this.explanation_;
+    }
+    /**
+     * 定価
+     * @private
+     * @type {number}
+     * @memberof OrnamentData
+     */
+    private price_ : number;
     /**
      * 定価
      * @public
+     * @readonly
      * @type {number}
      * @memberof OrnamentData
      */
-    public price_ : number;
+    public get price() : number {
+        return this.price_;
+    }
+    /**
+     * 物理攻撃補整
+     * @private
+     * @type {number}
+     * @memberof OrnamentData
+     */
+    private strengthCorrection_ : number;
     /**
      * 物理攻撃補整
      * @public
+     * @readonly
      * @type {number}
      * @memberof OrnamentData
      */
-    public strengthCorrection_ : number;
+    public get strengthCorrection() : number {
+        return this.strengthCorrection_;
+    }
+    /**
+     * 物理防御補整
+     * @private
+     * @type {number}
+     * @memberof OrnamentData
+     */
+    private vitalityCorrection_ : number;
     /**
      * 物理防御補整
      * @public
+     * @readonly
      * @type {number}
      * @memberof OrnamentData
      */
-    public vitalityCorrection_ : number;
+    public get vitalityCorrection() : number {
+        return this.vitalityCorrection_;
+    }
+    /**
+     * 魔法攻撃補整
+     * @private
+     * @type {number}
+     * @memberof OrnamentData
+     */
+    private intelligenceCorrection_ : number;
     /**
      * 魔法攻撃補整
      * @public
+     * @readonly
      * @type {number}
      * @memberof OrnamentData
      */
-    public intelligenceCorrection_ : number;
+    public get intelligenceCorrection() : number {
+        return this.intelligenceCorrection_;
+    }
+    /**
+     * 魔法防御補整
+     * @private
+     * @type {number}
+     * @memberof OrnamentData
+     */
+    private mindCorrection_ : number;
     /**
      * 魔法防御補整
      * @public
+     * @readonly
      * @type {number}
      * @memberof OrnamentData
      */
-    public mindCorrection_ : number;
+    public get mindCorrection() : number {
+        return this.mindCorrection_;
+    }
+    /**
+     * 器用さ補整
+     * @private
+     * @type {number}
+     * @memberof OrnamentData
+     */
+    private dexterityCorrection_ : number;
     /**
      * 器用さ補整
      * @public
+     * @readonly
      * @type {number}
      * @memberof OrnamentData
      */
-    public dexterityCorrection_ : number;
+    public get dexterityCorrection() : number {
+        return this.dexterityCorrection_;
+    }
+    /**
+     * 敏捷性補整
+     * @private
+     * @type {number}
+     * @memberof OrnamentData
+     */
+    private agilityCorrection_ : number;
     /**
      * 敏捷性補整
      * @public
+     * @readonly
      * @type {number}
      * @memberof OrnamentData
      */
-    public agilityCorrection_ : number;
+    public get agilityCorrection() : number {
+        return this.agilityCorrection_;
+    }
+    /**
+     * 効果フラグ [バフ、デバフ等]
+     * @private
+     * @type {number}
+     * @memberof OrnamentData
+     */
+    private effectFlag_ : number;
     /**
      * 効果フラグ [バフ、デバフ等]
      * @public
+     * @readonly
      * @type {number}
      * @memberof OrnamentData
      */
-    public effectFlag_ : number;
+    public get effectFlag() : number {
+        return this.effectFlag_;
+    }
 
 
     /**
@@ -227,7 +337,7 @@ export class OrnamentDataAccessor implements DatabaseAccessor{
                 _id : number,
                 _array : OrnamentData[]
             ) : boolean {
-                return (_key === _data.name_);
+                return (_key === _data.name);
             }
         ).shift();
     }
@@ -254,7 +364,7 @@ export class OrnamentDataAccessor implements DatabaseAccessor{
 
         // TODO:データベースから情報を読み取る
         
-        console.log('Loaded the weapon data.');
+        console.log('Loaded the ornament data.');
         return true;
     }
 }

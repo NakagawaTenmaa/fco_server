@@ -15,95 +15,242 @@ import {DatabaseAccessor} from './DatabaseAccessor'
 export class SkillData{
     /**
      * 名前
-     * @public
+     * @private
      * @type {string}
      * @memberof SkillData
      */
-    public name_ : string;
+    private name_ : string;
+    /**
+     * 名前
+     * @public
+     * @readonly
+     * @type {string}
+     * @memberof SkillData
+     */
+    public get name() : string {
+        return this.name_;
+    }
+    /**
+     * スキルタイプ
+     * @private
+     * @type {number}
+     * @memberof SkillData
+     */
+    private type_ : number;
+    /**
+     * スキルタイプ
+     * @public
+     * @readonly
+     * @type {number}
+     * @memberof SkillData
+     */
+    public get type() : number {
+        return this.type_;
+    }
+    /**
+     * キャストタイム
+     * @private
+     * @type {number}
+     * @memberof SkillData
+     */
+    private castTime_ : number;
     /**
      * キャストタイム
      * @public
+     * @readonly
      * @type {number}
      * @memberof SkillData
      */
-    public castTime_ : number;
+    public get castTime() : number {
+        return this.castTime_;
+    }
+    /**
+     * リキャストタイム
+     * @private
+     * @type {number}
+     * @memberof SkillData
+     */
+    private recastTime_ : number;
     /**
      * リキャストタイム
      * @public
+     * @readonly
      * @type {number}
      * @memberof SkillData
      */
-    public recastTime_ : number;
+    public get recastTime() : number {
+        return this.recastTime_;
+    }
+    /**
+     * 消費体力
+     * @private
+     * @type {number}
+     * @memberof SkillData
+     */
+    private consumptionHitPoint_ : number;
     /**
      * 消費体力
      * @public
+     * @readonly
      * @type {number}
      * @memberof SkillData
      */
-    public consumptionHitPoint_ : number;
+    public get consumptionHitPoint() : number {
+        return this.consumptionHitPoint_;
+    }
+    /**
+     * 消費魔力
+     * @private
+     * @type {number}
+     * @memberof SkillData
+     */
+    private consumptionMagicPoint_ : number;
     /**
      * 消費魔力
      * @public
+     * @readonly
      * @type {number}
      * @memberof SkillData
      */
-    public consumptionMagicPoint_ : number;
+    public get consumptionMagicPoint() : number {
+        return this.consumptionMagicPoint_;
+    }
+    /**
+     * 固定物理ダメージ
+     * @private
+     * @type {number}
+     * @memberof SkillData
+     */
+    private fixedPhysicalDamage_ : number;
     /**
      * 固定物理ダメージ
      * @public
+     * @readonly
      * @type {number}
      * @memberof SkillData
      */
-    public fixedPhysicalDamage_ : number;
+    public get fixedPhysicalDamage() : number {
+        return this.fixedPhysicalDamage_;
+    }
+    /**
+     * 物理攻撃力による物理ダメージ増加率
+     * @private
+     * @type {number}
+     * @memberof SkillData
+     */
+    private strengthPhysicalDamageRate_ : number;
     /**
      * 物理攻撃力による物理ダメージ増加率
      * @public
+     * @readonly
      * @type {number}
      * @memberof SkillData
      */
-    public strengthPhysicalDamageRate_ : number;
+    public get strengthPhysicalDamageRate() : number {
+        return this.strengthPhysicalDamageRate_;
+    }
+    /**
+     * 固定魔法ダメージ
+     * @private
+     * @type {number}
+     * @memberof SkillData
+     */
+    private fixedMagicalDamage_ : number;
     /**
      * 固定魔法ダメージ
      * @public
+     * @readonly
      * @type {number}
      * @memberof SkillData
      */
-    public fixedMagicalDamage_ : number;
+    public get fixedMagicalDamage() : number {
+        return this.fixedMagicalDamage_;
+    }
+    /**
+     * 魔法攻撃力による魔法ダメージ増加率
+     * @private
+     * @type {number}
+     * @memberof SkillData
+     */
+    private intelligenceMagicalDamageRate_ : number;
     /**
      * 魔法攻撃力による魔法ダメージ増加率
      * @public
+     * @readonly
      * @type {number}
      * @memberof SkillData
      */
-    public intelligenceMagicalDamageRate_ : number;
+    public get intelligenceMagicalDamageRate() : number {
+        return this.intelligenceMagicalDamageRate_;
+    }
     /**
      * 効果フラグ [バフ、デバフ等]
-     * @public
+     * @private
      * @type {number}
      * @memberof ItemData
      */
-    public effectFlag_ : number;
+    private effectFlag_ : number;
+    /**
+     * 効果フラグ [バフ、デバフ等]
+     * @public
+     * @readonly
+     * @type {number}
+     * @memberof ItemData
+     */
+    public get effectFlag() : number {
+        return this.effectFlag_;
+    }
+    /**
+     * 効果対象
+     * @private
+     * @type {number}
+     * @memberof SkillData
+     */
+    private effectTarget_ : number;
     /**
      * 効果対象
      * @public
+     * @readonly
      * @type {number}
      * @memberof SkillData
      */
-    public effectTarget_ : number;
+    public get effectTarget() : number {
+        return this.effectTarget_;
+    }
+    /**
+     * 効果範囲タイプ
+     * @private
+     * @type {number}
+     * @memberof SkillData
+     */
+    private effectRangeType_ : number;
     /**
      * 効果範囲タイプ
      * @public
+     * @readonly
      * @type {number}
      * @memberof SkillData
      */
-    public effectRangeType_ : number;
+    public get effectRangeType() : number {
+        return this.effectRangeType_;
+    }
+    /**
+     * 効果範囲拡大率
+     * @private
+     * @type {number}
+     * @memberof SkillData
+     */
+    private effectRangeScale_ : number;
     /**
      * 効果範囲拡大率
      * @public
+     * @readonly
      * @type {number}
      * @memberof SkillData
      */
-    public effectRangeScale_ : number;
+    public get effectRangeScale() : number {
+        return this.effectRangeScale_;
+    }
 
 
     /**
@@ -111,6 +258,7 @@ export class SkillData{
      * @public
      * @constructor
      * @param {string} _name 名前
+     * @param {number} _type スキルタイプ
      * @param {number} _castTime キャストタイム
      * @param {number} _recastTime リキャストタイム
      * @param {number} _consumptionHitPoint 消費体力
@@ -127,6 +275,7 @@ export class SkillData{
      */
     public constructor(
         _name : string,
+        _type : number,
         _castTime : number,
         _recastTime : number,
         _consumptionHitPoint : number,
@@ -141,6 +290,7 @@ export class SkillData{
         _effectRangeScale : number
     ){
         this.name_ = _name;
+        this.type_ = _type;
         this.castTime_ = _castTime;
         this.recastTime_ = _recastTime;
         this.consumptionHitPoint_ = _consumptionHitPoint;
@@ -195,6 +345,16 @@ export class SkillDataAccessor implements DatabaseAccessor{
      * @memberof SkillDataAccessor
      */
     private dataArray_ : Array<SkillData>;
+    /**
+     * スキル情報配列
+     * @public
+     * @readonly
+     * @type {Array<SkillData>}
+     * @memberof SkillDataAccessor
+     */
+    public get dataArray() : Array<SkillData> {
+        return this.dataArray_.concat([]);
+    }
 
 
     /**
@@ -247,7 +407,7 @@ export class SkillDataAccessor implements DatabaseAccessor{
                 _id : number,
                 _array : SkillData[]
             ) : boolean {
-                return (_key === _data.name_);
+                return (_key === _data.name);
             }
         ).shift();
     }
@@ -262,6 +422,7 @@ export class SkillDataAccessor implements DatabaseAccessor{
         // テスト用データ
         this.dataArray_[0] = new SkillData(
             '通常攻撃',
+            0,
             0.5,
             1.0,
             0, 0,

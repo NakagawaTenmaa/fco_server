@@ -15,81 +15,191 @@ import {DatabaseAccessor} from './DatabaseAccessor'
 export class WeaponData{
     /**
      * 名前
-     * @public
+     * @private
      * @type {string}
      * @memberof WeaponData
      */
-    public name_ : string;
+    private name_ : string;
+    /**
+     * 名前
+     * @public
+     * @readonly
+     * @type {string}
+     * @memberof WeaponData
+     */
+    public get name() : string {
+        return this.name_;
+    }
+    /**
+     * 種別
+     * @private
+     * @type {string}
+     * @memberof WeaponData
+     */
+    private type_ : string;
     /**
      * 種別
      * @public
+     * @readonly
      * @type {string}
      * @memberof WeaponData
      */
-    public type_ : string;
+    public get type() : string {
+        return this.type_;
+    }
+    /**
+     * 説明文
+     * @private
+     * @type {string}
+     * @memberof WeaponData
+     */
+    private explanation_ : string;
     /**
      * 説明文
      * @public
+     * @readonly
      * @type {string}
      * @memberof WeaponData
      */
-    public explanation_ : string;
+    public get explanation() : string {
+        return this.explanation_;
+    }
+    /**
+     * 定価
+     * @private
+     * @type {number}
+     * @memberof WeaponData
+     */
+    private price_ : number;
     /**
      * 定価
      * @public
+     * @readonly
      * @type {number}
      * @memberof WeaponData
      */
-    public price_ : number;
+    public get price() : number {
+        return this.price_;
+    }
+    /**
+     * 物理攻撃補整
+     * @private
+     * @type {number}
+     * @memberof WeaponData
+     */
+    private strengthCorrection_ : number;
     /**
      * 物理攻撃補整
      * @public
+     * @readonly
      * @type {number}
      * @memberof WeaponData
      */
-    public strengthCorrection_ : number;
+    public get strengthCorrection() : number {
+        return this.strengthCorrection_;
+    }
+    /**
+     * 物理防御補整
+     * @private
+     * @type {number}
+     * @memberof WeaponData
+     */
+    private vitalityCorrection_ : number;
     /**
      * 物理防御補整
      * @public
+     * @readonly
      * @type {number}
      * @memberof WeaponData
      */
-    public vitalityCorrection_ : number;
+    public get vitalityCorrection() : number {
+        return this.vitalityCorrection_;
+    }
+    /**
+     * 魔法攻撃補整
+     * @private
+     * @type {number}
+     * @memberof WeaponData
+     */
+    private intelligenceCorrection_ : number;
     /**
      * 魔法攻撃補整
      * @public
+     * @readonly
      * @type {number}
      * @memberof WeaponData
      */
-    public intelligenceCorrection_ : number;
+    public get intelligenceCorrection() : number {
+        return this.intelligenceCorrection_;
+    }
+    /**
+     * 魔法防御補整
+     * @private
+     * @type {number}
+     * @memberof WeaponData
+     */
+    private mindCorrection_ : number;
     /**
      * 魔法防御補整
      * @public
+     * @readonly
      * @type {number}
      * @memberof WeaponData
      */
-    public mindCorrection_ : number;
+    public get mindCorrection() : number {
+        return this.mindCorrection_;
+    }
+    /**
+     * 器用さ補整
+     * @private
+     * @type {number}
+     * @memberof WeaponData
+     */
+    private dexterityCorrection_ : number;
     /**
      * 器用さ補整
      * @public
+     * @readonly
      * @type {number}
      * @memberof WeaponData
      */
-    public dexterityCorrection_ : number;
+    public get dexterityCorrection() : number {
+        return this.dexterityCorrection_;
+    }
+    /**
+     * 敏捷性補整
+     * @private
+     * @type {number}
+     * @memberof WeaponData
+     */
+    private agilityCorrection_ : number;
     /**
      * 敏捷性補整
      * @public
+     * @readonly
      * @type {number}
      * @memberof WeaponData
      */
-    public agilityCorrection_ : number;
+    public get agilityCorrection() : number {
+        return this.agilityCorrection_;
+    }
+    /**
+     * 効果フラグ [バフ、デバフ等]
+     * @private
+     * @type {number}
+     * @memberof WeaponData
+     */
+    private effectFlag_ : number;
     /**
      * 効果フラグ [バフ、デバフ等]
      * @public
+     * @readonly
      * @type {number}
      * @memberof WeaponData
      */
-    public effectFlag_ : number;
+    public get effectFlag() : number {
+        return this.effectFlag_;
+    }
 
 
     /**
@@ -227,7 +337,7 @@ export class WeaponDataAccessor implements DatabaseAccessor{
                 _id : number,
                 _array : WeaponData[]
             ) : boolean {
-                return (_key === _data.name_);
+                return (_key === _data.name);
             }
         ).shift();
     }

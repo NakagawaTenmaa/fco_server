@@ -5,17 +5,20 @@
  * @license Copyright(c) 2019 Ishikawa Takayoshi All Rights Reserved.
  */
 
-import {Character} from './Character'
+import {Character,CharacterType} from './Character'
 import {CharacterStatus} from './CharacterStatus'
 import {EnemyStatus} from './EnemyStatus'
 import {Transform} from './Transform'
-import {CharacterEffect} from './CharacterEffect'
 import {EnemyTribeData,EnemyTribeDataAccessor} from './DatabaseAccessors/EnemyTribeDataAccessor'
 import {CharacterManager} from './CharacterManager'
 import {CommunicationData} from './CommunicationData';
 import {EnemyPopAreaData, EnemyPopAreaDataAccessor} from './DatabaseAccessors/EnemyPopAreaDataAccessor'
 import {Vector3} from './Vector3'
 import {Matrix4x4} from './Matrix4x4'
+import {SkillData, SkillDataAccessor} from './DatabaseAccessors/SkillDataAccessor'
+import {EnemyTarget} from './EnemyTarget'
+import {SkillEffectManager} from './SkillEffectManager'
+import {SkillEffect} from './SkillEffect'
 
 /**
  * 敵
@@ -33,7 +36,17 @@ export class Enemy implements Character{
      */
     private static readonly repopulateInterval_ : number = 3000.0;
 
-
+    
+    /**
+     * キャラクタ種類
+     * @public
+     * @readonly
+     * @type {CharacterType}
+     * @memberof Enemy
+     */
+    public get type() : CharacterType {
+        return CharacterType.Enemy;
+    }
     /**
      * キャラクタID
      * @private
@@ -49,6 +62,30 @@ export class Enemy implements Character{
      */
     public get id() : number { return this.characterId_; }
     public set id(_id:number){ this.characterId_ = _id; }
+    /**
+     * 戦場ID
+     * @private
+     * @type {number}
+     * @memberof Enemy
+     */
+    private battlefieldId_ : number;
+    /**
+     * 戦場ID
+     * @public
+     * @readonly
+     * @type {number}
+     * @memberof Enemy
+     */
+    public get battlefieldId() : number {
+        return this.battlefieldId_;
+    }
+    /**
+     * ターゲット情報
+     * @private
+     * @type {Array<EnemyTarget>}
+     * @memberof Enemy
+     */
+    private targetArray_ : Array<EnemyTarget>;
     /**
      * マップID
      * @private
@@ -132,6 +169,8 @@ export class Enemy implements Character{
      */
     public constructor(){
         this.characterId_ = -1;
+        this.battlefieldId_ = -1;
+        this.targetArray_ = new Array<EnemyTarget>()
         this.mapId_ = -1;
         this.transform_ = new Transform();
         this.enemyStatus_ = new EnemyStatus(this);
@@ -178,14 +217,41 @@ export class Enemy implements Character{
 
 
     /**
-     * 効果を受ける
+     * スキルが使用できるか?
      * @public
-     * @param {CharacterEffect} _effect 効果
+     * @param {number} _skillId 確認するスキルのID
+     * @returns {boolean} true:できる false:できない
+     * @memberof Enemy
+     */
+    IsUsableSkill(_skillId:number) : boolean {
+        return (_skillId === this.enemyStatus_.tribeStatus.useSkillId);
+    }
+
+    /**
+     * スキル使用
+     * @public
+     * @param {number} _skillId 使うスキルのID
+     * @param {number} _receiverId スキルを受けるキャラクタのID
      * @returns {boolean} true:成功 false:失敗
      * @memberof Enemy
      */
-    public ReceiveAnEffect(_effect:CharacterEffect) : boolean {
-        return _effect.Show(this);
+    public UseSkill(_skillId:number, _receiverId:number) : boolean {
+        if(!(this.IsUsableSkill(_skillId))){
+            console.error("Couldn't use a skill. [skill id : " + _skillId.toString() + "]");
+            return false;
+        }
+        const skillEffect:SkillEffect|undefined = SkillEffectManager.instance.FindSkillEffect(_skillId);
+        if(skillEffect === undefined){
+            console.error("Couldn't find a skill effect. [skill id : " + _skillId.toString() + "]");
+            return false;
+        }
+        const receiver:Character|undefined = CharacterManager.instance.FindCharacter(_receiverId);
+        if(receiver === undefined){
+            console.error("Couldn't find a receiver. [id : " + _receiverId.toString() + "]");
+            return false;
+        }
+        
+        return skillEffect.Show(this, receiver);
     }
 
 
@@ -197,7 +263,7 @@ export class Enemy implements Character{
     public OnNormal() : void {
         this.currentUpdateMethod_ = this.UpdateOfNormal;
         
-        console.log('enemy [id:' + this.characterId_.toString() + ']  is normal mode.');
+        console.log('enemy [id:' + this.characterId_.toString() + '] is normal mode.');
     }
     /**
      * 戦闘するときの処理
@@ -238,26 +304,21 @@ export class Enemy implements Character{
      * @memberof Enemy
      */
     public OnChangeBattleModeOfSkillUse() : void {
-        // TODO: キャストタイム設定
-        this.restTime_ = 1000.0;
+        const skill:SkillData|undefined = SkillDataAccessor.instance.Find(this.enemyStatus_.tribeStatus.useSkillId);
+        if(skill === undefined){
+            console.error('enemy [id:' + this.characterId_.toString() + '] don\'t use skill.');
+            return;
+        }
+
+        // キャストタイム設定
+        this.restTime_ = skill.castTime;
 
         this.currentBattleMethod_ = this.ButtleOfSkillCastTimeConsumption;
 
-        console.log('enemy [id:' + this.characterId_.toString() + '] change battle mode of skill use.');
-    }
-
-    /**
-     * スキルの使用
-     * @private
-     * @param {number} _elapsedTime 経過時間
-     * @returns {boolean} true:継続 false:終了
-     * @memberof Enemy
-     */
-    private OnUseSkill() : void {
-        // スキル使用
+        // スキル使用情報送信
         this.SendUseSkill();
 
-        console.log('enemy [id:' + this.characterId_.toString() + '] is use skill.');
+        console.log('enemy [id:' + this.characterId_.toString() + '] change battle mode of skill use.');
     }
 
 
@@ -318,9 +379,10 @@ export class Enemy implements Character{
      * @memberof Enemy
      */
     private UpdateOfNormal(_elapsedTime:number) : boolean {
-        // TODO:
-        this.enemyStatus_.hitPoint -= 2.0;
-        console.log('enemy id:' + this.characterId_.toString() + ', hp:' + this.enemyStatus_.hitPoint.toString());
+        // TODO:通常移動
+        // TODO:バトルに移行するか判定
+
+        console.log("enemy id:" + this.id.toString() + " hp:" + this.status.hitPoint.toString());
 
         this.SendTransform(this.mapId);
         this.SendSimpleDisplay();
@@ -366,13 +428,24 @@ export class Enemy implements Character{
         // TODO: 各行動点数計算
         const movePoint = 0;
         const useSkillPoint = 0;
+        const toNormalMode = 0;
 
-        // 点数の高いほうの行動をする
+        // 点数が一番高い行動をする
         if(movePoint < useSkillPoint){
-            this.OnChangeBattleModeOfSkillUse();
+            if(useSkillPoint < toNormalMode){
+                this.OnNormal();
+            }
+            else{
+                this.OnChangeBattleModeOfSkillUse();
+            }
         }
         else{
-            this.OnChangeButtleModeOfMove();
+            if(movePoint < toNormalMode){
+                this.OnNormal();
+            }
+            else{
+                this.OnChangeButtleModeOfMove();
+            }
         }
 
         return true;
@@ -386,7 +459,7 @@ export class Enemy implements Character{
      */
     private ButtleOfMove(_elapsedTime:number) : boolean {
         // 相手の場所に近づく
-        const battleCharacter:Character|undefined = CharacterManager.instance.GetCharacter(this.battleCharacterId_);
+        const battleCharacter:Character|undefined = CharacterManager.instance.FindCharacter(this.battleCharacterId_);
         if(battleCharacter !== undefined){
             const battleCharacterInLocal:Matrix4x4 = battleCharacter.transform.worldMatrix.invertMatrix.Multiplication(this.transform_.worldMatrix);
             const toPosition:Vector3 = battleCharacterInLocal.column4.xyz;
@@ -431,10 +504,15 @@ export class Enemy implements Character{
     private ButtleOfSkillCastTimeConsumption(_elapsedTime:number) : boolean {
         this.restTime_ -= _elapsedTime;
         if(this.restTime_ < 0.0){
-            // スキル使用
-            this.OnUseSkill();
+            // Comment: 攻撃判定はクライアントが行う
+
             // リキャストタイム消費モードへ
-            this.restTime_ = 2000.0;
+            const skill:SkillData|undefined = SkillDataAccessor.instance.Find(this.enemyStatus_.tribeStatus.useSkillId);
+            if(skill === undefined){
+                console.error('enemy [id:' + this.characterId_.toString() + '] don\'t use skill.');
+                return true;
+            }
+            this.restTime_ = skill.recastTime;
             this.currentBattleMethod_ = this.ButtleOfSkillRecastTimeConsumption
         }
         return true;
@@ -471,16 +549,16 @@ export class Enemy implements Character{
             return false;
         }
 
-        this.mapId_ = area.mapID_;
+        this.mapId_ = area.mapId;
 
         this.transform.worldMatrix = Matrix4x4.CreateRotationMatrix(2.0*Math.PI * (Math.random()-0.5));
         {
             const direction:number = 2.0*Math.PI * (Math.random()-0.5);
-            const delta:number = area.popAreaRadius_ * Math.random();
+            const delta:number = area.popAreaRadius * Math.random();
             this.transform.position = new Vector3(
-                area.positionX_ + delta*Math.cos(direction),
-                area.positionY_,
-                area.positionZ_ + delta*Math.sin(direction)
+                area.positionX + delta*Math.cos(direction),
+                area.positionY,
+                area.positionZ + delta*Math.sin(direction)
             );
         }
 

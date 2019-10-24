@@ -7,19 +7,66 @@
 
 import {Character} from './Character'
 import {CharacterEffect} from './CharacterEffect'
+import {SkillData} from './DatabaseAccessors/SkillDataAccessor';
 
 /**
  * スキル効果
  * @export
- * @interface SkillEffect
- * @extends {CharacterEffect}
+ * @class SkillEffect
+ * @implements {CharacterEffect}
  */
-export interface SkillEffect extends CharacterEffect{
+export class SkillEffect implements CharacterEffect{
     /**
-     * スキルを利用しているキャラクタ
-     * @public
-     * @type {Character}
+     * スキルデータ
+     * @private
+     * @type {SkillData}
      * @memberof SkillEffect
      */
-    characterUsingASkill : Character;
+    private skillData_ : SkillData;
+
+
+    /**
+     * コンストラクタ
+     * @public
+     * @constructor
+     * @param {SkillData} _data スキル情報
+     * @memberof SkillEffect
+     */
+    public constructor(_data:SkillData){
+        this.skillData_ = _data;
+    }
+
+    /**
+     * 効果を発揮する
+     * @public
+     * @param {Character} _user 効果使用キャラクタ
+     * @param {Character} _receiver 対象となるキャラクタ
+     * @returns {boolean} true:成功 false:失敗
+     * @memberof CharacterEffect
+     */
+    public Show(_user:Character, _receiver:Character) : boolean {
+        // HP,MPチェック
+        if(_user.status.hitPoint <= this.skillData_.consumptionHitPoint){
+            console.error("Don't have enough hit point.");
+            return false;
+        }
+        if(_user.status.magicPoint <= this.skillData_.consumptionMagicPoint){
+            console.error("Don't have enough magic point.");
+            return false;
+        }
+        // HP,MP消費
+        _user.status.hitPoint = _user.status.hitPoint - this.skillData_.consumptionHitPoint;
+        _user.status.magicPoint = _user.status.magicPoint - this.skillData_.consumptionMagicPoint;
+
+        // 物理と魔法の攻撃値計算
+        const physicalAttack:number = this.skillData_.fixedPhysicalDamage + this.skillData_.strengthPhysicalDamageRate*_user.status.strength;
+        const magicalAttack:number = this.skillData_.fixedMagicalDamage + this.skillData_.intelligenceMagicalDamageRate*_user.status.intelligence;
+        // ダメージ算出
+        const damage:number = physicalAttack/_receiver.status.vitality + magicalAttack/_receiver.status.mind;
+        
+        // ダメージ反映
+        _receiver.status.hitPoint = _receiver.status.hitPoint - damage;
+
+        return true;
+    }
 }

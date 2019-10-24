@@ -5,11 +5,10 @@
  * @license Copyright(c) 2019 Ishikawa Takayoshi All Rights Reserved.
  */
 
-import {Character} from './Character'
+import {Character,CharacterType} from './Character'
 import {CharacterStatus} from './CharacterStatus'
 import {PlayerStatus} from './PlayerStatus'
 import {Transform} from './Transform'
-import {CharacterEffect} from './CharacterEffect'
 import {CharacterManager} from './CharacterManager'
 import {CommunicationData} from './CommunicationData';
 import {JobData,JobDataAccessor} from './DatabaseAccessors/JobDataAccessor'
@@ -17,6 +16,11 @@ import WebSocket = require('ws')
 import {  } from '../model/characterDataModel';
 import { Vector3 } from './Vector3'
 import { Weapon } from '../controller/object/playerWeapon'
+import {PartyManager} from './PartyManager'
+import {Party} from './Party'
+import {SkillEffectManager} from './SkillEffectManager'
+import {SkillEffect} from './SkillEffect'
+
 /**
  * プレイヤー
  * @export
@@ -42,6 +46,16 @@ export class Player implements Character{
     public get dbId(): number { return this.dbId_; }
     public set dbId(_id: number) { this.dbId_ = _id; }
     /**
+     * キャラクタ種類
+     * @public
+     * @readonly
+     * @type {CharacterType}
+     * @memberof Player
+     */
+    public get type() : CharacterType {
+        return CharacterType.Player;
+    }
+    /**
      * キャラクタID
      * @private
      * @type {number}
@@ -56,6 +70,83 @@ export class Player implements Character{
      */
     public get id() : number { return this.characterId_; }
     public set id(_id:number){ this.characterId_ = _id; }
+    /**
+     * パーティID
+     * @private
+     * @type {number}
+     * @memberof Player
+     */
+    private partyId_ : number;
+    /**
+     * パーティID
+     * @public
+     * @type {number}
+     * @memberof Player
+     */
+    public get partyId() : number {
+        return this.partyId_;
+    }
+    public set partyId(_id:number){
+        this.partyId_ = _id;
+    }
+    /**
+     * パーティ優先度
+     * @private
+     * @type {number}
+     * @memberof Player
+     */
+    private partyPriority_ : number;
+    /**
+     * パーティ優先度
+     * @public
+     * @readonly
+     * @type {number}
+     * @memberof Player
+     */
+    public get partyPriority() : number {
+        return this.partyPriority_;
+    }
+    public set partyPriority(_priority:number){
+        this.partyPriority_ = _priority;
+    }
+    /**
+     * 戦場ID
+     * @private
+     * @type {number}
+     * @memberof Player
+     */
+    private battlefieldId_ : number;
+    /**
+     * 戦場ID
+     * @public
+     * @type {number}
+     * @memberof Player
+     */
+    public get battlefieldId() : number {
+        return this.battlefieldId_;
+    }
+    public set battlefieldId(_id:number){
+        this.battlefieldId_ = _id;
+    }
+    /**
+     * ターゲットID
+     * @private
+     * @type {number}
+     * @memberof Player
+     */
+    private targetId_ : number;
+    /**
+     * ターゲットID
+     * @public
+     * @type {number}
+     * @memberof Player
+     */
+    public get targetId() : number {
+        return this.targetId_;
+    }
+    public set targetId(_id:number){
+        this.targetId_ = _id;
+    }
     /**
      * マップID
      * @private
@@ -117,6 +208,10 @@ export class Player implements Character{
         this.ws_ = null;
         this.dbId_ = -1;
         this.characterId_ = -1;
+        this.partyId_ = -1;
+        this.partyPriority_ = -1;
+        this.battlefieldId_ = -1;
+        this.targetId_ = -1;
         this.mapId_ = 0;
         this.transform_ = new Transform();
         this.playerStatus_ = new PlayerStatus();
@@ -204,14 +299,104 @@ export class Player implements Character{
 
 
     /**
-     * 効果を受ける
+     * スキルが使用できるか?
      * @public
-     * @param {CharacterEffect} _effect 効果
+     * @param {number} _skillId 確認するスキルのID
+     * @returns {boolean} true:できる false:できない
+     * @memberof Player
+     */
+    public IsUsableSkill(_skillId:number) : boolean {
+        // TODO:
+        return true;
+    }
+
+    /**
+     * スキル使用
+     * @public
+     * @param {number} _skillId 使うスキルのID
+     * @param {number} _receiverId スキルを受けるキャラクタのID
      * @returns {boolean} true:成功 false:失敗
      * @memberof Player
      */
-    public ReceiveAnEffect(_effect:CharacterEffect) : boolean {
-        return _effect.Show(this);
+    public UseSkill(_skillId:number, _receiverId:number) : boolean {
+        if(!(this.IsUsableSkill(_skillId))){
+            console.error("Couldn't use a skill. [skill id : " + _skillId.toString() + "]");
+            return false;
+        }
+        const skillEffect:SkillEffect|undefined = SkillEffectManager.instance.FindSkillEffect(_skillId);
+        if(skillEffect === undefined){
+            console.error("Couldn't find a skill effect. [skill id : " + _skillId.toString() + "]");
+            return false;
+        }
+        const receiver:Character|undefined = CharacterManager.instance.FindCharacter(_receiverId);
+        if(receiver === undefined){
+            console.error("Couldn't find a receiver. [id : " + _receiverId.toString() + "]");
+            return false;
+        }
+        
+        return skillEffect.Show(this, receiver);
+    }
+
+    /**
+     * パーティに参加する
+     * @public
+     * @param {number} _partyId 参加するパーティのID
+     * @returns {boolean} true:参加した false:参加しなかった
+     * @memberof Player
+     */
+    public JoinParty(_partyId:number) : boolean {
+        const beforeParty:Party|undefined = PartyManager.instance.Search(this.partyId_);
+        if(beforeParty === undefined){
+            return false;
+        }
+        if(!(beforeParty.RemovePlayer(this))){
+            return false;
+        }
+
+        let afterParty:Party|undefined = PartyManager.instance.Search(_partyId);
+        if(afterParty === undefined){
+            afterParty = PartyManager.instance.Create(_partyId);
+        }
+
+        const isSuccess:boolean = afterParty.AddPlayer(this);
+        if(isSuccess){
+            this.partyId_ = _partyId;
+        }
+        else{
+            console.error('Couldn\'t join the party.');
+        }
+
+        return isSuccess;
+    }
+    /**
+     * パーティから去る
+     * @public
+     * @returns {boolean} true:去った false:去らなかった
+     * @memberof Player
+     */
+    public leaveParty() : boolean {
+        const beforeParty:Party|undefined = PartyManager.instance.Search(this.partyId_);
+        if(beforeParty === undefined){
+            return false;
+        }
+        if(!(beforeParty.RemovePlayer(this))){
+            return false;
+        }
+
+        let afterParty:Party|undefined = PartyManager.instance.Search(this.characterId_);
+        if(afterParty === undefined){
+            afterParty = PartyManager.instance.Create(this.characterId_);
+        }
+
+        const isSuccess:boolean = afterParty.AddPlayer(this);
+        if(isSuccess){
+            this.partyId_ = this.characterId_;
+        }
+        else{
+            console.error('Couldn\'t join the party.');
+        }
+
+        return isSuccess;
     }
 
     

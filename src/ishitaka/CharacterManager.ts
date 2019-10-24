@@ -8,9 +8,11 @@
 import {Character} from './Character'
 import {Player} from './Player'
 import {Enemy} from './Enemy'
-import { CommunicationData } from './CommunicationData';
+import {CommunicationData} from './CommunicationData';
 import WebSocket = require('ws');
-import { Vector3 } from './Vector3';
+import {Vector3} from './Vector3';
+import {PartyManager} from './PartyManager';
+import {Party} from './Party';
 import { UserModel } from './../model/userModel'
 
 /**
@@ -106,13 +108,6 @@ export class CharacterManager{
         }
         return true;
     }
-
-    /**
-     * ユーザーデータの読み込み
-     * @public
-     * @returns {boolean}
-     * @memberof CharacterManager
-     */
 
     /**
      * 更新処理
@@ -281,19 +276,14 @@ export class CharacterManager{
     }
 
     /**
-     * キャラクタの取得
+     * キャラクタの検索
      * @public
-     * @param {number} _searchCharacterId 取得するキャラクタのID
-     * @returns {Character|undefined} 指定したIDのキャラクタ
+     * @param {number} _searchCharacterId 検索するキャラクタのID
+     * @returns {Character|undefined} 対応するキャラクタ 居なければundefined
      * @memberof CharacterManager
      */
-    public GetCharacter(_searchCharacterId:number) : Character|undefined {
-        if(_searchCharacterId in this.characterArray_){
-            return this.characterArray_[_searchCharacterId];
-        }
-        else{
-            return undefined;
-        }
+    public FindCharacter(_searchCharacterId:number) : Character|undefined {
+        return this.characterArray_[_searchCharacterId];
     }
 
     /**
@@ -340,6 +330,13 @@ export class CharacterManager{
 
         _character.id = checkId;
         this.characterArray_[_character.id] = _character;
+
+        if(_character instanceof Player){
+            // パーティを追加
+            const party:Party = PartyManager.instance.Create(checkId);
+            party.AddPlayer(_character);
+        }
+
         return true;
     }
 
@@ -379,5 +376,22 @@ export class CharacterManager{
      */
     private FindPlayer(_characterId: number): Player | undefined{
         return this.playerArray_.find((player: Player) => player.id === _characterId);
+    }
+
+    /**
+     * スキル使用情報の取得
+     * @private
+     * @param {CommunicationData.ReceiveData.UseSkillCtoS} _useSkill スキル使用情報
+     * @memberof CharacterManager
+     */
+    private ReceiveUseSkill(_useSkill:any/*CommunicationData.ReceiveData.UseSkillCtoS*/){
+        const useCharacter:Character = this.characterArray_[_useSkill.user_id];
+        
+        if(useCharacter.UseSkill(_useSkill.skill_id, _useSkill.receiver_id)){
+            // TODO:成功時処理
+        }
+        else{
+            // TODO:失敗時処理
+        }
     }
 }

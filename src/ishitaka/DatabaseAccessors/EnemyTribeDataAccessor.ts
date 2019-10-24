@@ -15,81 +15,191 @@ import {DatabaseAccessor} from './DatabaseAccessor'
 export class EnemyTribeData{
     /**
      * 種族名
-     * @public
+     * @private
      * @type {string}
      * @memberof EnemyTribeData
      */
-    public tribeName_ : string;
+    private tribeName_ : string;
+    /**
+     * 種族名
+     * @public
+     * @readonly
+     * @type {string}
+     * @memberof EnemyTribeData
+     */
+    public get tribeName() : string {
+        return this.tribeName_;
+    }
+    /**
+     * 使用スキルID
+     * @private
+     * @type {number}
+     * @memberof EnemyTribeData
+     */
+    private useSkillId_ : number;
     /**
      * 使用スキルID
      * @public
+     * @readonly
      * @type {number}
      * @memberof EnemyTribeData
      */
-    public useSkillId_ : number;
+    public get useSkillId() : number {
+        return this.useSkillId_;
+    }
+    /**
+     * モデルID
+     * @private
+     * @type {number}
+     * @memberof EnemyTribeData
+     */
+    private modelId_ : number;
     /**
      * モデルID
      * @public
+     * @readonly
      * @type {number}
      * @memberof EnemyTribeData
      */
-    public modelId_ : number;
+    public get modelId() : number {
+        return this.modelId_;
+    }
+    /**
+     * 最大体力
+     * @private
+     * @type {number}
+     * @memberof EnemyTribeData
+     */
+    private maxHitPoint_ : number;
     /**
      * 最大体力
      * @public
+     * @readonly
      * @type {number}
      * @memberof EnemyTribeData
      */
-    public maxHitPoint_ : number;
+    public get maxHitPoint() : number {
+        return this.maxHitPoint_;
+    }
+    /**
+     * 最大魔力
+     * @private
+     * @type {number}
+     * @memberof EnemyTribeData
+     */
+    private maxMagicPoint_ : number;
     /**
      * 最大魔力
      * @public
+     * @readonly
      * @type {number}
      * @memberof EnemyTribeData
      */
-    public maxMagicPoint_ : number;
+    public get maxMagicPoint() : number {
+        return this.maxMagicPoint_;
+    }
+    /**
+     * 物理攻撃力
+     * @private
+     * @type {number}
+     * @memberof EnemyTribeData
+     */
+    private strength_ : number;
     /**
      * 物理攻撃力
      * @public
+     * @readonly
      * @type {number}
      * @memberof EnemyTribeData
      */
-    public strength_ : number;
+    public get strength() : number {
+        return this.strength_;
+    }
+    /**
+     * 物理防御力
+     * @private
+     * @type {number}
+     * @memberof EnemyTribeData
+     */
+    private vitality_ : number;
     /**
      * 物理防御力
      * @public
+     * @readonly
      * @type {number}
      * @memberof EnemyTribeData
      */
-    public vitality_ : number;
+    public get vitality() : number {
+        return this.vitality_;
+    }
+    /**
+     * 魔法攻撃力
+     * @private
+     * @type {number}
+     * @memberof EnemyTribeData
+     */
+    private intelligence_ : number;
     /**
      * 魔法攻撃力
      * @public
+     * @readonly
      * @type {number}
      * @memberof EnemyTribeData
      */
-    public intelligence_ : number;
+    public get intelligence() : number {
+        return this.intelligence_;
+    }
+    /**
+     * 魔法防御力
+     * @private
+     * @type {number}
+     * @memberof EnemyTribeData
+     */
+    private mind_ : number;
     /**
      * 魔法防御力
      * @public
+     * @readonly
      * @type {number}
      * @memberof EnemyTribeData
      */
-    public mind_ : number;
+    public get mind() : number {
+        return this.mind_;
+    }
+    /**
+     * 器用さ
+     * @private
+     * @type {number}
+     * @memberof EnemyTribeData
+     */
+    private dexterity_ : number;
     /**
      * 器用さ
      * @public
+     * @readonly
      * @type {number}
      * @memberof EnemyTribeData
      */
-    public dexterity_ : number;
+    public get dexterity() : number {
+        return this.dexterity_;
+    }
+    /**
+     * 敏捷性
+     * @private
+     * @type {number}
+     * @memberof EnemyTribeData
+     */
+    private agility_ : number;
     /**
      * 敏捷性
      * @public
+     * @readonly
      * @type {number}
      * @memberof EnemyTribeData
      */
-    public agility_ : number;
+    public get agility() : number {
+        return this.agility_;
+    }
 
 
     /**
@@ -174,7 +284,7 @@ export class EnemyTribeDataAccessor implements DatabaseAccessor{
      * @type {Array<EnemyTribeData>}
      * @memberof EnemyTribeDataAccessor
      */
-    private enemyTribeDataArray_ : Array<EnemyTribeData>;
+    private dataArray_ : Array<EnemyTribeData>;
 
 
     /**
@@ -184,7 +294,7 @@ export class EnemyTribeDataAccessor implements DatabaseAccessor{
      * @memberof EnemyTribeDataAccessor
      */
     private constructor(){
-        this.enemyTribeDataArray_ = new Array<EnemyTribeData>();
+        this.dataArray_ = new Array<EnemyTribeData>();
     }
 
     /**
@@ -217,13 +327,17 @@ export class EnemyTribeDataAccessor implements DatabaseAccessor{
      * @memberof EnemyTribeDataAccessor
      */
     public Find(_key:number|string) : EnemyTribeData|undefined {
-        return this.enemyTribeDataArray_.filter(
+        if(typeof(_key) === 'number'){
+            return this.dataArray_[_key];
+        }
+
+        return this.dataArray_.filter(
             function(
                 _data : EnemyTribeData,
                 _id : number,
                 _array : EnemyTribeData[]
             ) : boolean {
-                return ((_key === _id) || (_key === _data.tribeName_));
+                return (_key === _data.tribeName);
             }
         ).shift();
     }
@@ -247,11 +361,11 @@ export class EnemyTribeDataAccessor implements DatabaseAccessor{
             50
         );
 
-        this.enemyTribeDataArray_[0] = testTribe;
+        this.dataArray_[0] = testTribe;
         //this.enemyTribeDataArray_ = await GetEnemyData();
 
         // TODO:データベースから情報を読み取る
-        console.log('Synchronize of the enemy tribe data.');
+        console.log('Loaded the enemy tribe data.');
         return true;
     }
 
@@ -262,10 +376,10 @@ export class EnemyTribeDataAccessor implements DatabaseAccessor{
      * @memberof EnemyTribeDataAccessor
      */
     public GetRandomID() : number {
-        const getting:number = Math.floor(this.enemyTribeDataArray_.length * Math.random());
+        const getting:number = Math.floor(this.dataArray_.length * Math.random());
         let id:number = 0;
         let i:number = 0;
-        this.enemyTribeDataArray_.every(
+        this.dataArray_.every(
             function(
                 _data : EnemyTribeData,
                 _id : number,
