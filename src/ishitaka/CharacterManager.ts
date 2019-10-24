@@ -11,6 +11,7 @@ import {Enemy} from './Enemy'
 import { CommunicationData } from './CommunicationData';
 import WebSocket = require('ws');
 import { Vector3 } from './Vector3';
+import { UserModel } from './../model/userModel'
 
 /**
  * キャラクタマネージャ
@@ -18,6 +19,9 @@ import { Vector3 } from './Vector3';
  * @class CharacterManager
  */
 export class CharacterManager{
+    // ユーザーのモデル
+    private userModel = new UserModel();
+
     /**
      * シングルトンインスタンス
      * @private
@@ -238,7 +242,7 @@ export class CharacterManager{
     public Receive(_receiveData:string) : boolean {
         const data = CommunicationData.Converter.Convert(_receiveData);
         let isSuccess = true;
-        
+
         // コンバートエラー
         if(typeof data === 'undefined' || !data) return false;
 
@@ -340,6 +344,17 @@ export class CharacterManager{
     }
 
     /**
+     * プレイヤーのログアウト
+     * @param {number} _characterId
+     * @memberof CharacterManager
+     */
+    public PlayerLogout(_characterId: number){
+        const player = this.FindPlayer(_characterId);
+        if(typeof player === 'undefined') return false;
+        this.userModel.changeStatus(player.dbId, 0);
+    }
+
+    /**
      * キャラクタの削除
      * @public
      * @param {number} _characterId キャラクタID
@@ -348,6 +363,7 @@ export class CharacterManager{
      */
     public RemoveCharacter(_characterId:number) : boolean{
         if(_characterId in this.characterArray_){
+            
             delete this.characterArray_[_characterId];
             return true;
         }
