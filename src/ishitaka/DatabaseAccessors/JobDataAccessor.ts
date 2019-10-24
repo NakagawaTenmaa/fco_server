@@ -485,7 +485,7 @@ export class JobDataAccessor implements DatabaseAccessor{
         this.dataArray_[0] = testJob;
 
         // TODO:データベースから情報を読み取る
-        console.log('Synchronize of the job data.');
+        console.log('Loaded the job data.');
         return true;
     }
 }

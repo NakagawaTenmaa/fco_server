@@ -364,7 +364,7 @@ export class OrnamentDataAccessor implements DatabaseAccessor{
 
         // TODO:データベースから情報を読み取る
         
-        console.log('Loaded the weapon data.');
+        console.log('Loaded the ornament data.');
         return true;
     }
 }

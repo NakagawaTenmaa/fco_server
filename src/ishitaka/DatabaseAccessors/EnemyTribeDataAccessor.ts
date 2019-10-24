@@ -365,7 +365,7 @@ export class EnemyTribeDataAccessor implements DatabaseAccessor{
         //this.enemyTribeDataArray_ = await GetEnemyData();
 
         // TODO:データベースから情報を読み取る
-        console.log('Synchronize of the enemy tribe data.');
+        console.log('Loaded the enemy tribe data.');
         return true;
     }
 

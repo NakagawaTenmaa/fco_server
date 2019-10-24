@@ -380,7 +380,7 @@ export class EnemyPopAreaDataAccessor implements DatabaseAccessor{
         this.dataArray_[0] = testArea;
 
         // TODO:データベースから情報を読み取る
-        console.log('Synchronize of the enemy pop area data.');
+        console.log('Loaded the enemy pop area data.');
         return true;
     }
 }

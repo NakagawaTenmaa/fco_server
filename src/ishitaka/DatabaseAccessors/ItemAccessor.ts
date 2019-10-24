@@ -323,7 +323,7 @@ export class ItemDataAccessor implements DatabaseAccessor{
 
         // TODO:データベースから情報を読み取る
         
-        console.log('Loaded the weapon data.');
+        console.log('Loaded the item data.');
         return true;
     }
 }
