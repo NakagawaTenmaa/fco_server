@@ -345,6 +345,16 @@ export class SkillDataAccessor implements DatabaseAccessor{
      * @memberof SkillDataAccessor
      */
     private dataArray_ : Array<SkillData>;
+    /**
+     * スキル情報配列
+     * @public
+     * @readonly
+     * @type {Array<SkillData>}
+     * @memberof SkillDataAccessor
+     */
+    public get dataArray() : Array<SkillData> {
+        return this.dataArray_.concat([]);
+    }
 
 
     /**

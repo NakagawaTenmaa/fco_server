@@ -16,9 +16,10 @@ export interface CharacterEffect{
     /**
      * 効果を発揮する
      * @public
-     * @param {Character} _character 対象となるキャラクタ
+     * @param {Character} _user 効果使用キャラクタ
+     * @param {Character} _receiver 対象キャラクタ
      * @returns {boolean} true:成功 false:失敗
      * @memberof CharacterEffect
      */
-    Show(_character:Character) : boolean;
+    Show(_user:Character, _receiver:Character) : boolean;
 }

@@ -7,19 +7,45 @@
 
 import {Character} from './Character'
 import {CharacterEffect} from './CharacterEffect'
+import {SkillData} from './DatabaseAccessors/SkillDataAccessor';
 
 /**
  * スキル効果
  * @export
- * @interface SkillEffect
- * @extends {CharacterEffect}
+ * @class SkillEffect
+ * @implements {CharacterEffect}
  */
-export interface SkillEffect extends CharacterEffect{
+export class SkillEffect implements CharacterEffect{
     /**
-     * スキルを利用しているキャラクタ
-     * @public
-     * @type {Character}
+     * スキルデータ
+     * @private
+     * @type {SkillData}
      * @memberof SkillEffect
      */
-    characterUsingASkill : Character;
+    private skillData_ : SkillData;
+
+
+    /**
+     * コンストラクタ
+     * @public
+     * @constructor
+     * @param {SkillData} _data スキル情報
+     * @memberof SkillEffect
+     */
+    public constructor(_data:SkillData){
+        this.skillData_ = _data;
+    }
+
+    /**
+     * 効果を発揮する
+     * @public
+     * @param {Character} _user 効果使用キャラクタ
+     * @param {Character} _receiver 対象となるキャラクタ
+     * @returns {boolean} true:成功 false:失敗
+     * @memberof CharacterEffect
+     */
+    public Show(_user:Character, _receiver:Character) : boolean {
+        // TODO:
+        return true;
+    }
 }
