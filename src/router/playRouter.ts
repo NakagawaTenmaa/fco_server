@@ -56,8 +56,13 @@ export class playRouter{
                     this.characterManager.SendAll(JSON.stringify(sendData));
                 }
                 // ログアウト
-                else if(data instanceof CommunicationData.ReceiveData.CharacterTransform){
-                    
+                else if(data instanceof CommunicationData.ReceiveData.LogoutCharacter){
+                    console.log("logout: " + data.user_id.toString());
+                    this.characterManager.PlayerLogout(data.user_id);
+                    this.characterManager.RemoveCharacter(data.user_id);
+                    let sendData: CommunicationData.SendData.LogoutCharacter = new CommunicationData.SendData.LogoutCharacter();
+                    sendData.user_id = data.user_id;
+                    this.characterManager.SendAll(JSON.stringify(sendData));
                 }
             })
         })

@@ -322,13 +322,22 @@ export namespace CommunicationData{
             constructor(){}
         }
 
+        // キャラクターのログアウト
+        export class LogoutCharacter implements Send {
+            public readonly command: number = 702;
+            public static id: number = 702;
+            public user_id: number = 0;
+            constructor(){}
+        }
+
         export type AllTypes = 
         CharacterTransform |
         SimpleDisplayOfCharacter |
         ModelSetting |
         SkillUse |
         LoadCharacter | 
-        InitCharacter;
+        InitCharacter | 
+        LogoutCharacter;
     }
     /**
      * 受信データ
@@ -390,8 +399,8 @@ export namespace CommunicationData{
 
         // ログアウト
         export class LogoutCharacter implements Receive {
-            public readonly command: number = 0;
-            public static id = 0;
+            public readonly command: number = 701;
+            public static id = 701;
             public user_id = 0;
         }
 
@@ -460,7 +469,13 @@ export namespace CommunicationData{
                     data.user_id = parse.user_id;
                     return data;
                 }
-                
+                case SendData.LogoutCharacter.id:
+                {
+                    const data: SendData.LogoutCharacter = new SendData.LogoutCharacter();
+                    data.user_id = parse.user_id;
+                    return data;
+                }
+
 
                 case ReceiveData.CharacterTransform.id:
                 {
