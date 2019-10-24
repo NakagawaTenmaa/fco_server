@@ -21,23 +21,6 @@ import {SkillEffectManager} from './SkillEffectManager'
 import {SkillEffect} from './SkillEffect'
 
 /**
- * 敵更新モード
- * @enum {number}
- */
-enum EnemyUpdateMode{
-    /**
-     * 通常モード
-     * @memberof EnemyUpdateMode
-     */
-    Normal,
-    /**
-     * 戦闘モード
-     * @memberof EnemyUpdateMode
-     */
-    Battle
-}
-
-/**
  * 敵
  * @export
  * @class Enemy
@@ -149,13 +132,6 @@ export class Enemy implements Character{
      */
     public get status() : CharacterStatus { return this.enemyStatus_; }
     /**
-     * 更新モード
-     * @private
-     * @type {EnemyUpdateMode}
-     * @memberof Enemy
-     */
-    private updateMode_ : EnemyUpdateMode;
-    /**
      * 現在の更新メソッド
      * @private
      * @type {function}
@@ -198,7 +174,6 @@ export class Enemy implements Character{
         this.mapId_ = -1;
         this.transform_ = new Transform();
         this.enemyStatus_ = new EnemyStatus(this);
-        this.updateMode_ = EnemyUpdateMode.Normal;
         this.currentUpdateMethod_ = this.UpdateOfNormal;
         this.restTime_ = 0;
         this.battleCharacterId_ = 0;
@@ -286,7 +261,6 @@ export class Enemy implements Character{
      * @memberof Enemy
      */
     public OnNormal() : void {
-        this.updateMode_ = EnemyUpdateMode.Normal;
         this.currentUpdateMethod_ = this.UpdateOfNormal;
         
         console.log('enemy [id:' + this.characterId_.toString() + '] is normal mode.');
@@ -297,7 +271,6 @@ export class Enemy implements Character{
      * @memberof Enemy
      */
     public OnBattle() : void {
-        this.updateMode_ = EnemyUpdateMode.Battle;
         this.currentBattleMethod_ = this.ButtleOfActionJudge;
         this.currentUpdateMethod_ = this.UpdateOfBattle;
 
@@ -406,9 +379,10 @@ export class Enemy implements Character{
      * @memberof Enemy
      */
     private UpdateOfNormal(_elapsedTime:number) : boolean {
-        this.status.hitPoint -= 1.0;
         // TODO:通常移動
         // TODO:バトルに移行するか判定
+
+        console.log("enemy id:" + this.id.toString() + " hp:" + this.status.hitPoint.toString());
 
         this.SendTransform(this.mapId);
         this.SendSimpleDisplay();
@@ -454,13 +428,24 @@ export class Enemy implements Character{
         // TODO: 各行動点数計算
         const movePoint = 0;
         const useSkillPoint = 0;
+        const toNormalMode = 0;
 
-        // 点数の高いほうの行動をする
+        // 点数が一番高い行動をする
         if(movePoint < useSkillPoint){
-            this.OnChangeBattleModeOfSkillUse();
+            if(useSkillPoint < toNormalMode){
+                this.OnNormal();
+            }
+            else{
+                this.OnChangeBattleModeOfSkillUse();
+            }
         }
         else{
-            this.OnChangeButtleModeOfMove();
+            if(movePoint < toNormalMode){
+                this.OnNormal();
+            }
+            else{
+                this.OnChangeButtleModeOfMove();
+            }
         }
 
         return true;

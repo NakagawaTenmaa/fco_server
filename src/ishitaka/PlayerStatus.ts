@@ -222,6 +222,18 @@ export class PlayerStatus implements CharacterStatus {
         );
     }
 
+    
+    /**
+     * 死んでいるか?
+     * @public
+     * @readonly
+     * @type {boolean}
+     * @memberof PlayerStatus
+     */
+    public get isDead() : boolean {
+        return (this.hitPoint <= 0.0);
+    }
+
 
     /**
      * デフォルトコンストラクタ
