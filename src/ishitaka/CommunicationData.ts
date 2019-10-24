@@ -316,8 +316,8 @@ export namespace CommunicationData{
         }
 
         export class InitCharacter implements Send{
-            public readonly command: number = 204;
-            public static id: number = 204;
+            public readonly command: number = 212;
+            public static id: number = 212;
             public user_id: number = 0;
             constructor(){}
         }
@@ -397,6 +397,20 @@ export namespace CommunicationData{
             public user_id = 0;
         }
 
+
+        /**
+         * 読み込み完了
+         * @export
+         * @class LoadOK
+         * @implements {Receive}
+         */
+        export class LoadOK implements Receive{
+            public readonly command: number = 211;
+            public static id = 211;
+            public user_id: number = 0;
+            constructor(){}
+        }
+
         // ログアウト
         export class LogoutCharacter implements Receive {
             public readonly command: number = 701;
@@ -404,7 +418,7 @@ export namespace CommunicationData{
             public user_id = 0;
         }
 
-        export type AllTypes = CharacterTransform | InitCharacter | PlayerStatus | LoadCharacter | LogoutCharacter;
+        export type AllTypes = CharacterTransform | InitCharacter | PlayerStatus | LoadCharacter | LogoutCharacter | LoadOK;
     }
 
     export type AllTypes = SendData.AllTypes | ReceiveData.AllTypes;
@@ -517,6 +531,12 @@ export namespace CommunicationData{
                 case ReceiveData.LogoutCharacter.id:
                 {
                     const data: ReceiveData.LogoutCharacter = new ReceiveData.LogoutCharacter();
+                    data.user_id = parse.user_id;
+                    return data;
+                }
+                case ReceiveData.LoadOK.id:
+                {
+                    const data: ReceiveData.LoadOK = new ReceiveData.LoadOK();
                     data.user_id = parse.user_id;
                     return data;
                 }

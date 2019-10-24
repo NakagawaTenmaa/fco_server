@@ -49,8 +49,8 @@ export class playRouter{
                 else if(data instanceof CommunicationData.ReceiveData.LoadCharacter){
                     this.characterManager.LoadCharacter(ws,data.user_id);
                 }
-                // 初期ログイン
-                else if(data instanceof CommunicationData.ReceiveData.InitCharacter){
+                // 初回IN
+                else if(data instanceof CommunicationData.ReceiveData.LoadOK){
                     let sendData:CommunicationData.SendData.InitCharacter = new CommunicationData.SendData.InitCharacter();
                     sendData.user_id = data.user_id;                    
                     this.characterManager.SendAll(JSON.stringify(sendData));
