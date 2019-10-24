@@ -266,6 +266,7 @@ export class Player implements Character{
         // TODO:
         if(this.ws_ === null) return false;
         const data:CommunicationData.AllTypes|undefined = CommunicationData.Converter.Convert(_sendData);
+        /*
         if(data === undefined){
             console.log('Undefined data.');
         }
@@ -290,8 +291,9 @@ export class Player implements Character{
         else{
             console.log('Any data.');
         }
+        */
         this.ws_.send(_sendData);
-        console.log('send:'+_sendData+' -> user_id:'+this.id.toString());
+        //console.log('send:'+_sendData+' -> user_id:'+this.id.toString());
         return true;
     }
 

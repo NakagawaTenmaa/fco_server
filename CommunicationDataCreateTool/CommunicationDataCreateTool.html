@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>通信データ作成ツール</title>
+    <link rel="stylesheet" href="CommunicationDataCreateTool.css">
+</head>
+<body>
+    <h1 class="Headers">Communication Data Create Tool</h1>
+    <p>
+        <span>Temporary filename : </span>
+        <input type="file" name="TmpFileInputBox" class="FilenameInput" onchange="OnLoad()" id="TmpFileInputBox">
+        <button name="SaveButton" onclick="OnSave()">Save</button>
+    </p>
+    <p>
+        <span class="OutputFileInputText">Output TS filename : </span>
+        <input type="text" name="OutputFileInputBox" value="CommunicationData.ts" class="FilenameInput" id="OutputTsFileInputBox">
+        <button name="CreateButton" onclick="OnCreateTypeScriptFile()">Create</button>
+    </p>
+    <p>
+        <span class="OutputFileInputText">Output C# filename : </span>
+        <input type="text" name="OutputFileInputBox" value="CommunicationData.cs" class="FilenameInput" id="OutputCsFileInputBox">
+        <button name="CreateButton" onclick="OnCreateCSharpFile()">Create</button>
+    </p>
+    <p>
+        <br>
+        <table class="AllCommuDataTable">
+            <thead>
+                <tr>
+                    <th class="AllCommuDataHeader">
+                        <h2 class="Headers">Communication Data</h2>
+                    </th>
+                </tr>
+            </thead>
+            <tbody id="DataAccessPoint">
+                <tr>
+                    <th>
+                        <button name="AddCommuDataButton" class="RightButtons" onclick="AddCommunicationData(this)">Add new data</button>
+                    </th>
+                </tr>
+            </tbody>
+        </table>
+    </p>
+
+
+    <script type="text/javascript">
+    var g_isChanged = false;
+
+    function OnChangedValue(){
+        g_isChanged = true;
+    }
+
+    window.onbeforeunload = function(){
+        if(g_isChanged){
+            event = event || window.event;
+            event.returnValue = '保存されていない変更があります。移動しますか?';
+        }
+    }
+
+    function Clear(){
+        var tbody = document.getElementById('DataAccessPoint');
+        while(tbody.children.length > 1){
+            tbody.removeChild(tbody.firstChild);
+        }
+        g_isChanged = true;
+    }
+
+    function LoadFileData(_strJsonData){
+        var dataArray = JSON.parse(_strJsonData);
+
+        Clear();
+
+        var addpoint = document.getElementById('DataAccessPoint');
+        Object.keys(dataArray).forEach((typeName)=>{
+            var typeData = dataArray[typeName];
+
+            var addRow = document.createElement("tr");
+            var addColumn = document.createElement("th");
+            var table = document.createElement("table");
+            table.className = 'CommuDataTable';
+            table.appendChild(CreateCommuDataTableHead(typeName, typeData['type_id'], typeData['comment'], typeData["communicate_type"]));
+            
+            var tbody = document.createElement("tbody");
+            Object.keys(typeData['members']).forEach((memberName)=>{
+                var memberData = typeData['members'][memberName];
+
+                if(memberName === 'command'){
+                    tbody.appendChild(CreateMemberCommandRow(memberData['comment']));
+                }
+                else{
+                    tbody.appendChild(CreateMember(memberName, memberData['type_ts'], memberData['type_cs'], memberData['comment']));
+                }
+            });
+            tbody.appendChild(CreateAddMemberButtonRow());
+            
+            table.appendChild(tbody);
+            addColumn.appendChild(table);
+            addRow.appendChild(addColumn);
+            addpoint.insertBefore(addRow, addpoint.lastChild.previousSibling);
+        });
+
+        g_isChanged = false;
+    }
+
+    function OnLoad(){
+        var loadFileInput = document.getElementById('TmpFileInputBox');
+        if(loadFileInput.files.length < 1){
+            alert('Please set a temporary file.');
+            return;
+        }
+
+        var reader = new FileReader();
+        reader.onloadend = function(){ LoadFileData(reader.result); }
+        reader.readAsText(loadFileInput.files[0], 'UTF-8');
+    }
+
+    function CreateDataArray(){
+        var dataArray = {};
+        var accessPoint = document.getElementById('DataAccessPoint');
+        var i = 0;
+        var maxI = accessPoint.children.length - 1;
+        for(i=0; i<maxI; ++i){
+            var typeName = '';
+            var typeData = {};
+
+            var row = accessPoint.children[i];
+            var col = row.firstElementChild;
+            var table = col.firstElementChild;
+            var thead = table.firstElementChild;
+            {
+                var tr = thead.firstElementChild;
+                {
+                    var th = tr.firstElementChild;
+                    {
+                        var div = th.firstElementChild;
+                        {
+                            var input = div.children['name'];
+                            typeName = input.value;
+                        }
+                        {
+                            var input = div.children['type_id'];
+                            typeData[input.name] = parseInt(input.value, 10);
+                        }
+                    }
+                    {
+                        var div = th.lastElementChild;
+                        var input = div.lastElementChild;
+                        typeData[input.name] = input.value;
+                    }
+                }
+                {
+                    var th = tr.lastElementChild;
+                    var select = th.children['communicate_type'];
+                    typeData[select.name] = select.children[select.selectedIndex].value;
+                }
+            }
+            var tbody = table.lastElementChild;
+            {
+                memberArray = {};
+                var j = 0;
+                var maxJ = tbody.children.length - 1;
+                for(j=0; j<maxJ; ++j){
+                    var tr = tbody.children[j];
+                    var memberName = '';
+                    var memberData = {};
+                    {
+                        var td = tr.firstElementChild;
+                        var input = td.firstElementChild;
+                        memberName = input.value;
+                    }
+                    {
+                        var td = tr.children[1];
+                        {
+                            var input = td.firstElementChild;
+                            memberData[input.name] = input.value;
+                        }
+                        {
+                            var input = td.lastElementChild;
+                            memberData[input.name] = input.value;
+                        }
+                    }
+                    {
+                        var td = tr.children[2];
+                        var input = td.firstElementChild;
+                        memberData[input.name] = input.value;
+                    }
+                    memberArray[memberName] = memberData;
+                };
+
+                typeData['members'] = memberArray;
+            }
+            dataArray[typeName] = typeData;
+        }
+        return dataArray;
+    }
+
+    function OnSave(){
+        var loadFileInput = document.getElementById('TmpFileInputBox');
+        var tmpFilename = 'TmpFile.json';
+        if(loadFileInput.files.length > 0){
+            tmpFilename = loadFileInput.files[0].name;
+        }
+
+        var strJson = JSON.stringify(CreateDataArray());
+        var blob = new Blob([strJson]);
+
+        var a = document.createElement("a");
+        a.download = tmpFilename;
+        a.href = window.URL.createObjectURL(blob);
+        a.click();
+
+        g_isChanged = false;
+    }
+
+    function OnCreateTypeScriptFile(){
+        var outputFileInput = document.getElementById('OutputTsFileInputBox');
+        var tmpFilename = outputFileInput.value;
+        if(!tmpFilename){
+            tmpFilename = 'CommunicationData.ts';
+        }
+
+        var dataArray = CreateDataArray();
+        var strData = CreateTypeScriptFileData(dataArray);
+        var blob = new Blob([strData]);
+
+        var a = document.createElement("a");
+        a.download = tmpFilename;
+        a.href = window.URL.createObjectURL(blob);
+        a.click();
+    }
+
+    function OnCreateCSharpFile(){
+        var outputFileInput = document.getElementById('OutputCsFileInputBox');
+        var tmpFilename = outputFileInput.value;
+        if(!tmpFilename){
+            tmpFilename = 'CommunicationData.cs';
+        }
+
+        var dataArray = CreateDataArray();
+        var strData = CreateCSharpFileData(dataArray);
+        var blob = new Blob([strData]);
+
+        var a = document.createElement("a");
+        a.download = tmpFilename;
+        a.href = window.URL.createObjectURL(blob);
+        a.click();
+    }
+
+
+    function CreateMamberName(_name){
+        var td = document.createElement("td");
+        var input = document.createElement("input");
+
+        input.type = 'text';
+        input.name = 'name';
+        input.value = _name;
+        input.className = 'NameInput';
+        input.onchange = OnChangedValue;
+
+        td.appendChild(input);
+        return td;
+    }
+    function CreateMamberType(_typeTs, _typeCs){
+        var td = document.createElement("td");
+        var inputs = [
+            document.createElement("input"),
+            document.createElement("input")
+        ];
+
+        inputs[0].type = 'text';
+        inputs[0].name = 'type_ts';
+        inputs[0].value = _typeTs;
+        inputs[0].className = 'TypeInput';
+        inputs[0].onchange = OnChangedValue;
+        inputs[1].type = 'text';
+        inputs[1].name = 'type_cs';
+        inputs[1].value = _typeCs;
+        inputs[1].className = 'TypeInput';
+        inputs[1].onchange = OnChangedValue;
+
+        td.appendChild(inputs[0]);
+        td.appendChild(inputs[1]);
+        return td;
+    }
+    function CreateMamberComment(_comment){
+        var td = document.createElement("td");
+        var input = document.createElement("input");
+
+        input.type = 'text';
+        input.name = 'comment';
+        input.value = _comment;
+        input.className = 'CommentInput';
+        input.onchange = OnChangedValue;
+
+        td.appendChild(input);
+        return td;
+    }
+    function CreateMamberButtons(){
+        var td = document.createElement("td");
+        var divs = [
+            document.createElement("div"),
+            document.createElement("div")
+        ];
+        var buttons = [
+            document.createElement("button"),
+            document.createElement("button")
+        ];
+
+        buttons[0].name = 'InsertMemberButton';
+        buttons[0].className = 'RightButtons';
+        buttons[0].onclick = function(){ InsertMember(buttons[0]); };
+        buttons[0].innerText = 'Insert new member';
+
+        buttons[1].name = 'RemoveMemberButton';
+        buttons[1].className = 'RightButtons';
+        buttons[1].onclick = function(){ RemoveMember(buttons[1]); };
+        buttons[1].innerText = 'Remove member';
+
+        divs[0].appendChild(buttons[0]);
+        divs[1].appendChild(buttons[1]);
+        td.appendChild(divs[0]);
+        td.appendChild(divs[1]);
+        return td;
+    }
+
+    function CreateMember(_name, _typeTs, _typeCs, _comment){
+        var tr = document.createElement("tr");
+        tr.appendChild(CreateMamberName(_name));
+        tr.appendChild(CreateMamberType(_typeTs, _typeCs));
+        tr.appendChild(CreateMamberComment(_comment));
+        tr.appendChild(CreateMamberButtons());
+        return tr;
+    }
+
+    function AddMember(_addMemberButton){
+        g_isChanged = true;
+
+        var th = _addMemberButton.parentElement;
+        var tr = th.parentElement;
+        var tbody = tr.parentElement;
+        tbody.insertBefore(CreateMember('name', 'type_ts', 'type_cs', 'comment'), tr);
+    }
+    function InsertMember(_insertMemberButton){
+        g_isChanged = true;
+
+        var div = _insertMemberButton.parentElement;
+        var td = div.parentElement;
+        var tr = td.parentElement;
+        var tbody = tr.parentElement;
+        tbody.insertBefore(CreateMember('name', 'type_ts', 'type_cs', 'comment'), tr);
+    }
+    function RemoveMember(_removeMemberButton){
+        g_isChanged = true;
+
+        var div = _removeMemberButton.parentElement;
+        var td = div.parentElement;
+        var tr = td.parentElement;
+        var tbody = tr.parentElement;
+        tbody.removeChild(tr);
+    }
+
+    function CreateDataTypeButtons(_communicateType){
+        var th = document.createElement("th");
+        var buttons = [
+            document.createElement("button"),
+            document.createElement("button")
+        ];
+        var brs = [
+            document.createElement("br"),
+            document.createElement("br")
+        ];
+        var select = document.createElement("select");
+        var options = [
+            document.createElement("option"),
+            document.createElement("option")
+        ];
+
+        th.rowSpan = 2;
+        buttons[0].name = 'InsertCommuDataButton';
+        buttons[0].className = 'RightButtons';
+        buttons[0].onclick = function(){ InsertCommunicationData(buttons[0]); };
+        buttons[0].innerText = 'Insert new data';
+        select.name = 'communicate_type';
+        select.size = 1;
+        select.className = 'RightButtons';
+        select.onchange = OnChangedValue;
+        options[0].value = 'c_s';
+        options[0].innerText = 'Client --> Server';
+        options[1].value = 's_c';
+        options[1].innerText = 'Server --> Client';
+        buttons[1].name = 'RemoveCommuDataButton';
+        buttons[1].className = 'RightButtons';
+        buttons[1].onclick = function(){ RemoveCommunicationData(buttons[1]); };
+        buttons[1].innerText = 'Remove data';
+
+        select.appendChild(options[0]);
+        select.appendChild(options[1]);
+        if(options[0].value === _communicateType){
+            select.selectedIndex = 0;
+        }
+        else if(options[1].value === _communicateType){
+            select.selectedIndex = 1;
+        }
+        th.appendChild(buttons[0]);
+        th.appendChild(brs[0]);
+        th.appendChild(select);
+        th.appendChild(brs[1]);
+        th.appendChild(buttons[1]);
+        return th;
+    }
+    function CreateDataTypeTitle(_name, _typeId, _comment, _communicateType){
+        var tr = document.createElement("tr");
+        var th = document.createElement("th");
+        var divs = [
+            document.createElement("div"),
+            document.createElement("div")
+        ];
+        var spans = [
+            document.createElement("span"),
+            document.createElement("span"),
+            document.createElement("span")
+        ];
+        var inputs = [
+            document.createElement("input"),
+            document.createElement("input"),
+            document.createElement("input")
+        ];
+
+        th.colSpan = 3;
+        th.className = 'DataTypeTitle';
+        divs[0].className = 'TypeName';
+        spans[0].innerText = 'Type name : ';
+        spans[1].innerText = '    ID : ';
+        spans[2].innerText = '  Comment : ';
+        inputs[0].type = 'text';
+        inputs[0].name = 'name';
+        inputs[0].value = _name;
+        inputs[0].className = 'DataTypeInput';
+        inputs[0].onchange = OnChangedValue;
+        inputs[1].type = 'text';
+        inputs[1].name = 'type_id';
+        inputs[1].value = _typeId;
+        inputs[1].className = 'TypeIdInput';
+        inputs[1].onchange = OnChangedValue;
+        inputs[2].type = 'text';
+        inputs[2].name = 'comment';
+        inputs[2].value = _comment;
+        inputs[2].className = 'DataCommentInput';
+        inputs[2].onchange = OnChangedValue;
+
+        divs[0].appendChild(spans[0]);
+        divs[0].appendChild(inputs[0]);
+        divs[0].appendChild(spans[1]);
+        divs[0].appendChild(inputs[1]);
+        divs[1].appendChild(spans[2]);
+        divs[1].appendChild(inputs[2]);
+        th.appendChild(divs[0]);
+        th.appendChild(divs[1]);
+        tr.appendChild(th);
+        tr.appendChild(CreateDataTypeButtons(_communicateType));
+        return tr;
+    }
+    function CreateMemberTitle(){
+        var tr = document.createElement("tr");
+        var ths = [
+            document.createElement("th"),
+            document.createElement("th"),
+            document.createElement("th")
+        ];
+
+        ths[0].className = 'NameTitle';
+        ths[0].innerText = 'Name';
+        ths[1].className = 'TypeTitle';
+        ths[1].innerText = 'Type';
+        ths[2].className = 'CommentTitle';
+        ths[2].innerText = 'Comment';
+
+        tr.appendChild(ths[0]);
+        tr.appendChild(ths[1]);
+        tr.appendChild(ths[2]);
+        return tr;
+    }
+    function CreateCommuDataTableHead(_typeName, _typeId, _typeComment, _communicateType){
+        var thead = document.createElement("thead");
+        thead.appendChild(CreateDataTypeTitle(_typeName, _typeId, _typeComment, _communicateType));
+        thead.appendChild(CreateMemberTitle());
+        return thead;
+    }
+    function CreateMemberCommandRow(_comment){
+        var tr = document.createElement("tr");
+        var tds = [
+            document.createElement("td"),
+            document.createElement("td"),
+            document.createElement("td"),
+            document.createElement("th")
+        ];
+        var inputs = [
+            document.createElement("input"),
+            document.createElement("input"),
+            document.createElement("input"),
+            document.createElement("input")
+        ];
+
+        inputs[0].type = 'text';
+        inputs[0].name = 'name';
+        inputs[0].value = 'command';
+        inputs[0].className = 'NameInput';
+        inputs[0].readOnly = true;
+
+        inputs[1].type = 'text';
+        inputs[1].name = 'type_ts';
+        inputs[1].value = 'number';
+        inputs[1].className = 'TypeInput';
+        inputs[1].readOnly = true;
+
+        inputs[2].type = 'text';
+        inputs[2].name = 'type_cs';
+        inputs[2].value = 'int';
+        inputs[2].className = 'TypeInput';
+        inputs[2].readOnly = true;
+
+        inputs[3].type = 'text';
+        inputs[3].name = 'comment';
+        inputs[3].value = _comment;
+        inputs[3].className = 'CommentInput';
+        inputs[3].onchange = OnChangedValue;
+
+        tds[0].appendChild(inputs[0]);
+        tds[1].appendChild(inputs[1]);
+        tds[1].appendChild(inputs[2]);
+        tds[2].appendChild(inputs[3]);
+        tr.appendChild(tds[0]);
+        tr.appendChild(tds[1]);
+        tr.appendChild(tds[2]);
+        tr.appendChild(tds[3]);
+        return tr;
+    }
+    function CreateAddMemberButtonRow(){
+        var tr = document.createElement("tr");
+        var th = document.createElement("th");
+        var button = document.createElement("button");
+
+        th.colSpan = 4;
+
+        button.name = 'AddMemberButton';
+        button.className = 'RightButtons';
+        button.onclick = function(){ AddMember(button); };
+        button.innerText = 'Add new member';
+
+        th.appendChild(button);
+        tr.appendChild(th);
+        return tr;
+    }
+    function CreateCommuDataTableBody(){
+        var tbody = document.createElement("tbody");
+        tbody.appendChild(CreateMemberCommandRow('コマンド識別子'));
+        tbody.appendChild(CreateAddMemberButtonRow());
+        return tbody;
+    }
+    function CreateCommuDataTable(){
+        var table = document.createElement("table");
+        table.className = 'CommuDataTable';
+        table.appendChild(CreateCommuDataTableHead('CommunicationType', 0, 'comment', 'c_s'));
+        table.appendChild(CreateCommuDataTableBody());
+        return table;
+    }
+    function CreateCommuData(){
+        var tr = document.createElement("tr");
+        var th = document.createElement("th");
+        th.appendChild(CreateCommuDataTable());
+        tr.appendChild(th);
+        return tr;
+    }
+
+    function AddCommunicationData(_addCommuDataButton){
+        g_isChanged = true;
+
+        var th = _addCommuDataButton.parentElement;
+        var tr = th.parentElement;
+        var tbody = tr.parentElement;
+        tbody.insertBefore(CreateCommuData(), tr);
+    }
+    function InsertCommunicationData(_insertCommuDataButton){
+        g_isChanged = true;
+
+        var th = _insertCommuDataButton.parentElement;
+        var tr = th.parentElement;
+        var thead = tr.parentElement;
+        var table = thead.parentElement;
+        var th2 = table.parentElement;
+        var tr2 = th2.parentElement;
+        var tbody = tr2.parentElement;
+        tbody.insertBefore(CreateCommuData(), tr2);
+    }
+    function RemoveCommunicationData(_removeCommuDataButton){
+        g_isChanged = true;
+
+        var th = _removeCommuDataButton.parentElement;
+        var tr = th.parentElement;
+        var thead = tr.parentElement;
+        var table = thead.parentElement;
+        var th2 = table.parentElement;
+        var tr2 = th2.parentElement;
+        var tbody = tr2.parentElement;
+        tbody.removeChild(tr2);
+    }
+
+
+    var Member = function(){
+        this.name = '';
+        this.typeTs = '';
+        this.typeCs = '';
+        this.comment = '';
+    }
+    var TypeData = function(){
+        this.name = '';
+        this.id = 0;
+        this.comment = '';
+        this.communicateType = '';
+        var ms = [new Member()];
+        ms.shift();
+        this.members = ms;
+    }
+
+    function ConvertDataArray(_dataArray){
+        var dataArray = [new TypeData()];
+        dataArray.shift();
+
+        Object.keys(_dataArray).forEach((typeName)=>{
+            var _typeData = _dataArray[typeName];
+
+            var typeData = new TypeData();
+            typeData.name = typeName;
+            typeData.id = _typeData['type_id'];
+            typeData.comment = _typeData['comment'];
+            typeData.communicateType = _typeData["communicate_type"];
+            Object.keys(_typeData['members']).forEach((memberName)=>{
+                var _memberData = _typeData['members'][memberName];
+
+                var member = new Member();
+                member.name = memberName;
+                member.typeTs = _memberData['type_ts'];
+                member.typeCs = _memberData['type_cs'];
+                member.comment = _memberData['comment'];
+
+                typeData.members.push(member);
+            });
+
+            dataArray.push(typeData);
+        });
+
+        return dataArray;
+    }
+
+    function CreateTypeScriptFileData(_dataArray){
+        var dataArray = ConvertDataArray(_dataArray);
+        
+        var serverToClientTypeDataArray = dataArray.filter((typeData)=>{
+            return (typeData.communicateType === 's_c');
+        });
+        var clientToServerTypeDataArray = dataArray.filter((typeData)=>{
+            return (typeData.communicateType === 'c_s');
+        });
+
+        var backReturn = "\n";
+
+        var strFileData = '';
+        strFileData += '/**' + backReturn;
+        strFileData += ' * @fileoverview 通信データの実装ファイル' + backReturn;
+        strFileData += ' * @file .ts' + backReturn;
+        strFileData += ' * @license Copyright(c) ' + (new Date()).getFullYear().toString() + ' All Rights Reserved.' + backReturn;
+        strFileData += ' */' + backReturn;
+        strFileData += backReturn;
+        strFileData += '/**' + backReturn;
+        strFileData += ' * 通信データ' + backReturn;
+        strFileData += ' * @export' + backReturn;
+        strFileData += ' * @namespace CommunicationData' + backReturn;
+        strFileData += ' */' + backReturn;
+        strFileData += 'export namespace CommunicationData{' + backReturn;
+        strFileData += "\t" + '/**' + backReturn;
+        strFileData += "\t" + ' * 通信データインターフェース' + backReturn;
+        strFileData += "\t" + ' * @interface Communication' + backReturn;
+        strFileData += "\t" + ' */' + backReturn;
+        strFileData += "\t" + 'interface Communication{' + backReturn;
+        strFileData += "\t\t" + '/**' + backReturn;
+        strFileData += "\t\t" + ' * コマンドID' + backReturn;
+        strFileData += "\t\t" + ' * @public' + backReturn;
+        strFileData += "\t\t" + ' * @readonly' + backReturn;
+        strFileData += "\t\t" + ' * @type {number}' + backReturn;
+        strFileData += "\t\t" + ' * @memberof Communication' + backReturn;
+        strFileData += "\t\t" + ' */' + backReturn;
+        strFileData += "\t\t" + 'readonly command : number;' + backReturn;
+        strFileData += "\t" + '}' + backReturn;
+        strFileData += backReturn;
+        strFileData += "\t" + '/**' + backReturn;
+        strFileData += "\t" + ' * 送信データ' + backReturn;
+        strFileData += "\t" + ' * @export' + backReturn;
+        strFileData += "\t" + ' * @namespace SendData' + backReturn;
+        strFileData += "\t" + ' */' + backReturn;
+        strFileData += "\t" + 'export namespace SendData{' + backReturn;
+        strFileData += "\t\t" + '/**' + backReturn;
+        strFileData += "\t\t" + ' * 送信データインターフェース' + backReturn;
+        strFileData += "\t\t" + ' * @interface Send' + backReturn;
+        strFileData += "\t\t" + ' * @extends {Communication}' + backReturn;
+        strFileData += "\t\t" + ' */' + backReturn;
+        strFileData += "\t\t" + 'interface Send extends Communication{' + backReturn;
+        strFileData += "\t\t" + '}' + backReturn;
+        strFileData += backReturn;
+        strFileData += backReturn;
+        serverToClientTypeDataArray.forEach((typeData)=>{
+            strFileData += "\t\t" + '/**' + backReturn;
+            strFileData += "\t\t" + ' * ' + typeData.comment + backReturn;
+            strFileData += "\t\t" + ' * @export' + backReturn;
+            strFileData += "\t\t" + ' * @class ' + typeData.name + backReturn;
+            strFileData += "\t\t" + ' * @implements {Send}' + backReturn;
+            strFileData += "\t\t" + ' */' + backReturn;
+            strFileData += "\t\t" + 'export class ' + typeData.name + ' implements Send{' + backReturn;
+            strFileData += "\t\t\t" + '/**' + backReturn;
+            strFileData += "\t\t\t" + ' * コマンドID' + backReturn;
+            strFileData += "\t\t\t" + ' * @public' + backReturn;
+            strFileData += "\t\t\t" + ' * @static ' + backReturn;
+            strFileData += "\t\t\t" + ' * @readonly ' + backReturn;
+            strFileData += "\t\t\t" + ' * @type {number}' + backReturn;
+            strFileData += "\t\t\t" + ' * @memberof {' + typeData.name + '}' + backReturn;
+            strFileData += "\t\t\t" + ' */' + backReturn;
+            strFileData += "\t\t\t" + 'public static readonly id : number = ' + typeData.id.toString() + ';' + backReturn;
+            strFileData += backReturn;
+            typeData.members.forEach((member)=>{
+                if(member.name === 'command'){
+                    strFileData += "\t\t\t" + '/**' + backReturn;
+                    strFileData += "\t\t\t" + ' * ' + member.comment + backReturn;
+                    strFileData += "\t\t\t" + ' * @public' + backReturn;
+                    strFileData += "\t\t\t" + ' * @readonly ' + backReturn;
+                    strFileData += "\t\t\t" + ' * @type {' + member.typeTs + '}' + backReturn;
+                    strFileData += "\t\t\t" + ' * @memberof {' + typeData.name + '}' + backReturn;
+                    strFileData += "\t\t\t" + ' */' + backReturn;
+                    strFileData += "\t\t\t" + 'public readonly ' + member.name + ' : ' + member.typeTs + ' = ' + typeData.name + '.id;' + backReturn;
+                }
+                else{
+                    strFileData += "\t\t\t" + '/**' + backReturn;
+                    strFileData += "\t\t\t" + ' * ' + member.comment + backReturn;
+                    strFileData += "\t\t\t" + ' * @public' + backReturn;
+                    strFileData += "\t\t\t" + ' * @type {' + member.typeTs + '}' + backReturn;
+                    strFileData += "\t\t\t" + ' * @memberof {' + typeData.name + '}' + backReturn;
+                    strFileData += "\t\t\t" + ' */' + backReturn;
+                    strFileData += "\t\t\t" + 'public ' + member.name + ' : ' + member.typeTs + ';' + backReturn;
+                }
+            });
+            strFileData += backReturn;
+            strFileData += backReturn;
+            strFileData += "\t\t\t" + '/**' + backReturn;
+            strFileData += "\t\t\t" + ' * デフォルトコンストラクタ' + backReturn;
+            strFileData += "\t\t\t" + ' * @public' + backReturn;
+            strFileData += "\t\t\t" + ' * @constructor' + backReturn;
+            strFileData += "\t\t\t" + ' * @memberof {' + typeData.name + '}' + backReturn;
+            strFileData += "\t\t\t" + ' */' + backReturn;
+            strFileData += "\t\t\t" + 'public constructor(){' + backReturn;
+            typeData.members.forEach((member)=>{
+                if(member.name !== 'command'){
+                    strFileData += "\t\t\t\t" + 'this.' + member.name + ' = ';
+                    switch(member.typeTs){
+                        case 'number':
+                        strFileData += '0';
+                        break;
+
+                        case 'string':
+                        strFileData += '\'\'';
+                        break;
+
+                        case 'boolean':
+                        strFileData += 'false';
+                        break;
+
+                        default:
+                        strFileData += 'new ' + member.typeTs + '()';
+                        break;
+                    }
+                    strFileData += ';' + backReturn;
+                }
+            });
+            strFileData += "\t\t\t" + '}' + backReturn;
+            strFileData += "\t\t" + '}' + backReturn;
+        });
+        strFileData += backReturn;
+        strFileData += backReturn;
+        strFileData += "\t\t" + 'export type AllTypes';
+        if(serverToClientTypeDataArray.length > 0){
+            var isFarst = true;
+            serverToClientTypeDataArray.forEach((typeData)=>{
+                strFileData += (isFarst ? ' =' : ' |');
+                isFarst = false;
+                strFileData += backReturn + "\t\t\t" + typeData.name;
+            });
+            strFileData += ';' + backReturn;
+        }
+        else{
+            strFileData += ' = undefined;' + backReturn;
+        }
+        strFileData += "\t" + '}' + backReturn;
+        strFileData += backReturn;
+        strFileData += "\t" + '/**' + backReturn;
+        strFileData += "\t" + ' * 受信データ' + backReturn;
+        strFileData += "\t" + ' * @export' + backReturn;
+        strFileData += "\t" + ' * @namespace ReceiveData' + backReturn;
+        strFileData += "\t" + ' */' + backReturn;
+        strFileData += "\t" + 'export namespace ReceiveData{' + backReturn;
+        strFileData += "\t\t" + '/**' + backReturn;
+        strFileData += "\t\t" + ' * 受信データインターフェース' + backReturn;
+        strFileData += "\t\t" + ' * @interface Receive' + backReturn;
+        strFileData += "\t\t" + ' * @extends {Communication}' + backReturn;
+        strFileData += "\t\t" + ' */' + backReturn;
+        strFileData += "\t\t" + 'interface Receive extends Communication{' + backReturn;
+        strFileData += "\t\t" + '}' + backReturn;
+        strFileData += backReturn;
+        strFileData += backReturn;
+        clientToServerTypeDataArray.forEach((typeData)=>{
+            strFileData += "\t\t" + '/**' + backReturn;
+            strFileData += "\t\t" + ' * ' + typeData.comment + backReturn;
+            strFileData += "\t\t" + ' * @export' + backReturn;
+            strFileData += "\t\t" + ' * @class ' + typeData.name + backReturn;
+            strFileData += "\t\t" + ' * @implements {Receive}' + backReturn;
+            strFileData += "\t\t" + ' */' + backReturn;
+            strFileData += "\t\t" + 'export class ' + typeData.name + ' implements Receive{' + backReturn;
+            strFileData += "\t\t\t" + '/**' + backReturn;
+            strFileData += "\t\t\t" + ' * コマンドID' + backReturn;
+            strFileData += "\t\t\t" + ' * @public' + backReturn;
+            strFileData += "\t\t\t" + ' * @static ' + backReturn;
+            strFileData += "\t\t\t" + ' * @readonly ' + backReturn;
+            strFileData += "\t\t\t" + ' * @type {number}' + backReturn;
+            strFileData += "\t\t\t" + ' * @memberof {' + typeData.name + '}' + backReturn;
+            strFileData += "\t\t\t" + ' */' + backReturn;
+            strFileData += "\t\t\t" + 'public static readonly id : number = ' + typeData.id.toString() + ';' + backReturn;
+            strFileData += backReturn;
+            typeData.members.forEach((member)=>{
+                if(member.name === 'command'){
+                    strFileData += "\t\t\t" + '/**' + backReturn;
+                    strFileData += "\t\t\t" + ' * ' + member.comment + backReturn;
+                    strFileData += "\t\t\t" + ' * @public' + backReturn;
+                    strFileData += "\t\t\t" + ' * @readonly ' + backReturn;
+                    strFileData += "\t\t\t" + ' * @type {' + member.typeTs + '}' + backReturn;
+                    strFileData += "\t\t\t" + ' * @memberof {' + typeData.name + '}' + backReturn;
+                    strFileData += "\t\t\t" + ' */' + backReturn;
+                    strFileData += "\t\t\t" + 'public readonly ' + member.name + ' : ' + member.typeTs + ' = ' + typeData.name + '.id;' + backReturn;
+                }
+                else{
+                    strFileData += "\t\t\t" + '/**' + backReturn;
+                    strFileData += "\t\t\t" + ' * ' + member.comment + backReturn;
+                    strFileData += "\t\t\t" + ' * @public' + backReturn;
+                    strFileData += "\t\t\t" + ' * @type {' + member.typeTs + '}' + backReturn;
+                    strFileData += "\t\t\t" + ' * @memberof {' + typeData.name + '}' + backReturn;
+                    strFileData += "\t\t\t" + ' */' + backReturn;
+                    strFileData += "\t\t\t" + 'public ' + member.name + ' : ' + member.typeTs + ';' + backReturn;
+                }
+            });
+            strFileData += backReturn;
+            strFileData += backReturn;
+            strFileData += "\t\t\t" + '/**' + backReturn;
+            strFileData += "\t\t\t" + ' * デフォルトコンストラクタ' + backReturn;
+            strFileData += "\t\t\t" + ' * @public' + backReturn;
+            strFileData += "\t\t\t" + ' * @constructor' + backReturn;
+            strFileData += "\t\t\t" + ' * @memberof {' + typeData.name + '}' + backReturn;
+            strFileData += "\t\t\t" + ' */' + backReturn;
+            strFileData += "\t\t\t" + 'public constructor(){' + backReturn;
+            typeData.members.forEach((member)=>{
+                if(member.name !== 'command'){
+                    strFileData += "\t\t\t\t" + 'this.' + member.name + ' = ';
+                    switch(member.typeTs){
+                        case 'number':
+                        strFileData += '0';
+                        break;
+
+                        case 'string':
+                        strFileData += '\'\'';
+                        break;
+
+                        case 'boolean':
+                        strFileData += 'false';
+                        break;
+
+                        default:
+                        strFileData += 'new ' + member.typeTs + '()';
+                        break;
+                    }
+                    strFileData += ';' + backReturn;
+                }
+            });
+            strFileData += "\t\t\t" + '}' + backReturn;
+            strFileData += "\t\t" + '}' + backReturn;
+        });
+        strFileData += backReturn;
+        strFileData += backReturn;
+        strFileData += "\t\t" + 'export type AllTypes';
+        if(clientToServerTypeDataArray.length > 0){
+            var isFarst = true;
+            clientToServerTypeDataArray.forEach((typeData)=>{
+                strFileData += (isFarst ? ' =' : ' |');
+                isFarst = false;
+                strFileData += backReturn + "\t\t\t" + typeData.name;
+            });
+            strFileData += ';' + backReturn;
+        }
+        else{
+            strFileData += ' = undefined;' + backReturn;
+        }
+        strFileData += "\t" + '}' + backReturn;
+        strFileData += backReturn;
+        strFileData += "\t" + 'export type AllTypes = SendData.AllTypes | ReceiveData.AllTypes;' + backReturn;
+        strFileData += backReturn;
+        strFileData += backReturn;
+        strFileData += "\t" + '/**' + backReturn;
+        strFileData += "\t" + ' * 通信データコンバータ' + backReturn;
+        strFileData += "\t" + ' * @export' + backReturn;
+        strFileData += "\t" + ' * @class Converter' + backReturn;
+        strFileData += "\t" + ' */' + backReturn;
+        strFileData += "\t" + 'export class Converter{' + backReturn;
+        strFileData += "\t\t" + '/**' + backReturn;
+        strFileData += "\t\t" + ' * 通信データ[string]を対応する通信データ型に変換する' + backReturn;
+        strFileData += "\t\t" + ' * @public' + backReturn;
+        strFileData += "\t\t" + ' * @static' + backReturn;
+        strFileData += "\t\t" + ' * @param {string} _data 通信データ' + backReturn;
+        strFileData += "\t\t" + ' * @returns {(AllTypes|undefined)} 対応する通信データ 対応できなかったらundefined' + backReturn;
+        strFileData += "\t\t" + ' * @memberof Converter' + backReturn;
+        strFileData += "\t\t" + ' */' + backReturn;
+        strFileData += "\t\t" + 'public static Convert(_data:string) : AllTypes|undefined{' + backReturn;
+        strFileData += "\t\t\t" + 'const parseData:any = JSON.parse(_data);' + backReturn;
+        strFileData += "\t\t\t" + 'const communicationData:Communication = parseData as Communication;' + backReturn;
+        strFileData += backReturn;
+        strFileData += "\t\t\t" + 'switch(communicationData.command){' + backReturn;
+        dataArray.forEach((typeData)=>{
+            var communicationType = 'None';
+            if(typeData.communicateType === 's_c'){
+                communicationType = 'SendData';
+            }
+            else if(typeData.communicateType === 'c_s'){
+                communicationType = 'ReceiveData';
+            }
+            var dataTypeName = communicationType + '.' + typeData.name;
+
+            strFileData += "\t\t\t\t" + 'case ' + dataTypeName + '.id:' + backReturn;
+            strFileData += "\t\t\t\t" + '{' + backReturn;
+            strFileData += "\t\t\t\t\t" + 'const data:' + dataTypeName + ' = new ' + dataTypeName + '();' + backReturn;
+            typeData.members.forEach((member)=>{
+                if(member.name !== 'command'){
+                    strFileData += "\t\t\t\t\t" + 'data.' + member.name + ' = parseData.' + member.name + ';' + backReturn;
+                }
+            });
+            strFileData += "\t\t\t\t\t" + 'return data;' + backReturn;
+            strFileData += "\t\t\t\t" + '}' + backReturn;
+        });
+        strFileData += "\t\t\t" + '}' + backReturn;
+        strFileData += backReturn;
+        strFileData += "\t\t\t" + 'console.error(\'Couldn\\\'t convert data.\');' + backReturn;
+        strFileData += "\t\t\t" + 'return undefined;' + backReturn;
+        strFileData += "\t\t" + '}' + backReturn;
+        strFileData += "\t" + '}' + backReturn;
+        strFileData += '}' + backReturn;
+
+        return strFileData;
+    }
+    function CreateCSharpFileData(_dataArray){
+        var dataArray = ConvertDataArray(_dataArray);
+
+        var backReturn = "\n";
+
+        var strFileData = '';
+        strFileData += '////////////////////////////////////////////' + backReturn;
+        strFileData += '// パケットデータ等通信で使うデータをまとめた //' + backReturn;
+        strFileData += '////////////////////////////////////////////' + backReturn;
+        strFileData += 'using UnityEngine;' + backReturn;
+        strFileData += backReturn;
+        strFileData += backReturn;
+        strFileData += '/// <summary>' + backReturn;
+        strFileData += '/// パケットデータ' + backReturn;
+        strFileData += '/// </summary>' + backReturn;
+        strFileData += 'namespace Packes{' + backReturn;
+        strFileData += "\t" + '/// <summary>' + backReturn;
+        strFileData += "\t" + '/// パケットデータインターフェース' + backReturn;
+        strFileData += "\t" + '/// </summary>' + backReturn;
+        strFileData += "\t" + 'public abstract class IPacketDatas{' + backReturn;
+        strFileData += "\t\t" + '/// <summary>コマンド</summary>' + backReturn;
+        strFileData += "\t\t" + 'public int command;' + backReturn;
+        strFileData += "\t\t" + '/// <summary>コマンド</summary>' + backReturn;
+        strFileData += "\t\t" + 'public CommandData Command{ get{ return (CommandData)(this.command); } }' + backReturn;
+        strFileData += "\t" + '}' + backReturn;
+        strFileData += backReturn;
+        dataArray.forEach((typeData)=>{
+            strFileData += backReturn;
+            strFileData += "\t" + '/// <summary>' + backReturn;
+            strFileData += "\t" + '/// ' + typeData.comment + backReturn;
+            strFileData += "\t" + '/// </summary>' + backReturn;
+            strFileData += "\t" + 'public class ' + typeData.name + ' : IPacketDatas{' + backReturn;
+            typeData.members.forEach((member)=>{
+                strFileData += "\t\t" + '/// <summary>' + member.comment + '</summary>' + backReturn;
+                strFileData += "\t\t" + 'public ' + member.typeCs + ' ' + member.name + ';' + backReturn;
+            });
+            strFileData += backReturn;
+            strFileData += "\t\t" + '/// <summary>デフォルトコンストラクタ</summary>' + backReturn;
+            strFileData += "\t\t" + 'public ' + typeData.name + '(){' + backReturn;
+            strFileData += "\t\t\t" + 'this.command = (int)CommandData.' + typeData.name + ';' + backReturn;
+            strFileData += "\t\t" + '}' + backReturn;
+            if(typeData.members.length > 1){
+                strFileData += "\t\t" + '/// <summary>コンストラクタ</summary>' + backReturn;
+                typeData.members.forEach((member)=>{
+                    if(member.name !== 'command'){
+                        strFileData += "\t\t" + '/// <param name="_' + member.name + '">' + member.comment + '</summary>' + backReturn;
+                    }
+                });
+                strFileData += "\t\t" + 'public ' + typeData.name + '(' + backReturn;
+                var isNotFirst = false;
+                typeData.members.forEach((member)=>{
+                    if(member.name !== 'command'){
+                        if(isNotFirst){
+                            strFileData += ',' + backReturn;
+                        }
+                        isNotFirst = true;
+                        strFileData += "\t\t\t" + member.typeCs + ' _' + member.name;
+                    }
+                });
+                strFileData += backReturn;
+                strFileData += "\t\t" + '){' + backReturn;
+                strFileData += "\t\t\t" + 'this.command = (int)CommandData.' + typeData.name + ';' + backReturn;
+                typeData.members.forEach((member)=>{
+                    if(member.name !== 'command'){
+                        strFileData += "\t\t\t" + 'this.' + member.name + ' = _' + member.name + ';' + backReturn;
+                    }
+                });
+                strFileData += "\t\t" + '}' + backReturn;
+            }
+            strFileData += "\t" + '}' + backReturn;
+        });
+        strFileData += '}' + backReturn;
+        strFileData += backReturn;
+        strFileData += backReturn;
+        strFileData += backReturn;
+        strFileData += '/// <summary>' + backReturn;
+        strFileData += '/// コマンド一覧' + backReturn;
+        strFileData += '/// </summary>' + backReturn;
+        strFileData += 'public enum CommandData{' + backReturn;
+        {
+            var isNotFirst = false;
+            dataArray.forEach((typeData)=>{
+                if(isNotFirst){
+                    strFileData += ',' + backReturn;
+                }
+                isNotFirst = true;
+                strFileData += "\t" + '/// <summary>' + typeData.comment + '</summary>' + backReturn;
+                strFileData += "\t" + typeData.name + ' = (int)' + typeData.id;
+            });
+            strFileData += backReturn;
+        }
+        strFileData += '}' + backReturn;
+
+        return strFileData;
+    }
+    </script>
+</body>
+</html>

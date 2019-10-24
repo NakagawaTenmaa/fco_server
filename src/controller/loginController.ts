@@ -7,8 +7,10 @@ export class loginController{
 
     // ユーザーの作成
     public async createUser(data: any): Promise<number>{
-        const model = await this.model.newUser(data.user_name, data.pass);
-        if(!model) return -1;
+        const user = await this.model.newUser(data.user_name, data.pass);
+        if(!user) return -1;
+        this.model.changeStatus(user.id, 1);
+        // 状態の変更
         return 0;
     }
 
@@ -18,8 +20,14 @@ export class loginController{
         const user = userData[0];
         if(user){
             const hash = await createHash(data.pass, user.salt);
-            if(hash === user.hash) return user.id;
-            return -1;
+            if(hash === user.hash) {
+                if(!user.status){
+                    // 状態の変更
+                    this.model.changeStatus(user.id, 1);
+                    return user.id;
+                } else return -1;
+            }
+            return -2;
         } return -2;
     }
 }

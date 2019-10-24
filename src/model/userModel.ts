@@ -1,5 +1,6 @@
 import { createHash, createSalt } from './../controller/utility/hash'
 import { BaseModel } from './modelBase'
+import { format } from 'mysql'
 
 // ユーザーモデル
 export class UserModel extends BaseModel{
@@ -30,5 +31,19 @@ export class UserModel extends BaseModel{
     private async isDuplicateUser(name: string){
         const data = await this.findUserByName(name);
         return (data.length !== 0);
+    }
+
+    /**
+     * プレイヤーのログイン状態の変更
+     * @param {string} name 変更したい人
+     * @param {boolean} state 新しい状態
+     * @memberof UserModel
+     */
+    public async changeStatus(_id: number, _status: number){
+        const query = "update `users` set `status` = ? where `id` = ?";
+        const col = [_status, _id];
+        const sql = format(query, col);
+        console.log(sql);
+        this.myQuery(sql);
     }
 }

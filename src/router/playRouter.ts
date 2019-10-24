@@ -1,9 +1,8 @@
 import { Server, } from 'ws';
-import {listen} from 'socket.io';
 import { CharacterManager } from '../ishitaka/CharacterManager';
-import { Player } from '../ishitaka/Player';
 import { CommunicationData } from '../ishitaka/CommunicationData';
 import WebSocket = require('ws');
+
 
 
 
@@ -19,6 +18,7 @@ export class playRouter{
         this.wss = new Server({port: 8001});
         this.characterManager.Initialize();
         this.time = new Date().getTime();
+        console.log("new play");
     }
     
 
@@ -35,7 +35,7 @@ export class playRouter{
             console.log("client_connection");
 
             ws.on('message', (msg: WebSocket.Data) => {
-                console.log('msg : ' + msg);
+                //console.log('msg : ' + msg);
                 const data = CommunicationData.Converter.Convert(msg.toString());
   
                 // コンバートエラー
@@ -56,80 +56,15 @@ export class playRouter{
                     this.characterManager.SendAll(JSON.stringify(sendData));
                 }
                 // ログアウト
-                else if(data instanceof CommunicationData.ReceiveData.CharacterTransform){
-                    
+                else if(data instanceof CommunicationData.ReceiveData.LogoutCharacter){
+                    console.log("logout: " + data.user_id.toString());
+                    this.characterManager.PlayerLogout(data.user_id);
+                    this.characterManager.RemoveCharacter(data.user_id);
+                    let sendData: CommunicationData.SendData.LogoutCharacter = new CommunicationData.SendData.LogoutCharacter();
+                    sendData.user_id = data.user_id;
+                    this.characterManager.SendAll(JSON.stringify(sendData));
                 }
             })
         })
-        
-        this.serverSocUpdate();
     }
-    
-    // サーバー間のやり取り用更新
-    private serverSocUpdate(){
-            let io = listen(10001);
-            console.log('start socket.io server');
-            io.sockets.on('connection', (socket: any) => {
-                console.log('connect');
-                socket.on('user_login', (data: any) => {
-                    console.log(data);
-                    console.log("data : " + data);
-    
-                    // TODO: 処理の場所変更 ---
-                    let player: Player = new Player();
-                    player.dbId = data.id;
-                    this.characterManager.AddCharacter(player);
-                    // -----------------------
-    
-                    //this.controller.addPlayer(data);
-                })
-            })
-        }
-/*
-    // 移動201
-    private playersMove(data: any){
-        const res = this.controller.playersMove(data);
-        this.wss.clients.forEach((client) => {
-            client.send(JSON.stringify(res));
-        });
-    }
-
-    // プレイヤーのログイン203
-    private initUser(data: any, ws: any){
-        const res = this.controller.initUser(data.user_id);
-        this.wss.clients.forEach(client => {
-            if(ws === client) {
-                //ws.send(JSON.stringify(this.controller.loadPlayer(data.user_id)));
-            } else client.send(JSON.stringify(res));
-        })
-    }
-
-
-
-    // TODO: プレイヤーの状態共有
-    private statusUpdate(data: any){
-
-    }
-
-    // インベントリの更新
-    private inventoryUpdate(data: any, ws: any){
-        ws.send(JSON.stringify(this.controller.inventoryUpdate(data)));
-    }
-
-    // インベントリ一覧取得
-    private inventoryList(data: any, ws: any){
-        ws.send(JSON.stringify(this.controller.inventoryList(data)));
-    }
-
-    // 装備の更新
-    public weaponUpdate(data: any, ws: any){
-        ws.send(JSON.stringify(this.controller.weaponUpdate(data)));
-    }
-
-    // データのセーブ
-
-    // 位置の更新
-
-    // 
-    */
 }
