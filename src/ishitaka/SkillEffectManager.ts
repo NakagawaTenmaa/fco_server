@@ -28,6 +28,7 @@ export class SkillEffectManager{
     public static get instance() : SkillEffectManager {
         if(SkillEffectManager.instance_ === undefined){
             SkillEffectManager.instance_ = new SkillEffectManager();
+            SkillEffectManager.instance_.CreateAllSkillEffect();
         }
         return SkillEffectManager.instance_;
     }
