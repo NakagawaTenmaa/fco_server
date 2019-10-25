@@ -126,4 +126,15 @@ export interface Character{
      * @memberof Character
      */
     UseSkill(_skillId:number, _receiverId:number) : boolean;
+
+    /**
+     * ダメージを受ける
+     * @public
+     * @param {Character} _attacker 攻撃キャラクタ
+     * @param {number} _hitPointDamage 体力ダメージ
+     * @param {number} _magicPointDamage 魔力ダメージ
+     * @returns {boolean} true:成功 false:失敗
+     * @memberof Character
+     */
+    ReceiveDamage(_attacker:Character, _hitPointDamage:number, _magicPointDamage:number) : boolean;
 }

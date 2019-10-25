@@ -30,7 +30,15 @@ export class Matrix4x4 {
         );
     }
 
-    public static CreateRotationMatrix(_rotation:number) : Matrix4x4 {
+    /**
+     * Y軸回転行列の作成
+     * @public
+     * @static
+     * @param {number} _rotation 回転量
+     * @returns {Matrix4x4} 回転行列
+     * @memberof Matrix4x4
+     */
+    public static CreateRotationYMatrix(_rotation:number) : Matrix4x4 {
         const rotation:Matrix4x4 = Matrix4x4.identity;
 
         const cosValue:number = Math.cos(_rotation);
@@ -244,7 +252,7 @@ export class Matrix4x4 {
             this.column2.x*newColumn1.y +
             this.column3.x*newColumn1.z +
             this.column4.x*newColumn1.w;
-        if((matrixValue > (-Number.MIN_VALUE)) || (matrixValue < Number.MIN_VALUE)){
+        if((matrixValue > (-Number.MIN_VALUE)) && (matrixValue < Number.MIN_VALUE)){
             console.error('Couldn\'t create invert matrix.');
             return new Matrix4x4(this);
         }

@@ -146,7 +146,7 @@ export class Vector4{
      */
     public get normalizedVector() : Vector4 {
         const len = this.length;
-        if((len > (-Number.MIN_VALUE)) || (len < Number.MIN_VALUE)){
+        if((len > (-Number.MIN_VALUE)) && (len < Number.MIN_VALUE)){
             console.error('Couldn\'t normalize vector.');
             return new Vector4(this);
         }

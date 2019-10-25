@@ -338,6 +338,21 @@ export class Player implements Character{
     }
 
     /**
+     * ダメージを受ける
+     * @public
+     * @param {Character} _attacker 攻撃キャラクタ
+     * @param {number} _hitPointDamage 体力ダメージ
+     * @param {number} _magicPointDamage 魔力ダメージ
+     * @returns {boolean} true:成功 false:失敗
+     * @memberof Player
+     */
+    public ReceiveDamage(_attacker:Character, _hitPointDamage:number, _magicPointDamage:number) : boolean {
+        this.status.hitPoint = this.status.hitPoint - _hitPointDamage;
+        this.status.magicPoint = this.status.magicPoint - _magicPointDamage;
+        return true;
+    }
+
+    /**
      * パーティに参加する
      * @public
      * @param {number} _partyId 参加するパーティのID

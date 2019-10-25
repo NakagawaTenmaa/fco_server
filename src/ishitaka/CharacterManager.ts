@@ -117,6 +117,10 @@ export class CharacterManager{
      * @memberof CharacterManager
      */
     public Update(_elapsedTime:number) : boolean {
+        if(!_elapsedTime){
+            _elapsedTime = 1000.0 / 60.0;
+        }
+
         let isSuccess = true;
         this.characterArray_ = this.characterArray_.filter(
             function(
