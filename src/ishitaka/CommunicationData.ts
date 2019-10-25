@@ -765,7 +765,7 @@ export namespace CommunicationData{
                 {
                     const data:ReceiveData.Attack = new ReceiveData.Attack();
                     data.enemy_id = parse.enemy_id;
-                    data.user_id = parse.player_id;
+                    data.user_id = parse.user_id;
                     data.skill_id = parse.skill_id;
                     data.map_id = parse.map_id;
                     return data;

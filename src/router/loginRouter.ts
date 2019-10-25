@@ -41,6 +41,7 @@ export class loginRouter{
             const characterManager: CharacterManager = CharacterManager.instance;
             let player: Player = new Player();
             player.dbId = result;
+            player.Initialize();
             characterManager.AddCharacter(player);
 
             const res = new MakeOk();
@@ -66,6 +67,7 @@ export class loginRouter{
             let player: Player = new Player();
 
             player.dbId = result;
+            player.Initialize();
             characterManager.AddCharacter(player);
 
             const res = new LoginOK();
