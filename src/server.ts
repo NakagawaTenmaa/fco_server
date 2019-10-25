@@ -4,11 +4,12 @@ import { playRouter } from './router/playRouter';
 import { chatUpdate } from './router/chatRouter'
 import { AllDatabaseAccessor } from './ishitaka/AllDatabaseAccessor';
 
+AllDatabaseAccessor.Initialize();
+
 // ルートの作成
 const login: loginRouter = new loginRouter();
 const play: playRouter = new playRouter();
 
-AllDatabaseAccessor.Initialize();
 
 // サーバーの処理
 login.loginUpdate();
