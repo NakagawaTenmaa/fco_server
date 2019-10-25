@@ -416,9 +416,22 @@ export namespace CommunicationData{
             public readonly command: number = 701;
             public static id = 701;
             public user_id = 0;
+            constructor(){}
         }
 
-        export type AllTypes = CharacterTransform | InitCharacter | PlayerStatus | LoadCharacter | LogoutCharacter | LoadOK;
+        /**
+         * 敵の取得
+         * @export
+         * @class GetEnemy
+         * @implements {Receive}
+         */
+        export class GetEnemy implements Receive {
+            public readonly command: number = 203;
+            public static id = 203;
+            public map_id: number = 0;
+        }
+
+        export type AllTypes = CharacterTransform | InitCharacter | PlayerStatus | LoadCharacter | LogoutCharacter | LoadOK | GetEnemy;
     }
 
     export type AllTypes = SendData.AllTypes | ReceiveData.AllTypes;
@@ -538,6 +551,12 @@ export namespace CommunicationData{
                 {
                     const data: ReceiveData.LoadOK = new ReceiveData.LoadOK();
                     data.user_id = parse.user_id;
+                    return data;
+                }
+                case ReceiveData.GetEnemy.id:
+                {
+                    const data: ReceiveData.GetEnemy = new ReceiveData.GetEnemy();
+                    data.map_id = parse.map_id;
                     return data;
                 }
             }

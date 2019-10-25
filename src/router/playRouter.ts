@@ -45,6 +45,9 @@ export class playRouter{
                 if(data instanceof CommunicationData.ReceiveData.CharacterTransform){
                     this.characterManager.Receive(JSON.stringify(data));
                 }
+                else if(data instanceof CommunicationData.ReceiveData.GetEnemy){
+                    
+                }
                 // セーブデータの読み込み
                 else if(data instanceof CommunicationData.ReceiveData.LoadCharacter){
                     this.characterManager.LoadCharacter(ws,data.user_id);
