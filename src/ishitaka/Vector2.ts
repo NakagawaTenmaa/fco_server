@@ -86,7 +86,7 @@ export class Vector2{
      */
     public get normalizedVector() : Vector2 {
         const len = this.length;
-        if((len > (-Number.MIN_VALUE)) || (len < Number.MIN_VALUE)){
+        if((len > (-Number.MIN_VALUE)) && (len < Number.MIN_VALUE)){
             console.error('Couldn\'t normalize vector.');
             return new Vector2(this);
         }

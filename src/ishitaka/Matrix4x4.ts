@@ -252,7 +252,7 @@ export class Matrix4x4 {
             this.column2.x*newColumn1.y +
             this.column3.x*newColumn1.z +
             this.column4.x*newColumn1.w;
-        if((matrixValue > (-Number.MIN_VALUE)) || (matrixValue < Number.MIN_VALUE)){
+        if((matrixValue > (-Number.MIN_VALUE)) && (matrixValue < Number.MIN_VALUE)){
             console.error('Couldn\'t create invert matrix.');
             return new Matrix4x4(this);
         }
