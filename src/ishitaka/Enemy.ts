@@ -19,6 +19,7 @@ import {SkillData, SkillDataAccessor} from './DatabaseAccessors/SkillDataAccesso
 import {EnemyTarget} from './EnemyTarget'
 import {SkillEffectManager} from './SkillEffectManager'
 import {SkillEffect} from './SkillEffect'
+import { Vector4 } from './Vector4'
 
 /**
  * 敵
@@ -146,6 +147,13 @@ export class Enemy implements Character{
      */
     private restTime_ : number;
     /**
+     * 歩いて近づく位置
+     * @private
+     * @type {Vector3}
+     * @memberof Enemy
+     */
+    private toWalkPosition_ : Vector3;
+    /**
      * 戦闘相手のキャラクタID
      * @private
      * @type {number}
@@ -176,6 +184,7 @@ export class Enemy implements Character{
         this.enemyStatus_ = new EnemyStatus(this);
         this.currentUpdateMethod_ = this.UpdateOfNormal;
         this.restTime_ = 0;
+        this.toWalkPosition_ = new Vector3();
         this.battleCharacterId_ = 0;
         this.currentBattleMethod_ = this.ButtleOfActionJudge;
     }
@@ -379,7 +388,7 @@ export class Enemy implements Character{
 
         if(tribeData === undefined){
             if((typeof _tribeKey) === 'number'){
-                //console.error('Couldn\'t find enemy data. [id:' + _tribeKey.toString() + ']');
+                console.error('Couldn\'t find enemy data. [id:' + _tribeKey.toString() + ']');
             }
             else if((typeof _tribeKey) === 'string'){
                 console.error('Couldn\'t find enemy data. [name:' + _tribeKey + ']');
@@ -403,13 +412,127 @@ export class Enemy implements Character{
      * @memberof Enemy
      */
     private UpdateOfNormal(_elapsedTime:number) : boolean {
-        // TODO:通常移動
-        // TODO:バトルに移行するか判定
+        // バトルに移行するか判定
+        if(this.IsChangeBattleMode()){
+            this.OnBattle();
+        }
+        
+        if(this.restTime_ > 0.0){
+            // 待機状態なら動かない
+            this.restTime_ -= _elapsedTime;
+            if(this.restTime_ < 0.0){
+                this.restTime_ = 0.0;
+            }
+        }
+        else{
+            // 通常移動
+            if(this.IsArrivedWalkPosition()){
+                this.ChangeWalkPosition();
+            }
+            this.Walk(_elapsedTime);
 
-        console.log("enemy id:" + this.id.toString() + " hp:" + this.status.hitPoint.toString());
+            // 目的地に到着したら待機状態へ
+            if(this.IsArrivedWalkPosition()){
+                this.restTime_ = 1000;
+            }
+        }
+
+        console.log("enemy id:" + this.id.toString() + " hp:" + this.status.hitPoint.toString() + " pos:" + this.transform.worldMatrix.column4.xyz.toString());
 
         this.SendTransform(this.mapId);
         this.SendSimpleDisplay();
+        return true;
+    }
+    /**
+     * 戦闘モードに移行するか?
+     * @private
+     * @returns {boolean} true:する false:しない
+     * @memberof Enemy
+     */
+    private IsChangeBattleMode() : boolean {
+        // TODO:
+        return false;
+    }
+    /**
+     * 歩き目的地に到着したか?
+     * @private
+     * @returns {boolean} true:した false:してない
+     * @memberof Enemy
+     */
+    private IsArrivedWalkPosition() : boolean {
+        const delta:Vector3 = this.toWalkPosition_.Subtraction(this.transform.worldMatrix.column4.xyz);
+        // TODO:
+        const checkRange:number = 0.1;
+        const checkValue:number = checkRange*checkRange;
+        const isChange:boolean = (delta.lengthSquared < checkValue);
+        return isChange;
+    }
+    /**
+     * 歩き目的地変更
+     * @private
+     * @returns {boolean} true:成功 false:失敗
+     * @memberof Enemy
+     */
+    private ChangeWalkPosition() : boolean {
+        const area:EnemyPopAreaData|undefined = EnemyPopAreaDataAccessor.instance.Find(this.mapId_);
+        if(area === undefined){
+            return false;
+        }
+
+        const direction:number = 2.0*Math.PI * (Math.random()-0.5);
+        const delta:number = area.popAreaRadius * Math.random();
+        this.toWalkPosition_ = new Vector3(
+            area.positionX + delta*Math.cos(direction),
+            area.positionY,
+            area.positionZ + delta*Math.sin(direction)
+        );
+
+        return true;
+    }
+    /**
+     * 歩く
+     * @private
+     * @param {number} _elapsedTime 経過時間
+     * @returns {boolean} true:成功 false:失敗
+     * @memberof Enemy
+     */
+    private Walk(_elapsedTime:number) : boolean {
+        // 目的地に近づく
+        const toWalkMatrix:Matrix4x4 = Matrix4x4.identity;
+        toWalkMatrix.column4.xyz = this.toWalkPosition_;
+        const toPosition:Vector3 = toWalkMatrix.Multiplication(this.transform_.worldMatrix.invertMatrix).column4.xyz;
+        const move:Vector3 = new Vector3(0, 0, 0);
+            
+        // TODO:最大回転量
+        const maxRotation:number = 0.5;
+
+        let rotation:number = 0.0;
+        // 前に進む
+        if(toPosition.z > 0.0){
+            // TODO:最大移動量
+            const maxMoveDistance:number = 0.5;
+
+            // 移動量と回転量を計算
+            const moveDistance:number = (toPosition.z>maxMoveDistance) ? (maxMoveDistance) : (toPosition.z);
+            // 移動
+            move.z += moveDistance * (_elapsedTime / 1000.0);
+
+            // 回転量を計算
+            rotation = maxRotation*(toPosition.x*toPosition.x)/(toPosition.x*toPosition.x + toPosition.z*toPosition.z);
+            if(toPosition.x < 0.0){
+                rotation = -rotation;
+            }
+        }
+        else{
+            // 回転量を計算
+            rotation = (toPosition.x < 0.0) ? (-maxRotation) : (maxRotation);
+        }
+
+        // 移動、回転
+        const transformMatrix:Matrix4x4 = Matrix4x4.CreateRotationYMatrix(-rotation * (_elapsedTime / 1000.0));
+        transformMatrix.column4.xyz = move;
+        this.transform_.worldMatrix = transformMatrix.Multiplication(this.transform_.worldMatrix);
+
         return true;
     }
     /**
@@ -508,8 +631,9 @@ export class Enemy implements Character{
         // 相手の場所に近づく
         const battleCharacter:Character|undefined = CharacterManager.instance.FindCharacter(this.battleCharacterId_);
         if(battleCharacter !== undefined){
-            const battleCharacterInLocal:Matrix4x4 = battleCharacter.transform.worldMatrix.invertMatrix.Multiplication(this.transform_.worldMatrix);
+            const battleCharacterInLocal:Matrix4x4 = battleCharacter.transform.worldMatrix.Multiplication(this.transform_.worldMatrix.invertMatrix);
             const toPosition:Vector3 = battleCharacterInLocal.column4.xyz;
+            const move:Vector4 = new Vector4(0, 0, 0, 1);
             
             // TODO:最大回転量
             const maxRotation:number = 1.0;
@@ -523,7 +647,7 @@ export class Enemy implements Character{
                 // 移動量と回転量を計算
                 const moveDistance:number = (toPosition.z>maxMoveDistance) ? (maxMoveDistance) : (toPosition.z);
                 // 移動
-                this.transform_.worldMatrix.column4.z += moveDistance;
+                move.z += moveDistance * (_elapsedTime / 1000.0);
 
                 // 回転量を計算
                 rotation = maxRotation*(toPosition.x*toPosition.x)/(toPosition.x*toPosition.x + toPosition.z*toPosition.z);
@@ -533,8 +657,10 @@ export class Enemy implements Character{
                 rotation = (toPosition.x < 0.0) ? (-maxRotation) : (maxRotation);
             }
 
-            // 回転
-            this.transform_.worldMatrix = this.transform_.worldMatrix.Multiplication(Matrix4x4.CreateRotationYMatrix(rotation));
+            // 移動、回転
+            const transformMatrix:Matrix4x4 = Matrix4x4.CreateRotationYMatrix(-rotation * (_elapsedTime / 1000.0));
+            transformMatrix.column4 = move;
+            this.transform_.worldMatrix = transformMatrix.Multiplication(this.transform_.worldMatrix);
         }
 
         // 行動判定へ
@@ -593,7 +719,7 @@ export class Enemy implements Character{
         // TODO:
         const area:EnemyPopAreaData|undefined = EnemyPopAreaDataAccessor.instance.Find(0);
         if(area === undefined){
-            //console.error('Couldn\'t get pop area.');
+            console.error('Couldn\'t get pop area.');
             return false;
         }
 
@@ -609,6 +735,8 @@ export class Enemy implements Character{
                 area.positionZ + delta*Math.sin(direction)
             );
         }
+
+        this.ChangeWalkPosition();
 
         this.restTime_ = 0;
         this.OnNormal();
