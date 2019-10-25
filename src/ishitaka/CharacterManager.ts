@@ -8,7 +8,7 @@
 import {Character} from './Character'
 import {Player} from './Player'
 import {Enemy} from './Enemy'
-import {CommunicationData} from './CommunicationData';
+import {CommunicationData, SendEnemyData} from './CommunicationData';
 import WebSocket = require('ws');
 import {Vector3} from './Vector3';
 import {PartyManager} from './PartyManager';
@@ -365,6 +365,31 @@ export class CharacterManager{
             return true;
         }
         return false;
+    }
+    
+
+    /**
+     * 敵の送信
+     * @param {number} _userid
+     * @param {number} _mapid
+     * @memberof CharacterManager
+     */
+    public SendEnemy(_characterid: number, _mapid: number){
+        let data: CommunicationData.SendData.EnemysData = new CommunicationData.SendData.EnemysData();
+        this.enemyArray_.forEach((_enemy: Enemy) => { 
+            let enemyData = new SendEnemyData(); 
+            enemyData.master_id = _enemy.tribeId;
+            enemyData.x = _enemy.transform.position.x;
+            enemyData.y = _enemy.transform.position.y;
+            enemyData.z = _enemy.transform.position.z;
+            enemyData.dir = _enemy.transform.rotationY;
+            enemyData.hp = _enemy.status.hitPoint;
+            enemyData.unique_id = _enemy.id;
+
+            data.enemys.push(enemyData);
+        })
+
+        this.SendOne(_characterid,JSON.stringify(data));
     }
     
     /**
