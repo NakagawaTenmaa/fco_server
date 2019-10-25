@@ -265,7 +265,7 @@ export class Player implements Character{
     public SendToClient(_sendData:string) : boolean {
         // TODO:
         if(this.ws_ === null) return false;
-        const data:CommunicationData.AllTypes|undefined = CommunicationData.Converter.Convert(_sendData);
+        //const data:CommunicationData.AllTypes|undefined = CommunicationData.Converter.Convert(_sendData);
         /*
         if(data === undefined){
             console.log('Undefined data.');

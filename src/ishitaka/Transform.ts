@@ -40,6 +40,12 @@ export class Transform{
     public get position() : Vector3 { return this.worldMatrix.column4.xyz; }
     public set position(_position:Vector3){ this.worldMatrix.column4.xyz = _position; }
 
+    public get rotationY() : number {
+        const x : number = this.worldMatrix.column1.x;
+        const z : number = this.worldMatrix.column1.z;
+        return Math.atan2(z, x);
+    }
+
     /**
      * 拡大率
      * @public

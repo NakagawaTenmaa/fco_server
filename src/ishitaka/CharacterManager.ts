@@ -8,7 +8,7 @@
 import {Character} from './Character'
 import {Player} from './Player'
 import {Enemy} from './Enemy'
-import {CommunicationData} from './CommunicationData';
+import {CommunicationData, SendEnemyData} from './CommunicationData';
 import WebSocket = require('ws');
 import {Vector3} from './Vector3';
 import {PartyManager} from './PartyManager';
@@ -371,6 +371,31 @@ export class CharacterManager{
         return false;
     }
     
+
+    /**
+     * 敵の送信
+     * @param {number} _userid
+     * @param {number} _mapid
+     * @memberof CharacterManager
+     */
+    public SendEnemy(_characterid: number, _mapid: number){
+        let data: CommunicationData.SendData.EnemysData = new CommunicationData.SendData.EnemysData();
+        this.enemyArray_.forEach((_enemy: Enemy) => { 
+            let enemyData = new SendEnemyData(); 
+            enemyData.master_id = _enemy.tribeId;
+            enemyData.x = _enemy.transform.position.x;
+            enemyData.y = _enemy.transform.position.y;
+            enemyData.z = _enemy.transform.position.z;
+            enemyData.dir = _enemy.transform.rotationY;
+            enemyData.hp = _enemy.status.hitPoint;
+            enemyData.unique_id = _enemy.id;
+
+            data.enemys.push(enemyData);
+        })
+
+        this.SendOne(_characterid,JSON.stringify(data));
+    }
+    
     /**
      * IDからプレイヤーの検索
      * @privet 
@@ -382,20 +407,47 @@ export class CharacterManager{
         return this.playerArray_.find((player: Player) => player.id === _characterId);
     }
 
+
+    /**
+     * IDから敵の検索
+     * @private
+     * @param {number} _enemyId
+     * @returns {(Enemy | undefined)}
+     * @memberof CharacterManager
+     */
+    private FindEnemy(_enemyId: number) : Enemy | undefined{
+        return this.enemyArray_.find((_enemy: Enemy) => _enemy.id === _enemyId);
+    }
+
     /**
      * スキル使用情報の取得
      * @private
      * @param {CommunicationData.ReceiveData.UseSkillCtoS} _useSkill スキル使用情報
      * @memberof CharacterManager
      */
-    private ReceiveUseSkill(_useSkill:any/*CommunicationData.ReceiveData.UseSkillCtoS*/){
+    public ReceiveUseSkill(_useSkill: CommunicationData.ReceiveData.Attack){
         const useCharacter:Character = this.characterArray_[_useSkill.user_id];
         
-        if(useCharacter.UseSkill(_useSkill.skill_id, _useSkill.receiver_id)){
+        if(useCharacter.UseSkill(_useSkill.skill_id, _useSkill.enemy_id)){
             // TODO:成功時処理
+            const enemy = this.FindEnemy(_useSkill.enemy_id);
+            if(enemy === undefined) return;
+
+            let data;
+            if(enemy.status.hitPoint <= 0) {
+                data = new CommunicationData.SendData.EnemyDie();
+                data.drop = 1;
+            } else {
+                // 生きている
+                data = new CommunicationData.SendData.EnemyAlive();
+                data.hp = enemy.status.hitPoint;
+                data.unique_id = enemy.id;
+                data.status = 0;
+            }
+            this.SendAll(JSON.stringify(data));
         }
         else{
-            // TODO:失敗時処理
+            console.error("Attack miss");
         }
     }
 }

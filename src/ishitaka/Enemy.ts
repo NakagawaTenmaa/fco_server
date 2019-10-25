@@ -132,6 +132,8 @@ export class Enemy implements Character{
      * @memberof Enemy
      */
     public get status() : CharacterStatus { return this.enemyStatus_; }
+    private tribeId_ : number;
+    public get tribeId() : number { return this.tribeId_; }
     /**
      * 現在の更新メソッド
      * @private
@@ -182,6 +184,7 @@ export class Enemy implements Character{
         this.mapId_ = -1;
         this.transform_ = new Transform();
         this.enemyStatus_ = new EnemyStatus(this);
+        this.tribeId_ = 0;
         this.currentUpdateMethod_ = this.UpdateOfNormal;
         this.restTime_ = 0;
         this.toWalkPosition_ = new Vector3();
@@ -387,13 +390,17 @@ export class Enemy implements Character{
             EnemyTribeDataAccessor.instance.Find(_tribeKey);
 
         if(tribeData === undefined){
-            if((typeof _tribeKey) === 'number'){
+            if(typeof(_tribeKey) === 'number'){
                 console.error('Couldn\'t find enemy data. [id:' + _tribeKey.toString() + ']');
             }
-            else if((typeof _tribeKey) === 'string'){
+            else if(typeof(_tribeKey) === 'string'){
                 console.error('Couldn\'t find enemy data. [name:' + _tribeKey + ']');
             }
             return false;
+        }
+
+        if(typeof(_tribeKey) === 'number'){
+            this.tribeId_ = _tribeKey;
         }
 
         if(!(this.enemyStatus_.tribeStatus.ChangeTribe(tribeData, _level))){
@@ -778,10 +785,7 @@ export class Enemy implements Character{
         data.x = this.transform.position.x;
         data.y = this.transform.position.y;
         data.z = this.transform.position.z;
-
-        const x : number = this.transform.worldMatrix.column1.x;
-        const z : number = this.transform.worldMatrix.column1.z;
-        data.dir = Math.atan2(z, x);
+        data.dir = this.transform.rotationY;
 
         return CharacterManager.instance.Send(this.id, _toMapId, JSON.stringify(data));
     }

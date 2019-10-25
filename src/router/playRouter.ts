@@ -45,12 +45,19 @@ export class playRouter{
                 if(data instanceof CommunicationData.ReceiveData.CharacterTransform){
                     this.characterManager.Receive(JSON.stringify(data));
                 }
+                // 敵の更新
+                else if(data instanceof CommunicationData.ReceiveData.GetEnemy){
+                    this.characterManager.SendEnemy(data.user_id, data.map_id);
+                }
+                else if(data instanceof CommunicationData.ReceiveData.Attack){
+                    this.characterManager.ReceiveUseSkill(data);
+                }
                 // セーブデータの読み込み
                 else if(data instanceof CommunicationData.ReceiveData.LoadCharacter){
                     this.characterManager.LoadCharacter(ws,data.user_id);
                 }
-                // 初期ログイン
-                else if(data instanceof CommunicationData.ReceiveData.InitCharacter){
+                // 初回IN
+                else if(data instanceof CommunicationData.ReceiveData.LoadOK){
                     let sendData:CommunicationData.SendData.InitCharacter = new CommunicationData.SendData.InitCharacter();
                     sendData.user_id = data.user_id;                    
                     this.characterManager.SendAll(JSON.stringify(sendData));
