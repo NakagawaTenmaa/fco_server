@@ -330,6 +330,20 @@ export namespace CommunicationData{
             constructor(){}
         }
 
+
+        /**
+         * 敵の送信
+         * @export
+         * @class EnemysData
+         * @implements {Send}
+         */
+        export class EnemysData implements Send {
+            public readonly command: number = 204;
+            public static id = 204;
+            public enemys: Array<SendEnemyData> = [];
+            constructor(){}
+        }
+
         export type AllTypes = 
         CharacterTransform |
         SimpleDisplayOfCharacter |
@@ -337,7 +351,8 @@ export namespace CommunicationData{
         SkillUse |
         LoadCharacter | 
         InitCharacter | 
-        LogoutCharacter;
+        LogoutCharacter |
+        EnemysData;
     }
     /**
      * 受信データ
@@ -371,13 +386,7 @@ export namespace CommunicationData{
             }
         }
 
-        // プレイへのログイン
-        export class InitCharacter implements Receive{
-            public readonly command: number = 203;
-            public static id = 203;
-            public user_id = 0;
-            constructor() {}
-        }
+
 
         // プレイヤーの状態
         export class PlayerStatus implements Receive{
@@ -429,9 +438,10 @@ export namespace CommunicationData{
             public readonly command: number = 203;
             public static id = 203;
             public map_id: number = 0;
+            public user_id: number = 0;
         }
 
-        export type AllTypes = CharacterTransform | InitCharacter | PlayerStatus | LoadCharacter | LogoutCharacter | LoadOK | GetEnemy;
+        export type AllTypes = CharacterTransform | PlayerStatus | LoadCharacter | LogoutCharacter | LoadOK | GetEnemy;
     }
 
     export type AllTypes = SendData.AllTypes | ReceiveData.AllTypes;
@@ -502,7 +512,12 @@ export namespace CommunicationData{
                     data.user_id = parse.user_id;
                     return data;
                 }
-
+                case SendData.EnemysData.id:
+                {
+                    const data: SendData.EnemysData = new SendData.EnemysData();
+                    data.enemys = parse.enemys;
+                    return data;
+                }
 
                 case ReceiveData.CharacterTransform.id:
                 {
@@ -511,12 +526,6 @@ export namespace CommunicationData{
                     data.y = parse.y;
                     data.z = parse.z;
                     data.dir = parse.dir;
-                    data.user_id = parse.user_id;
-                    return data;
-                }
-                case ReceiveData.InitCharacter.id:
-                {
-                    const data: ReceiveData.InitCharacter = new ReceiveData.InitCharacter();
                     data.user_id = parse.user_id;
                     return data;
                 }
@@ -557,6 +566,7 @@ export namespace CommunicationData{
                 {
                     const data: ReceiveData.GetEnemy = new ReceiveData.GetEnemy();
                     data.map_id = parse.map_id;
+                    data.user_id = parse.user_id;
                     return data;
                 }
             }
@@ -564,4 +574,17 @@ export namespace CommunicationData{
             return undefined;
         }
     }
+}
+/**
+    * 送信用敵情報
+    * @class SendEnemyData
+*/
+export class SendEnemyData {
+    public unique_id: number = 0;
+    public master_id: number = 0;
+    public x: number = 0;
+    public y: number = 0;
+    public z: number = 0;
+    public dir: number = 0;
+    public hp: number = 0; 
 }
