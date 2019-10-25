@@ -586,7 +586,7 @@ export namespace CommunicationData{
 			 * @type {number}
 			 * @memberof {Attack}
 			 */
-			public player_id : number;
+			public user_id : number;
 			/**
 			 * スキルID
 			 * @public
@@ -611,7 +611,7 @@ export namespace CommunicationData{
 			 */
 			public constructor(){
 				this.enemy_id = 0;
-				this.player_id = 0;
+				this.user_id = 0;
 				this.skill_id = 0;
 				this.map_id = 0;
 			}
@@ -765,7 +765,7 @@ export namespace CommunicationData{
                 {
                     const data:ReceiveData.Attack = new ReceiveData.Attack();
                     data.enemy_id = parse.enemy_id;
-                    data.player_id = parse.player_id;
+                    data.user_id = parse.player_id;
                     data.skill_id = parse.skill_id;
                     data.map_id = parse.map_id;
                     return data;

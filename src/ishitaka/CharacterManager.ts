@@ -409,10 +409,10 @@ export class CharacterManager{
      * @param {CommunicationData.ReceiveData.UseSkillCtoS} _useSkill スキル使用情報
      * @memberof CharacterManager
      */
-    private ReceiveUseSkill(_useSkill:any/*CommunicationData.ReceiveData.UseSkillCtoS*/){
+    public ReceiveUseSkill(_useSkill: CommunicationData.ReceiveData.Attack){
         const useCharacter:Character = this.characterArray_[_useSkill.user_id];
         
-        if(useCharacter.UseSkill(_useSkill.skill_id, _useSkill.receiver_id)){
+        if(useCharacter.UseSkill(_useSkill.skill_id, _useSkill.enemy_id)){
             // TODO:成功時処理
         }
         else{
