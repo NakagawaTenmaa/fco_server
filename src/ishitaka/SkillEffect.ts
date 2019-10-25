@@ -62,10 +62,10 @@ export class SkillEffect implements CharacterEffect{
         const physicalAttack:number = this.skillData_.fixedPhysicalDamage + this.skillData_.strengthPhysicalDamageRate*_user.status.strength;
         const magicalAttack:number = this.skillData_.fixedMagicalDamage + this.skillData_.intelligenceMagicalDamageRate*_user.status.intelligence;
         // ダメージ算出
-        const damage:number = physicalAttack/_receiver.status.vitality + magicalAttack/_receiver.status.mind;
+        const hitPointDamage:number = physicalAttack/_receiver.status.vitality + magicalAttack/_receiver.status.mind;
         
         // ダメージ反映
-        _receiver.status.hitPoint = _receiver.status.hitPoint - damage;
+        _receiver.ReceiveDamage(_user, hitPointDamage, 0);
 
         return true;
     }

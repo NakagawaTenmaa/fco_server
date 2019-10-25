@@ -254,6 +254,30 @@ export class Enemy implements Character{
         return skillEffect.Show(this, receiver);
     }
 
+    /**
+     * ダメージを受ける
+     * @public
+     * @param {Character} _attacker 攻撃キャラクタ
+     * @param {number} _hitPointDamage 体力ダメージ
+     * @param {number} _magicPointDamage 魔力ダメージ
+     * @returns {boolean} true:成功 false:失敗
+     * @memberof Enemy
+     */
+    public ReceiveDamage(_attacker:Character, _hitPointDamage:number, _magicPointDamage:number) : boolean {
+        this.status.hitPoint = this.status.hitPoint - _hitPointDamage;
+        this.status.magicPoint = this.status.magicPoint - _magicPointDamage;
+
+        let enemyTarget:EnemyTarget|undefined = this.FindTargetData(_attacker);
+        if(enemyTarget === undefined){
+            enemyTarget = new EnemyTarget(_attacker);
+            this.targetArray_.push(enemyTarget);
+        }
+        // TODO: ヘイト算出
+        enemyTarget.hate = enemyTarget.hate + _hitPointDamage + _magicPointDamage;
+
+        return true;
+    }
+
 
     /**
      * 通常状態になるときの処理
@@ -396,11 +420,34 @@ export class Enemy implements Character{
      * @memberof Enemy
      */
     private UpdateOfBattle(_elapsedTime:number) : boolean {
+        this.UpdateOfAllTargetHate(_elapsedTime);
         const result = this.currentBattleMethod_(_elapsedTime);
 
         this.SendTransform(this.mapId);
         this.SendSimpleDisplay();
         return result;
+    }
+    /**
+     * 全ターゲットのヘイト更新
+     * @private
+     * @param {number} _elapsedTime 経過時間
+     * @returns {boolean} true:継続 false:終了
+     * @memberof Enemy
+     */
+    private UpdateOfAllTargetHate(_elapsedTime:number) : boolean {
+        // TODO: ヘイト減少量算出
+        const downHate = 0.3 * _elapsedTime;
+
+        this.targetArray_.forEach(function(
+            _enemyTarget : EnemyTarget,
+            _index : number,
+            _array : EnemyTarget[]
+        ) : void {
+            const afterHate:number = _enemyTarget.hate - downHate;
+            _enemyTarget.hate = (afterHate<0.0) ? (0.0) : (afterHate);
+        });
+
+        return true;
     }
     /**
      * 死んでいる時の更新処理
@@ -487,7 +534,7 @@ export class Enemy implements Character{
             }
 
             // 回転
-            this.transform_.worldMatrix = this.transform_.worldMatrix.Multiplication(Matrix4x4.CreateRotationMatrix(rotation));
+            this.transform_.worldMatrix = this.transform_.worldMatrix.Multiplication(Matrix4x4.CreateRotationYMatrix(rotation));
         }
 
         // 行動判定へ
@@ -543,6 +590,7 @@ export class Enemy implements Character{
     private Populate() : boolean {
         this.ChangeTribe(EnemyTribeDataAccessor.instance.GetRandomID(), 1);
 
+        // TODO:
         const area:EnemyPopAreaData|undefined = EnemyPopAreaDataAccessor.instance.Find(0);
         if(area === undefined){
             //console.error('Couldn\'t get pop area.');
@@ -551,7 +599,7 @@ export class Enemy implements Character{
 
         this.mapId_ = area.mapId;
 
-        this.transform.worldMatrix = Matrix4x4.CreateRotationMatrix(2.0*Math.PI * (Math.random()-0.5));
+        this.transform.worldMatrix = Matrix4x4.CreateRotationYMatrix(2.0*Math.PI * (Math.random()-0.5));
         {
             const direction:number = 2.0*Math.PI * (Math.random()-0.5);
             const delta:number = area.popAreaRadius * Math.random();
@@ -566,6 +614,23 @@ export class Enemy implements Character{
         this.OnNormal();
 
         return true;
+    }
+
+    /**
+     * ターゲット情報の取得
+     * @private
+     * @param {Character} _target ターゲットキャラクタ
+     * @returns {(EnemyTarget|undefined)} ターゲット情報 なければundefined
+     * @memberof Enemy
+     */
+    private FindTargetData(_target:Character) : EnemyTarget|undefined{
+        return this.targetArray_.filter(function (
+            _enemyTarget : EnemyTarget,
+            _index : number,
+            _array : EnemyTarget[]
+        ) : boolean {
+            return (_enemyTarget.character.id === _target.id);
+        }).shift();
     }
 
 
