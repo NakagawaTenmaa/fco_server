@@ -992,8 +992,10 @@
             strFileData += "\t" + '/// </summary>' + backReturn;
             strFileData += "\t" + 'public class ' + typeData.name + ' : IPacketDatas{' + backReturn;
             typeData.members.forEach((member)=>{
-                strFileData += "\t\t" + '/// <summary>' + member.comment + '</summary>' + backReturn;
-                strFileData += "\t\t" + 'public ' + member.typeCs + ' ' + member.name + ';' + backReturn;
+                if(member.name !== 'command'){
+                    strFileData += "\t\t" + '/// <summary>' + member.comment + '</summary>' + backReturn;
+                    strFileData += "\t\t" + 'public ' + member.typeCs + ' ' + member.name + ';' + backReturn;
+                }
             });
             strFileData += backReturn;
             strFileData += "\t\t" + '/// <summary>デフォルトコンストラクタ</summary>' + backReturn;
