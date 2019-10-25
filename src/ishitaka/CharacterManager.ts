@@ -403,6 +403,18 @@ export class CharacterManager{
         return this.playerArray_.find((player: Player) => player.id === _characterId);
     }
 
+
+    /**
+     * IDから敵の検索
+     * @private
+     * @param {number} _enemyId
+     * @returns {(Enemy | undefined)}
+     * @memberof CharacterManager
+     */
+    private FindEnemy(_enemyId: number) : Enemy | undefined{
+        return this.enemyArray_.find((_enemy: Enemy) => _enemy.id === _enemyId);
+    }
+
     /**
      * スキル使用情報の取得
      * @private
@@ -414,9 +426,24 @@ export class CharacterManager{
         
         if(useCharacter.UseSkill(_useSkill.skill_id, _useSkill.enemy_id)){
             // TODO:成功時処理
+            const enemy = this.FindEnemy(_useSkill.enemy_id);
+            if(enemy === undefined) return;
+
+            let data;
+            if(enemy.status.hitPoint <= 0) {
+                data = new CommunicationData.SendData.EnemyDie();
+                data.drop = 1;
+            } else {
+                // 生きている
+                data = new CommunicationData.SendData.EnemyAlive();
+                data.hp = enemy.status.hitPoint;
+                data.unique_id = enemy.id;
+                data.status = 0;
+            }
+            this.SendAll(JSON.stringify(data));
         }
         else{
-            // TODO:失敗時処理
+            console.error("Attack miss");
         }
     }
 }
