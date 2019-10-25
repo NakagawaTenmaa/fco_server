@@ -344,6 +344,111 @@ export namespace CommunicationData{
             constructor(){}
         }
 
+        /**
+		 * 判定後生きている
+		 * @export
+		 * @class EnemyAlive
+		 * @implements {Send}
+		 */
+		export class EnemyAlive implements Send{
+			/**
+			 * コマンドID
+			 * @public
+			 * @static 
+			 * @readonly 
+			 * @type {number}
+			 * @memberof {EnemyAlive}
+			 */
+			public static readonly id : number = 221;
+
+			/**
+			 * コマンド識別子
+			 * @public
+			 * @readonly 
+			 * @type {number}
+			 * @memberof {EnemyAlive}
+			 */
+			public readonly command : number = EnemyAlive.id;
+			/**
+			 * 敵のID
+			 * @public
+			 * @type {numbaer}
+			 * @memberof {EnemyAlive}
+			 */
+			public unique_id : number;
+			/**
+			 * ヒットポイント
+			 * @public
+			 * @type {number}
+			 * @memberof {EnemyAlive}
+			 */
+			public hp : number;
+			/**
+			 * 状態
+			 * @public
+			 * @type {number}
+			 * @memberof {EnemyAlive}
+			 */
+			public status : number;
+
+
+			/**
+			 * デフォルトコンストラクタ
+			 * @public
+			 * @constructor
+			 * @memberof {EnemyAlive}
+			 */
+			public constructor(){
+				this.unique_id = 0;
+				this.hp = 0;
+				this.status = 0;
+			}
+		}
+		/**
+		 * 判定後死亡
+		 * @export
+		 * @class EnemyDie
+		 * @implements {Send}
+		 */
+		export class EnemyDie implements Send{
+			/**
+			 * コマンドID
+			 * @public
+			 * @static 
+			 * @readonly 
+			 * @type {number}
+			 * @memberof {EnemyDie}
+			 */
+			public static readonly id : number = 222;
+
+			/**
+			 * コマンド識別子
+			 * @public
+			 * @readonly 
+			 * @type {number}
+			 * @memberof {EnemyDie}
+			 */
+			public readonly command : number = EnemyDie.id;
+			/**
+			 * ドロップ品のID
+			 * @public
+			 * @type {number}
+			 * @memberof {EnemyDie}
+			 */
+			public drop : number;
+
+
+			/**
+			 * デフォルトコンストラクタ
+			 * @public
+			 * @constructor
+			 * @memberof {EnemyDie}
+			 */
+			public constructor(){
+				this.drop = 0;
+			}
+		}
+
         export type AllTypes = 
         CharacterTransform |
         SimpleDisplayOfCharacter |
@@ -352,7 +457,9 @@ export namespace CommunicationData{
         LoadCharacter | 
         InitCharacter | 
         LogoutCharacter |
-        EnemysData;
+        EnemysData |
+        EnemyAlive |
+        EnemyDie;
     }
     /**
      * 受信データ
@@ -441,7 +548,76 @@ export namespace CommunicationData{
             public user_id: number = 0;
         }
 
-        export type AllTypes = CharacterTransform | PlayerStatus | LoadCharacter | LogoutCharacter | LoadOK | GetEnemy;
+        /**
+		 * 攻撃
+		 * @export
+		 * @class Attack
+		 * @implements {Receive}
+		 */
+		export class Attack implements Receive{
+			/**
+			 * コマンドID
+			 * @public
+			 * @static 
+			 * @readonly 
+			 * @type {number}
+			 * @memberof {Attack}
+			 */
+			public static readonly id : number = 220;
+
+			/**
+			 * コマンド識別子
+			 * @public
+			 * @readonly 
+			 * @type {number}
+			 * @memberof {Attack}
+			 */
+			public readonly command : number = Attack.id;
+			/**
+			 * 敵のID
+			 * @public
+			 * @type {number}
+			 * @memberof {Attack}
+			 */
+			public enemy_id : number;
+			/**
+			 * プレイヤーID
+			 * @public
+			 * @type {number}
+			 * @memberof {Attack}
+			 */
+			public player_id : number;
+			/**
+			 * スキルID
+			 * @public
+			 * @type {number}
+			 * @memberof {Attack}
+			 */
+			public skill_id : number;
+			/**
+			 * マップのID
+			 * @public
+			 * @type {number}
+			 * @memberof {Attack}
+			 */
+			public map_id : number;
+
+
+			/**
+			 * デフォルトコンストラクタ
+			 * @public
+			 * @constructor
+			 * @memberof {Attack}
+			 */
+			public constructor(){
+				this.enemy_id = 0;
+				this.player_id = 0;
+				this.skill_id = 0;
+				this.map_id = 0;
+			}
+		}
+
+        export type AllTypes = CharacterTransform | PlayerStatus | LoadCharacter | LogoutCharacter | LoadOK | GetEnemy | Attack;
     }
 
     export type AllTypes = SendData.AllTypes | ReceiveData.AllTypes;
@@ -518,6 +694,22 @@ export namespace CommunicationData{
                     data.enemys = parse.enemys;
                     return data;
                 }
+				case SendData.EnemyAlive.id:
+				{
+					const data:SendData.EnemyAlive = new SendData.EnemyAlive();
+					data.unique_id = parse.unique_id;
+					data.hp = parse.hp;
+					data.status = parse.status;
+					return data;
+				}
+				case SendData.EnemyDie.id:
+				{
+					const data:SendData.EnemyDie = new SendData.EnemyDie();
+					data.drop = parse.drop;
+					return data;
+				}
+
+
 
                 case ReceiveData.CharacterTransform.id:
                 {
@@ -567,6 +759,15 @@ export namespace CommunicationData{
                     const data: ReceiveData.GetEnemy = new ReceiveData.GetEnemy();
                     data.map_id = parse.map_id;
                     data.user_id = parse.user_id;
+                    return data;
+                }
+                case ReceiveData.Attack.id:
+                {
+                    const data:ReceiveData.Attack = new ReceiveData.Attack();
+                    data.enemy_id = parse.enemy_id;
+                    data.player_id = parse.player_id;
+                    data.skill_id = parse.skill_id;
+                    data.map_id = parse.map_id;
                     return data;
                 }
             }
