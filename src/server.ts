@@ -2,10 +2,13 @@ import { connection } from './model/setting';
 import { loginRouter } from './router/loginRouter';
 import { playRouter } from './router/playRouter';
 import { chatUpdate } from './router/chatRouter'
+import { AllDatabaseAccessor } from './ishitaka/AllDatabaseAccessor';
 
 // ルートの作成
 const login: loginRouter = new loginRouter();
 const play: playRouter = new playRouter();
+
+AllDatabaseAccessor.Initialize();
 
 // サーバーの処理
 login.loginUpdate();
