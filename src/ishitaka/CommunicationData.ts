@@ -512,7 +512,12 @@ export namespace CommunicationData{
                     data.user_id = parse.user_id;
                     return data;
                 }
-
+                case SendData.EnemysData.id:
+                {
+                    const data: SendData.EnemysData = new SendData.EnemysData();
+                    data.enemys = parse.enemys;
+                    return data;
+                }
 
                 case ReceiveData.CharacterTransform.id:
                 {
