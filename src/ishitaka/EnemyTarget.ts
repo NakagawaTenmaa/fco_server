@@ -45,6 +45,7 @@ export class EnemyTarget{
         this.hate_ = _hate;
     }
 
+
     /**
      * コンストラクタ
      * @public
