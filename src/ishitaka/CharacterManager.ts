@@ -14,6 +14,8 @@ import {Vector3} from './Vector3';
 import {PartyManager} from './PartyManager';
 import {Party} from './Party';
 import { UserModel } from './../model/userModel'
+import { EnemyDropModel } from '../model/enemyDropModel';
+import { EnemyDrop } from '../controller/object/enemyDrop';
 
 /**
  * キャラクタマネージャ
@@ -425,7 +427,7 @@ export class CharacterManager{
      * @param {CommunicationData.ReceiveData.UseSkillCtoS} _useSkill スキル使用情報
      * @memberof CharacterManager
      */
-    public ReceiveUseSkill(_useSkill: CommunicationData.ReceiveData.Attack){
+    public async ReceiveUseSkill(_useSkill: CommunicationData.ReceiveData.Attack){
         const useCharacter:Character = this.characterArray_[_useSkill.user_id];
         
         if(useCharacter.UseSkill(_useSkill.skill_id, _useSkill.enemy_id)){
@@ -435,8 +437,11 @@ export class CharacterManager{
 
             let data;
             if(enemy.status.hitPoint <= 0) {
+                const model: EnemyDropModel = new EnemyDropModel();
+                const dropData: EnemyDrop = await model.createItems(enemy.tribeId);
+                
                 data = new CommunicationData.SendData.EnemyDie();
-                data.drop = 1;
+                data.drop = dropData.randomItem();;
             } else {
                 // 生きている
                 data = new CommunicationData.SendData.EnemyAlive();
