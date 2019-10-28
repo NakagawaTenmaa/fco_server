@@ -440,7 +440,7 @@ export class CharacterManager{
             } else {
                 // 生きている
                 data = new CommunicationData.SendData.EnemyAlive();
-                data.hp = enemy.status.hitPoint;
+                data.hp = Math.ceil(enemy.status.hitPoint);
                 data.unique_id = enemy.id;
                 data.status = 0;
             }
