@@ -423,8 +423,8 @@ export class SkillDataAccessor implements DatabaseAccessor{
         this.dataArray_[0] = new SkillData(
             '通常攻撃',
             0,
-            0.5,
-            1.0,
+            500.0,
+            1000.0,
             0, 0,
             10.0, 1.0,
             0.0, 0.0,

@@ -20,6 +20,8 @@ import {PartyManager} from './PartyManager'
 import {Party} from './Party'
 import {SkillEffectManager} from './SkillEffectManager'
 import {SkillEffect} from './SkillEffect'
+import {Battlefield} from './Battlefield'
+import {BattlefieldManager} from './BattlefieldManager'
 
 /**
  * プレイヤー
@@ -80,14 +82,12 @@ export class Player implements Character{
     /**
      * パーティID
      * @public
+     * @readonly
      * @type {number}
      * @memberof Player
      */
     public get partyId() : number {
         return this.partyId_;
-    }
-    public set partyId(_id:number){
-        this.partyId_ = _id;
     }
     /**
      * パーティ優先度
@@ -119,14 +119,22 @@ export class Player implements Character{
     /**
      * 戦場ID
      * @public
+     * @readonly
      * @type {number}
      * @memberof Player
      */
     public get battlefieldId() : number {
         return this.battlefieldId_;
     }
-    public set battlefieldId(_id:number){
-        this.battlefieldId_ = _id;
+    /**
+     * 戦場にいるか
+     * @public
+     * @readonly
+     * @type {boolean}
+     * @memberof Player
+     */
+    public get isJoinedBattlefield() : boolean {
+        return (this.battlefieldId_ >= 0);
     }
     /**
      * ターゲットID
@@ -192,6 +200,16 @@ export class Player implements Character{
      * @memberof Player
      */
     public get status() : CharacterStatus { return this.playerStatus_; }
+    /**
+     * 死んでいるかのフラグ
+     * @public
+     * @readonly
+     * @type {boolean}
+     * @memberof Enemy
+     */
+    public get isDead() : boolean {
+        return this.status.isDead;
+    }
 
     private playerDir_ : number;
     public get dir(): number { return this.playerDir_; }
@@ -263,35 +281,7 @@ export class Player implements Character{
      * @memberof Player
      */
     public SendToClient(_sendData:string) : boolean {
-        // TODO:
         if(this.ws_ === null) return false;
-        //const data:CommunicationData.AllTypes|undefined = CommunicationData.Converter.Convert(_sendData);
-        /*
-        if(data === undefined){
-            console.log('Undefined data.');
-        }
-        else if(data instanceof CommunicationData.SendData.CharacterTransform){
-            console.log('Character transform data.');
-        }
-        else if(data instanceof CommunicationData.SendData.SimpleDisplayOfCharacter){
-            console.log('Simple display data.');
-        }
-        else if(data instanceof CommunicationData.SendData.ModelSetting){
-            console.log('Model setting data.');
-        }
-        else if(data instanceof CommunicationData.SendData.SkillUse){
-            console.log('Skill use data.');
-        } 
-        else if(data instanceof CommunicationData.SendData.LoadCharacter){
-            console.log('Load data');
-        } 
-        else if(data instanceof CommunicationData.SendData.InitCharacter){
-            console.log('Init user data');
-        }
-        else{
-            console.log('Any data.');
-        }
-        */
         this.ws_.send(_sendData);
         //console.log('send:'+_sendData+' -> user_id:'+this.id.toString());
         return true;
@@ -347,9 +337,89 @@ export class Player implements Character{
      * @memberof Player
      */
     public ReceiveDamage(_attacker:Character, _hitPointDamage:number, _magicPointDamage:number) : boolean {
+        // HP,MP更新
         this.status.hitPoint = this.status.hitPoint - _hitPointDamage;
         this.status.magicPoint = this.status.magicPoint - _magicPointDamage;
+
+        if(this.isJoinedBattlefield){
+            // 自身が戦場に入っているなら
+            // 攻撃してきたキャラクタを自身と同じ戦場に引きずり込む
+            _attacker.JoinBattlefield(this.battlefieldId_, true);
+        }
+        else if(_attacker.isJoinedBattlefield){
+            // 自信が入っていなくて相手が戦場に入っているなら
+            // 攻撃してきたキャラクタの戦場に入る
+            this.JoinBattlefield(_attacker.battlefieldId, true);
+        }
+        else{
+            // 両方戦場に入っていないなら新たな戦場を作成し、双方とも加入する
+            const battlefield:Battlefield = BattlefieldManager.instance.Create(this.characterId_);
+            this.JoinBattlefield(battlefield.id, true);
+            _attacker.JoinBattlefield(battlefield.id, true);
+        }
+
         return true;
+    }
+    
+    /**
+     * 戦場に入る
+     * @public
+     * @param {number} _battlefieldId 戦場ID
+     * @param {boolean} _isCall 周りに通知するかのフラグ
+     * @returns {boolean} true:成功 false:失敗
+     * @memberof Player
+     */
+    public JoinBattlefield(_battlefieldId:number, _isCall:boolean) : boolean {
+        if(_battlefieldId < 0){
+            // IDが不正なら何もしない
+            return false;
+        }
+        if(_battlefieldId === this.battlefieldId_){
+            // 既に入っている戦場なら何もしない
+            return false;
+        }
+
+        if(_isCall){
+            // 通知
+            
+            const toBattlefield:Battlefield|undefined = BattlefieldManager.instance.Search(_battlefieldId);
+            if(toBattlefield === undefined){
+                return false;
+            }
+            if(this.isJoinedBattlefield){
+                // 現在戦場に入っている場合なら、同じ戦場にいるキャラクタを引きずり込む
+                const currentBattlefield:Battlefield|undefined = BattlefieldManager.instance.Search(this.battlefieldId_);
+                if(currentBattlefield === undefined){
+                    return false;
+                }
+
+                // 先戦場の戦場に全キャラクタを移動して元の戦場を削除
+                currentBattlefield.MoveAllCharacters(toBattlefield);
+                BattlefieldManager.instance.Delete(currentBattlefield.id);
+            }
+            else{
+                // 同じパーティのキャラクタを引きずり込む
+                const myParty:Party|undefined = PartyManager.instance.Search(this.partyId_);
+                if(myParty === undefined){
+                    return false;
+                }
+                toBattlefield.AddParty(myParty);
+            }
+        }
+        
+        this.battlefieldId_ = _battlefieldId;
+        return true;
+    }
+
+    /**
+     * ヘイト変更
+     * @public
+     * @param {Character} _target ターゲット
+     * @param {number} _hateDifference ヘイト差分
+     * @memberof Enemy
+     */
+    public ChangeHate(_target:Character, _hateDifference:number) : void {
+        // 何もしない
     }
 
     /**

@@ -16,6 +16,7 @@ import {Party} from './Party';
 import { UserModel } from './../model/userModel'
 import { EnemyDropModel } from '../model/enemyDropModel';
 import { EnemyDrop } from '../controller/object/enemyDrop';
+import { BattlefieldManager } from './BattlefieldManager';
 
 /**
  * キャラクタマネージャ
@@ -142,6 +143,8 @@ export class CharacterManager{
                 return isContinued;
             }
         );
+
+        BattlefieldManager.instance.Update();
         return isSuccess;
     }
 
