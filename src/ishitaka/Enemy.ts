@@ -723,16 +723,14 @@ export class Enemy implements Character{
      */
     private UpdateOfAllTargetHate(_elapsedTime:number) : boolean {
         // TODO: ヘイト減少量算出
-        const downHate = 0.3 * _elapsedTime;
+        const downHate = 0.3 * _elapsedTime / 1000.0;
 
-        this.targetArray_ = this.targetArray_.filter(function(
+        this.targetArray_.forEach(function(
             _enemyTarget : EnemyTarget,
             _index : number,
             _array : EnemyTarget[]
-        ) : boolean {
-            const nextHate:number = _enemyTarget.hate - downHate;
-            _enemyTarget.hate = nextHate;
-            return (nextHate > 0.0);
+        ) : void {
+            _enemyTarget.hate = _enemyTarget.hate - downHate;
         });
 
         // ヘイトが高い順にソート
@@ -848,6 +846,7 @@ export class Enemy implements Character{
         }
         else{
             // 向かうキャラクタがいない
+            console.error("enemy [id : " + this.id.toString() + "] didn't find the target.");
             this.OnChangeButtleModeOfActionJudge();
             return false;
         }
