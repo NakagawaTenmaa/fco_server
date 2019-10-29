@@ -371,6 +371,7 @@ export class CharacterManager{
         if(_characterId in this.characterArray_){
             
             delete this.characterArray_[_characterId];
+            console.log("delete charcter");
             return true;
         }
         return false;
