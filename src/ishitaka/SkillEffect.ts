@@ -67,6 +67,9 @@ export class SkillEffect implements CharacterEffect{
         // ダメージ反映
         _receiver.ReceiveDamage(_user, hitPointDamage, 0);
 
+        // ヘイト変更
+        _receiver.ChangeHate(_user, hitPointDamage);
+
         return true;
     }
 }

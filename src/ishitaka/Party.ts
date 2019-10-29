@@ -55,6 +55,30 @@ export class Party{
      * @memberof Party
      */
     private isResetPriority_ : boolean;
+    /**
+     * 死んでいるかのフラグ
+     * @public
+     * @readonly
+     * @type {boolean}
+     * @memberof Party
+     */
+    public get isDead() : boolean {
+        if(this.characterArray_.length < 1){
+            return true;
+        }
+
+        let isDead = true;
+        this.characterArray_.every(function(
+            _character : Character,
+            _index : number,
+            _array : Character[]
+        ) : boolean {
+            isDead = _character.isDead;
+            return (!isDead);
+        });
+
+        return isDead;
+    }
 
 
     /**
