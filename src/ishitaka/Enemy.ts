@@ -483,7 +483,7 @@ export class Enemy implements Character{
         this.currentBattleMethod_ = this.ButtleOfMove;
         this.restTime_ = Enemy.battleMoveInterval_;
 
-        console.log('enemy [id:' + this.characterId_.toString() + '] change battle mode of move.');
+        // console.log('enemy [id:' + this.characterId_.toString() + '] change battle mode of move.');
     }
     /**
      * スキルを使用するときの処理
@@ -505,7 +505,7 @@ export class Enemy implements Character{
         // スキル使用情報送信
         this.SendUseSkill();
 
-        console.log('enemy [id:' + this.characterId_.toString() + '] change battle mode of skill use.');
+        // console.log('enemy [id:' + this.characterId_.toString() + '] change battle mode of skill use.');
     }
 
 
@@ -846,7 +846,7 @@ export class Enemy implements Character{
         }
         else{
             // 向かうキャラクタがいない
-            console.error("enemy [id : " + this.id.toString() + "] didn't find the target.");
+            console.error("enemy [id:" + this.id.toString() + "] didn't find the target.");
             this.OnChangeButtleModeOfActionJudge();
             return false;
         }
@@ -889,6 +889,8 @@ export class Enemy implements Character{
     private ButtleOfSkillCastTimeConsumption(_elapsedTime:number) : boolean {
         this.restTime_ -= _elapsedTime;
         if(this.restTime_ < 0.0){
+            //console.log("enemy [id:" + this.id.toString() + "] use skill.");
+
             // Comment: 攻撃判定はクライアントが行う
 
             // リキャストタイム消費モードへ
