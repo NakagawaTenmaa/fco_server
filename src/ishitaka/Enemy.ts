@@ -994,7 +994,8 @@ export class Enemy implements Character{
         data.z = this.transform.position.z;
         data.dir = this.transform.rotationY;
 
-        return CharacterManager.instance.Send(this.id, _toMapId, JSON.stringify(data));
+        return true;
+        //return CharacterManager.instance.Send(this.id, _toMapId, JSON.stringify(data));
     }
     /**
      * 簡易表示情報送信
@@ -1011,7 +1012,8 @@ export class Enemy implements Character{
         data.mp = 100.0 * this.status.magicPoint / this.status.maxMagicPoint;
         data.status = this.status.abnormalConditionStatus.flag;
 
-        return CharacterManager.instance.Send(this.id, this.mapId, JSON.stringify(data));
+        return true;
+        //return CharacterManager.instance.Send(this.id, this.mapId, JSON.stringify(data));
     }
     /**
      * スキル使用情報送信
