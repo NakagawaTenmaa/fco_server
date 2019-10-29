@@ -44,6 +44,14 @@ export class Enemy implements Character{
      */
     private static readonly repopulateInterval_ : number = 3000.0;
     /**
+     * 歩行終了インターバル
+     * @private
+     * @static
+     * @type {number}
+     * @memberof Enemy
+     */
+    private static readonly walkEndInterval_ : number = 1000.0;
+    /**
      * 戦闘移動インターバル
      * @private
      * @static
@@ -591,11 +599,9 @@ export class Enemy implements Character{
 
             // 目的地に到着したら待機状態へ
             if(this.IsArrivedWalkPosition()){
-                this.restTime_ = 1000;
+                this.restTime_ = Enemy.walkEndInterval_;
             }
         }
-
-        console.log("enemy id:" + this.id.toString() + " hp:" + this.status.hitPoint.toString() + " pos:" + this.transform.worldMatrix.column4.xyz.toString());
 
         this.SendTransform(this.mapId);
         this.SendSimpleDisplay();
