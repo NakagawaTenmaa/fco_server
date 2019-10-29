@@ -514,7 +514,8 @@ export class Player implements Character{
         const z : number = this.transform.worldMatrix.column1.z;
         data.dir = Math.atan2(z, x);
 
-        return CharacterManager.instance.Send(this.id, this.mapId, JSON.stringify(data));
+        return true;
+        //return CharacterManager.instance.Send(this.id, this.mapId, JSON.stringify(data));
     }
 
     /**
@@ -532,6 +533,7 @@ export class Player implements Character{
         data.mp = 100.0 * this.status.magicPoint / this.status.maxMagicPoint;
         data.status = this.status.abnormalConditionStatus.flag;
 
-        return CharacterManager.instance.Send(this.id, this.mapId, JSON.stringify(data));
+        return true;
+        //return CharacterManager.instance.Send(this.id, this.mapId, JSON.stringify(data));
     }
 }
