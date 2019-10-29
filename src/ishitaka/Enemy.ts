@@ -19,7 +19,14 @@ import {SkillData, SkillDataAccessor} from './DatabaseAccessors/SkillDataAccesso
 import {EnemyTarget} from './EnemyTarget'
 import {SkillEffectManager} from './SkillEffectManager'
 import {SkillEffect} from './SkillEffect'
-import { Vector4 } from './Vector4'
+import {Vector4} from './Vector4'
+import {Battlefield} from './Battlefield'
+import {BattlefieldManager} from './BattlefieldManager'
+
+enum EnemyUpdateMode{
+    Normal,
+    Battle
+}
 
 /**
  * 敵
@@ -36,6 +43,22 @@ export class Enemy implements Character{
      * @memberof Enemy
      */
     private static readonly repopulateInterval_ : number = 3000.0;
+    /**
+     * 歩行終了インターバル
+     * @private
+     * @static
+     * @type {number}
+     * @memberof Enemy
+     */
+    private static readonly walkEndInterval_ : number = 1000.0;
+    /**
+     * 戦闘移動インターバル
+     * @private
+     * @static
+     * @type {number}
+     * @memberof Enemy
+     */
+    private static readonly battleMoveInterval_ : number = 1000.0;
 
     
     /**
@@ -79,6 +102,16 @@ export class Enemy implements Character{
      */
     public get battlefieldId() : number {
         return this.battlefieldId_;
+    }
+    /**
+     * 戦場にいるか
+     * @public
+     * @readonly
+     * @type {boolean}
+     * @memberof Player
+     */
+    public get isJoinedBattlefield() : boolean {
+        return (this.battlefieldId_ >= 0);
     }
     /**
      * ターゲット情報
@@ -132,8 +165,38 @@ export class Enemy implements Character{
      * @memberof Enemy
      */
     public get status() : CharacterStatus { return this.enemyStatus_; }
+    /**
+     * 死んでいるかのフラグ
+     * @public
+     * @readonly
+     * @type {boolean}
+     * @memberof Enemy
+     */
+    public get isDead() : boolean {
+        return this.status.isDead;
+    }
+    /**
+     * 種族ID
+     * @private
+     * @type {number}
+     * @memberof Enemy
+     */
     private tribeId_ : number;
+    /**
+     * 種族ID
+     * @public
+     * @readonly
+     * @type {number}
+     * @memberof Enemy
+     */
     public get tribeId() : number { return this.tribeId_; }
+    /**
+     * 更新モード
+     * @private
+     * @type {EnemyUpdateMode}
+     * @memberof Enemy
+     */
+    private updateMode_ : EnemyUpdateMode;
     /**
      * 現在の更新メソッド
      * @private
@@ -156,19 +219,19 @@ export class Enemy implements Character{
      */
     private toWalkPosition_ : Vector3;
     /**
-     * 戦闘相手のキャラクタID
-     * @private
-     * @type {number}
-     * @memberof Enemy
-     */
-    private battleCharacterId_ : number;
-    /**
      * 現在のバトルメソッド
      * @private
      * @type {function}
      * @memberof Enemy
      */
     private currentBattleMethod_ : (_elapsedTime:number)=>boolean;
+    /**
+     * デバッグ用:次の戦闘行動で動くか
+     * @private
+     * @type {boolean}
+     * @memberof Enemy
+     */
+    private isNextMoveOfButtleAction_ : boolean;
 
 
     /**
@@ -185,11 +248,12 @@ export class Enemy implements Character{
         this.transform_ = new Transform();
         this.enemyStatus_ = new EnemyStatus(this);
         this.tribeId_ = 0;
+        this.updateMode_ = EnemyUpdateMode.Normal;
         this.currentUpdateMethod_ = this.UpdateOfNormal;
         this.restTime_ = 0;
         this.toWalkPosition_ = new Vector3();
-        this.battleCharacterId_ = 0;
         this.currentBattleMethod_ = this.ButtleOfActionJudge;
+        this.isNextMoveOfButtleAction_ = true;
     }
 
 
@@ -276,18 +340,91 @@ export class Enemy implements Character{
      * @memberof Enemy
      */
     public ReceiveDamage(_attacker:Character, _hitPointDamage:number, _magicPointDamage:number) : boolean {
+        // HP,MP更新
         this.status.hitPoint = this.status.hitPoint - _hitPointDamage;
         this.status.magicPoint = this.status.magicPoint - _magicPointDamage;
 
-        let enemyTarget:EnemyTarget|undefined = this.FindTargetData(_attacker);
-        if(enemyTarget === undefined){
-            enemyTarget = new EnemyTarget(_attacker);
-            this.targetArray_.push(enemyTarget);
+        if(this.isJoinedBattlefield){
+            // 自身が戦場に入っているなら
+            // 攻撃してきたキャラクタを自身と同じ戦場に引きずり込む
+            _attacker.JoinBattlefield(this.battlefieldId_, true);
         }
-        // TODO: ヘイト算出
-        enemyTarget.hate = enemyTarget.hate + _hitPointDamage + _magicPointDamage;
+        else if(_attacker.isJoinedBattlefield){
+            // 自信が入っていなくて相手が戦場に入っているなら
+            // 攻撃してきたキャラクタの戦場に入る
+            this.JoinBattlefield(_attacker.battlefieldId, true);
+        }
+        else{
+            // 両方戦場に入っていないなら新たな戦場を作成し、双方とも加入する
+            const battlefield:Battlefield = BattlefieldManager.instance.Create(this.characterId_);
+            this.JoinBattlefield(battlefield.id, true);
+            _attacker.JoinBattlefield(battlefield.id, true);
+        }
+
+        // バトルモードでなければバトルモードへ
+        if(this.updateMode_ !== EnemyUpdateMode.Battle){
+            this.OnBattle();
+        }
 
         return true;
+    }
+    
+    /**
+     * 戦場に入る
+     * @public
+     * @param {number} _battlefieldId 戦場ID
+     * @param {boolean} _isCall 周りに通知するかのフラグ
+     * @returns {boolean} true:成功 false:失敗
+     * @memberof Enemy
+     */
+    public JoinBattlefield(_battlefieldId:number, _isCall:boolean) : boolean {
+        if(_battlefieldId < 0){
+            // IDが不正なら何もしない
+            return false;
+        }
+        if(_battlefieldId === this.battlefieldId_){
+            // 既に入っている戦場なら何もしない
+            return false;
+        }
+
+        if(_isCall){
+            // 通知
+            if(this.isJoinedBattlefield){
+                // 現在戦場に入っている場合なら、同じ戦場にいるキャラクタを引きずり込む
+                const currentBattlefield:Battlefield|undefined = BattlefieldManager.instance.Search(this.battlefieldId_);
+                if(currentBattlefield === undefined){
+                    return false;
+                }
+                const toBattlefield:Battlefield|undefined = BattlefieldManager.instance.Search(_battlefieldId);
+                if(toBattlefield === undefined){
+                    return false;
+                }
+
+                // 先戦場の戦場に全キャラクタを移動して元の戦場を削除
+                currentBattlefield.MoveAllCharacters(toBattlefield);
+                BattlefieldManager.instance.Delete(currentBattlefield.id);
+            }
+        }
+
+        this.battlefieldId_ = _battlefieldId;
+        return true;
+    }
+
+    /**
+     * ヘイト変更
+     * @public
+     * @param {Character} _target ターゲット
+     * @param {number} _hateDifference ヘイト差分
+     * @memberof Enemy
+     */
+    public ChangeHate(_target:Character, _hateDifference:number) : void {
+        // ターゲットデータを探す
+        let enemyTarget:EnemyTarget|undefined = this.FindTargetData(_target);
+        if(enemyTarget === undefined){
+            enemyTarget = new EnemyTarget(_target);
+            this.targetArray_.push(enemyTarget);
+        }
+        enemyTarget.hate = enemyTarget.hate + _hateDifference;
     }
 
 
@@ -297,7 +434,9 @@ export class Enemy implements Character{
      * @memberof Enemy
      */
     public OnNormal() : void {
+        this.updateMode_ = EnemyUpdateMode.Normal;
         this.currentUpdateMethod_ = this.UpdateOfNormal;
+        this.ResetTargetArray();
         
         console.log('enemy [id:' + this.characterId_.toString() + '] is normal mode.');
     }
@@ -307,6 +446,7 @@ export class Enemy implements Character{
      * @memberof Enemy
      */
     public OnBattle() : void {
+        this.updateMode_ = EnemyUpdateMode.Battle;
         this.currentBattleMethod_ = this.ButtleOfActionJudge;
         this.currentUpdateMethod_ = this.UpdateOfBattle;
 
@@ -318,12 +458,22 @@ export class Enemy implements Character{
      * @memberof Enemy
      */
     public OnDead() : void {
+        this.battlefieldId_ = -1;
         this.restTime_ = Enemy.repopulateInterval_;
         this.currentUpdateMethod_ = this.UpdateOfDead;
+        this.ResetTargetArray();
         
         console.log('enemy [id:' + this.characterId_.toString() + '] is dead mode.');
     }
 
+    /**
+     * 戦闘行動選択するときの処理
+     * @public
+     * @memberof Enemy
+     */
+    public OnChangeButtleModeOfActionJudge() : void {
+        this.currentBattleMethod_ = this.ButtleOfActionJudge;
+    }
     /**
      * 戦闘移動するときの処理
      * @public
@@ -331,8 +481,9 @@ export class Enemy implements Character{
      */
     public OnChangeButtleModeOfMove() : void {
         this.currentBattleMethod_ = this.ButtleOfMove;
+        this.restTime_ = Enemy.battleMoveInterval_;
 
-        console.log('enemy [id:' + this.characterId_.toString() + '] change battle mode of move.');
+        // console.log('enemy [id:' + this.characterId_.toString() + '] change battle mode of move.');
     }
     /**
      * スキルを使用するときの処理
@@ -354,7 +505,7 @@ export class Enemy implements Character{
         // スキル使用情報送信
         this.SendUseSkill();
 
-        console.log('enemy [id:' + this.characterId_.toString() + '] change battle mode of skill use.');
+        // console.log('enemy [id:' + this.characterId_.toString() + '] change battle mode of skill use.');
     }
 
 
@@ -410,6 +561,14 @@ export class Enemy implements Character{
         return true;
     }
 
+    /**
+     * ターゲット配列リセット
+     * @private
+     * @memberof Enemy
+     */
+    private ResetTargetArray() : void {
+        this.targetArray_ = new Array<EnemyTarget>();
+    }
 
     /**
      * 通常状態時の更新処理
@@ -440,11 +599,9 @@ export class Enemy implements Character{
 
             // 目的地に到着したら待機状態へ
             if(this.IsArrivedWalkPosition()){
-                this.restTime_ = 1000;
+                this.restTime_ = Enemy.walkEndInterval_;
             }
         }
-
-        console.log("enemy id:" + this.id.toString() + " hp:" + this.status.hitPoint.toString() + " pos:" + this.transform.worldMatrix.column4.xyz.toString());
 
         this.SendTransform(this.mapId);
         this.SendSimpleDisplay();
@@ -487,7 +644,7 @@ export class Enemy implements Character{
         }
 
         const direction:number = 2.0*Math.PI * (Math.random()-0.5);
-        const delta:number = area.popAreaRadius * Math.random();
+        const delta:number = area.areaRadius * Math.random();
         this.toWalkPosition_ = new Vector3(
             area.positionX + delta*Math.cos(direction),
             area.positionY,
@@ -566,15 +723,22 @@ export class Enemy implements Character{
      */
     private UpdateOfAllTargetHate(_elapsedTime:number) : boolean {
         // TODO: ヘイト減少量算出
-        const downHate = 0.3 * _elapsedTime;
+        const downHate = 0.3 * _elapsedTime / 1000.0;
 
         this.targetArray_.forEach(function(
             _enemyTarget : EnemyTarget,
             _index : number,
             _array : EnemyTarget[]
         ) : void {
-            const afterHate:number = _enemyTarget.hate - downHate;
-            _enemyTarget.hate = (afterHate<0.0) ? (0.0) : (afterHate);
+            _enemyTarget.hate = _enemyTarget.hate - downHate;
+        });
+
+        // ヘイトが高い順にソート
+        this.targetArray_ = this.targetArray_.sort(function(
+            _left : EnemyTarget,
+            _right : EnemyTarget
+        ) : number {
+            return (_right.hate - _left.hate);
         });
 
         return true;
@@ -602,30 +766,41 @@ export class Enemy implements Character{
      * @memberof Enemy
      */
     private ButtleOfActionJudge(_elapsedTime:number) : boolean {
-        // TODO: 各行動点数計算
-        const movePoint = 0;
-        const useSkillPoint = 0;
-        const toNormalMode = 0;
+        // 各行動ポイントの計算
+        const movePoint:number = this.CalculateBattleMovePoint();
+        const useSkillPoint:number = this.CalculateBattleUseSkillPoint();
 
         // 点数が一番高い行動をする
         if(movePoint < useSkillPoint){
-            if(useSkillPoint < toNormalMode){
-                this.OnNormal();
-            }
-            else{
-                this.OnChangeBattleModeOfSkillUse();
-            }
+            this.isNextMoveOfButtleAction_ = true;
+            this.OnChangeBattleModeOfSkillUse();
         }
         else{
-            if(movePoint < toNormalMode){
-                this.OnNormal();
-            }
-            else{
-                this.OnChangeButtleModeOfMove();
-            }
+            this.isNextMoveOfButtleAction_ = false;
+            this.OnChangeButtleModeOfMove();
         }
 
         return true;
+    }
+    /**
+     * 戦闘行動ポイントの計算
+     * @private
+     * @returns {number} 戦闘行動ポイント
+     * @memberof Enemy
+     */
+    private CalculateBattleMovePoint() : number {
+        // TODO:
+        return (this.isNextMoveOfButtleAction_ ? 1 : 0);
+    }
+    /**
+     * 戦闘スキル使用ポイントの計算
+     * @private
+     * @returns {number} 戦闘スキル使用ポイント
+     * @memberof Enemy
+     */
+    private CalculateBattleUseSkillPoint() : number {
+        // TODO:
+        return (this.isNextMoveOfButtleAction_ ? 0 : 1);
     }
     /**
      * バトル移動
@@ -636,7 +811,7 @@ export class Enemy implements Character{
      */
     private ButtleOfMove(_elapsedTime:number) : boolean {
         // 相手の場所に近づく
-        const battleCharacter:Character|undefined = CharacterManager.instance.FindCharacter(this.battleCharacterId_);
+        const battleCharacter:Character|undefined = this.GetBattleCharacter();
         if(battleCharacter !== undefined){
             const battleCharacterInLocal:Matrix4x4 = battleCharacter.transform.worldMatrix.Multiplication(this.transform_.worldMatrix.invertMatrix);
             const toPosition:Vector3 = battleCharacterInLocal.column4.xyz;
@@ -669,10 +844,40 @@ export class Enemy implements Character{
             transformMatrix.column4 = move;
             this.transform_.worldMatrix = transformMatrix.Multiplication(this.transform_.worldMatrix);
         }
+        else{
+            // 向かうキャラクタがいない
+            console.error("enemy [id:" + this.id.toString() + "] didn't find the target.");
+            this.OnChangeButtleModeOfActionJudge();
+            return false;
+        }
 
         // 行動判定へ
-        this.currentBattleMethod_ = this.ButtleOfActionJudge;
+        this.restTime_ -= _elapsedTime;
+        if(this.restTime_ < 0.0){
+            this.OnChangeButtleModeOfActionJudge();
+        }
         return true;
+    }
+    /**
+     * 戦闘相手キャラクタの取得
+     * @private
+     * @returns {(Character|undefined)} 戦闘相手キャラクタ 居なければundefined
+     * @memberof Enemy
+     */
+    private GetBattleCharacter() : Character|undefined {
+        let battleCharacter:Character|undefined = undefined;
+        this.targetArray_.every(function(
+            _target : EnemyTarget,
+            _priority : number,
+            _array : EnemyTarget[]
+        ) : boolean {
+            if(_target.character.isDead){
+                return true;
+            }
+            battleCharacter = _target.character;
+            return false;
+        });
+        return battleCharacter;
     }
     /**
      * バトルスキルのキャストタイム消費
@@ -684,6 +889,8 @@ export class Enemy implements Character{
     private ButtleOfSkillCastTimeConsumption(_elapsedTime:number) : boolean {
         this.restTime_ -= _elapsedTime;
         if(this.restTime_ < 0.0){
+            //console.log("enemy [id:" + this.id.toString() + "] use skill.");
+
             // Comment: 攻撃判定はクライアントが行う
 
             // リキャストタイム消費モードへ
@@ -708,7 +915,7 @@ export class Enemy implements Character{
         this.restTime_ -= _elapsedTime;
         if(this.restTime_ < 0.0){
             // 行動判定へ
-            this.currentBattleMethod_ = this.ButtleOfActionJudge;
+            this.OnChangeButtleModeOfActionJudge();
         }
         return true;
     }

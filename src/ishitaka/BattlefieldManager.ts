@@ -55,6 +55,24 @@ export class BattlefieldManager{
         this.battlefieldArray_ = new Array<Battlefield>();
     }
 
+    /**
+     * 更新
+     * @public
+     * @returns {boolean} true:成功 false:失敗
+     * @memberof BattlefieldManager
+     */
+    public Update() : boolean {
+        this.battlefieldArray_ = this.battlefieldArray_.filter(function(
+            _battlefield : Battlefield,
+            _index : number,
+            _array : Battlefield[]
+        ) : boolean {
+            _battlefield.Update();
+            return (!(_battlefield.isDead));
+        });
+
+        return true;
+    }
 
     /**
      * 作成
@@ -79,5 +97,15 @@ export class BattlefieldManager{
      */
     public Search(_id:number) : Battlefield|undefined {
         return this.battlefieldArray_[_id];
+    }
+    /**
+     * 削除
+     * @param {number} _id 削除する戦場のID
+     * @memberof BattlefieldManager
+     */
+    public Delete(_id:number) : void {
+        if(_id in this.battlefieldArray_){
+            delete this.battlefieldArray_[_id];
+        }
     }
 }

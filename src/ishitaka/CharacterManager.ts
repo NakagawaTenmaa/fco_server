@@ -13,7 +13,8 @@ import WebSocket = require('ws');
 import {Vector3} from './Vector3';
 import {PartyManager} from './PartyManager';
 import {Party} from './Party';
-import { UserModel } from './../model/userModel'
+import {UserModel} from './../model/userModel'
+import {BattlefieldManager} from './BattlefieldManager';
 
 /**
  * キャラクタマネージャ
@@ -140,6 +141,8 @@ export class CharacterManager{
                 return isContinued;
             }
         );
+
+        BattlefieldManager.instance.Update();
         return isSuccess;
     }
 

@@ -42,7 +42,7 @@ export class EnemyTarget{
         return this.hate_;
     }
     public set hate(_hate:number){
-        this.hate_ = _hate;
+        this.hate_ = (_hate < 0.0) ? (0.0) : (_hate);
     }
 
 

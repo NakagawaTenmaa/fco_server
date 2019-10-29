@@ -269,7 +269,7 @@ export namespace CommunicationData{
              * @type {number}
              * @memberof SkillUse
              */
-            public static readonly id : number = -1; // TODO
+            public static readonly id : number = 213;
             /**
              * コマンドID
              * @public
