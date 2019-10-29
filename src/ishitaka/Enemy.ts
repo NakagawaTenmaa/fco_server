@@ -447,7 +447,7 @@ export class Enemy implements Character{
         console.log("enemy id:" + this.id.toString() + " hp:" + this.status.hitPoint.toString() + " pos:" + this.transform.worldMatrix.column4.xyz.toString());
 
         this.SendTransform(this.mapId);
-        this.SendSimpleDisplay();
+        //this.SendSimpleDisplay();
         return true;
     }
     /**
@@ -554,7 +554,7 @@ export class Enemy implements Character{
         const result = this.currentBattleMethod_(_elapsedTime);
 
         this.SendTransform(this.mapId);
-        this.SendSimpleDisplay();
+        //this.SendSimpleDisplay();
         return result;
     }
     /**
@@ -787,7 +787,8 @@ export class Enemy implements Character{
         data.z = this.transform.position.z;
         data.dir = this.transform.rotationY;
 
-        return CharacterManager.instance.Send(this.id, _toMapId, JSON.stringify(data));
+        //return CharacterManager.instance.Send(this.id, _toMapId, JSON.stringify(data));
+        return true;
     }
     /**
      * 簡易表示情報送信

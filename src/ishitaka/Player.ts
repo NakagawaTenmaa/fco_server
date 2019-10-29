@@ -239,7 +239,7 @@ export class Player implements Character{
      */
     public Update(_elapsedTime:number) : boolean {
         if(!(this.Synchronize())) return false;
-        this.SendTransform(this.mapId);
+        //this.SendTransform(this.mapId);
         this.SendSimpleDisplay();
         return true;
     }
