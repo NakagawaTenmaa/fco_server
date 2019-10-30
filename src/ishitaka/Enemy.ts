@@ -942,7 +942,7 @@ export class Enemy implements Character{
         this.transform.worldMatrix = Matrix4x4.CreateRotationYMatrix(2.0*Math.PI * (Math.random()-0.5));
         {
             const direction:number = 2.0*Math.PI * (Math.random()-0.5);
-            const delta:number = area.popAreaRadius * Math.random();
+            const delta:number = area.areaRadius * Math.random();
             this.transform.position = new Vector3(
                 area.positionX + delta*Math.cos(direction),
                 area.positionY,
