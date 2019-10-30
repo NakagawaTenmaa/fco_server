@@ -40,10 +40,18 @@ export class Transform{
     public get position() : Vector3 { return this.worldMatrix.column4.xyz; }
     public set position(_position:Vector3){ this.worldMatrix.column4.xyz = _position; }
 
+    /**
+     * Y軸回転量 [デグリー]
+     * @public
+     * @readonly
+     * @type {number}
+     * @memberof Transform
+     */
     public get rotationY() : number {
-        const x : number = this.worldMatrix.column1.x;
-        const z : number = this.worldMatrix.column1.z;
-        return Math.atan2(z, x);
+        const x : number = this.worldMatrix.column3.x;
+        const z : number = this.worldMatrix.column3.z;
+        const radian : number = Math.atan2(x, z);
+        return ((radian/Math.PI)*180.0);
     }
 
     /**
