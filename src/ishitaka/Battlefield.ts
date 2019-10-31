@@ -97,17 +97,37 @@ export class Battlefield{
      * @memberof Battlefield
      */
     public Update() : boolean {
+        const enemyArray:Array<Enemy> = this.enemyArray_;
+
         this.partyArray_ = this.partyArray_.filter(function(
             _party : Party,
             _id : number,
             _array : Party[]
         ) : boolean {
+            let isRemove:boolean = false;
             // 死んでいたら消す
             if(_party.isDead){
-                return false;
+                isRemove = true;
             }
 
             // TODO:メンバ全員が範囲外に出ていたら消す
+
+            if(isRemove){
+                // パーティメンバを戦場にいる全ての敵のターゲットから外す
+                _party.OnRemoveBattlefield(function(
+                    _character : Character
+                ) : void {
+                    enemyArray.forEach(function(
+                        _enemy : Enemy,
+                        _index : number,
+                        _enemyArray : Enemy[]
+                    ) : void {
+                        _enemy.RemoveTarget(_character);
+                    });
+                });
+
+                return false;
+            }
 
             return true;
         });

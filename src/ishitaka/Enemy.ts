@@ -974,6 +974,28 @@ export class Enemy implements Character{
             return (_enemyTarget.character.id === _target.id);
         }).shift();
     }
+    /**
+     * ターゲット削除
+     * @public
+     * @param {Character} _target ターゲットキャラクタ
+     * @returns {boolean} true:成功 false:失敗
+     * @memberof Enemy
+     */
+    public RemoveTarget(_target:Character) : boolean {
+        let isRemoved:boolean = false;
+        this.targetArray_ = this.targetArray_.filter(function (
+            _enemyTarget : EnemyTarget,
+            _index : number,
+            _array : EnemyTarget[]
+        ) : boolean {
+            if(_enemyTarget.character.id === _target.id){
+                isRemoved = true;
+                return false;
+            }
+            return true;
+        });
+        return isRemoved;
+    }
 
 
     /**

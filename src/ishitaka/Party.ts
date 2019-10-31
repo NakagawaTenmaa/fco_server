@@ -94,6 +94,18 @@ export class Party{
         this.isResetPriority_ = false;
     }
 
+    public OnRemoveBattlefield(
+        _Remove : (_character:Character)=>void
+    ) : void {
+        this.characterArray.forEach(function(
+            _character : Character,
+            _priority : number,
+            _memberArray : Character[]
+        ) : void {
+            _Remove(_character);
+        });
+    }
+
     /**
      * プレイヤの追加
      * @param {Player} _player プレイヤ
