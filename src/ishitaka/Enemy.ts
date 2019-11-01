@@ -327,7 +327,10 @@ export class Enemy implements Character{
             return false;
         }
         
-        return skillEffect.Show(this, receiver);
+        if(skillEffect.Consume(this)){
+            return skillEffect.Show(this, receiver);
+        }
+        return false;
     }
 
     /**
