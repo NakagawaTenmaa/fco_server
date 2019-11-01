@@ -136,6 +136,8 @@ export class Battlefield{
             if(isDeadAllParty){
                 // 全パーティがいなくなっているなら通常状態へ
                 _enemy.OnRemovedBattlefield();
+                _enemy.OnNormal();
+                return false;
             }
 
             return true;

@@ -415,7 +415,6 @@ export class Enemy implements Character{
      * @memberof Enemy
      */
     public OnRemovedBattlefield() : void {
-        this.OnNormal();
         this.battlefieldId_ = -1;
     }
 
