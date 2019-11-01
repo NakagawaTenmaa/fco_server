@@ -163,6 +163,12 @@ export interface Character{
      * @memberof Character
      */
     JoinBattlefield(_battlefieldId:number, _isCall:boolean) : boolean;
+    /**
+     * 戦場から出た
+     * @public
+     * @memberof Character
+     */
+    OnRemovedBattlefield() : void;
 
     /**
      * ヘイト変更

@@ -97,7 +97,7 @@ export class Battlefield{
      * @memberof Battlefield
      */
     public Update() : boolean {
-        const enemyArray:Array<Enemy> = this.enemyArray_;
+        const this_:Battlefield = this;
 
         this.partyArray_ = this.partyArray_.filter(function(
             _party : Party,
@@ -114,18 +114,7 @@ export class Battlefield{
 
             if(isRemove){
                 // パーティメンバを戦場にいる全ての敵のターゲットから外す
-                _party.OnRemoveBattlefield(function(
-                    _character : Character
-                ) : void {
-                    enemyArray.forEach(function(
-                        _enemy : Enemy,
-                        _index : number,
-                        _enemyArray : Enemy[]
-                    ) : void {
-                        _enemy.RemoveTarget(_character);
-                    });
-                });
-
+                _party.OnRemovedBattlefield(this_.ClearEnemyTarget);
                 return false;
             }
 
@@ -168,6 +157,7 @@ export class Battlefield{
             return false;
         }
         this.partyArray_[_party.id] = _party;
+        _party.OnAddBattlefield(this.id);
         return true;
     }
     /**
@@ -225,6 +215,7 @@ export class Battlefield{
      */
     public RemoveParty(_party:Party) : boolean {
         if(_party.id in this.partyArray_){
+            _party.OnRemovedBattlefield(this.ClearEnemyTarget);
             delete this.partyArray_[_party.id];
             return true;
         }
@@ -239,9 +230,26 @@ export class Battlefield{
      */
     public RemoveEnemy(_enemy:Enemy) : boolean {
         if(_enemy.id in this.enemyArray_){
+            _enemy.OnRemovedBattlefield();
             delete this.enemyArray_[_enemy.id];
             return true;
         }
         return false;
+    }
+
+    /**
+     * 敵ターゲットから外す
+     * @private
+     * @param {Character} _character キャラクタ
+     * @memberof Battlefield
+     */
+    private ClearEnemyTarget(_character:Character) : void {
+        this.enemyArray_.forEach(function(
+            _enemy : Enemy,
+            _index : number,
+            _enemyArray : Enemy[]
+        ) : void {
+            _enemy.RemoveTarget(_character);
+        });
     }
 }

@@ -32,6 +32,23 @@ export class Party{
         return this.id_;
     }
     /**
+     * 戦場ID
+     * @private
+     * @type {number}
+     * @memberof Party
+     */
+    private battlefieldId_ : number;
+    /**
+     * 戦場ID
+     * @public
+     * @readonly
+     * @type {number}
+     * @memberof Party
+     */
+    public get battlefieldId() : number {
+        return this.battlefieldId_;
+    }
+    /**
      * パーティキャラクタ配列
      * @private
      * @type {Array<Character>}
@@ -90,11 +107,34 @@ export class Party{
      */
     public constructor(_id:number){
         this.id_ = _id;
+        this.battlefieldId_ = -1;
         this.characterArray_ = new Array<Character>();
         this.isResetPriority_ = false;
     }
 
-    public OnRemoveBattlefield(
+    /**
+     * 戦場に追加された
+     * @public
+     * @param {number} _battlefieldId 戦場ID
+     * @memberof Party
+     */
+    public OnAddBattlefield(_battlefieldId:number) : void {
+        this.battlefieldId_ = _battlefieldId;
+        this.characterArray.forEach(function(
+            _character : Character,
+            _priority : number,
+            _memberArray : Character[]
+        ) : void {
+            _character.JoinBattlefield(_battlefieldId, false);
+        });
+    }
+    /**
+     * 戦場から削除された
+     * @public
+     * @param {(_character:Character)=>void} _Remove キャラクタ削除用関数
+     * @memberof Party
+     */
+    public OnRemovedBattlefield(
         _Remove : (_character:Character)=>void
     ) : void {
         this.characterArray.forEach(function(
@@ -103,7 +143,9 @@ export class Party{
             _memberArray : Character[]
         ) : void {
             _Remove(_character);
+            _character.OnRemovedBattlefield();
         });
+        this.battlefieldId_ = -1;
     }
 
     /**

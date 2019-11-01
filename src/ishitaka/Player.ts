@@ -410,6 +410,14 @@ export class Player implements Character{
         this.battlefieldId_ = _battlefieldId;
         return true;
     }
+    /**
+     * 戦場から出た
+     * @public
+     * @memberof Player
+     */
+    public OnRemovedBattlefield() : void {
+        this.battlefieldId_ = -1;
+    }
 
     /**
      * ヘイト変更

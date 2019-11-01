@@ -409,6 +409,15 @@ export class Enemy implements Character{
         this.battlefieldId_ = _battlefieldId;
         return true;
     }
+    /**
+     * 戦場から出た
+     * @public
+     * @memberof Enemy
+     */
+    public OnRemovedBattlefield() : void {
+        this.OnNormal();
+        this.battlefieldId_ = -1;
+    }
 
     /**
      * ヘイト変更
