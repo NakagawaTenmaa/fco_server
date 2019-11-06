@@ -324,7 +324,10 @@ export class Player implements Character{
             return false;
         }
         
-        return skillEffect.Show(this, receiver);
+        if(skillEffect.Consume(this)){
+            return skillEffect.Show(this, receiver);
+        }
+        return false;
     }
 
     /**
@@ -409,6 +412,14 @@ export class Player implements Character{
         
         this.battlefieldId_ = _battlefieldId;
         return true;
+    }
+    /**
+     * 戦場から出た
+     * @public
+     * @memberof Player
+     */
+    public OnRemovedBattlefield() : void {
+        this.battlefieldId_ = -1;
     }
 
     /**

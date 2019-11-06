@@ -354,7 +354,7 @@ export class EnemyTribeDataAccessor implements DatabaseAccessor{
             'test',
             0,
             0,
-            300, 50,
+            30, 50,
             50, 70,
             20, 30,
             50,

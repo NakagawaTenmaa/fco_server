@@ -368,9 +368,9 @@ export class EnemyPopAreaDataAccessor implements DatabaseAccessor{
         // テスト用データ
         const testArea:EnemyPopAreaData = new EnemyPopAreaData(
             0,
-            10.0, 0.0, -20.0,
-            3.0,
-            5.0,
+            0.0, 0.4, 9.0,
+            0.7,
+            1.0,
             3,
             0, 3,
             -1, 0,

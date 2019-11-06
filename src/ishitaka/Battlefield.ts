@@ -97,17 +97,26 @@ export class Battlefield{
      * @memberof Battlefield
      */
     public Update() : boolean {
+        const this_:Battlefield = this;
+
         this.partyArray_ = this.partyArray_.filter(function(
             _party : Party,
             _id : number,
             _array : Party[]
         ) : boolean {
+            let isRemove:boolean = false;
             // 死んでいたら消す
             if(_party.isDead){
-                return false;
+                isRemove = true;
             }
 
             // TODO:メンバ全員が範囲外に出ていたら消す
+
+            if(isRemove){
+                // パーティメンバを戦場にいる全ての敵のターゲットから外す
+                _party.OnRemovedBattlefield(this_.ClearEnemyTarget);
+                return false;
+            }
 
             return true;
         });
@@ -126,7 +135,9 @@ export class Battlefield{
 
             if(isDeadAllParty){
                 // 全パーティがいなくなっているなら通常状態へ
+                _enemy.OnRemovedBattlefield();
                 _enemy.OnNormal();
+                return false;
             }
 
             return true;
@@ -148,6 +159,7 @@ export class Battlefield{
             return false;
         }
         this.partyArray_[_party.id] = _party;
+        _party.OnAddBattlefield(this.id);
         return true;
     }
     /**
@@ -205,6 +217,7 @@ export class Battlefield{
      */
     public RemoveParty(_party:Party) : boolean {
         if(_party.id in this.partyArray_){
+            _party.OnRemovedBattlefield(this.ClearEnemyTarget);
             delete this.partyArray_[_party.id];
             return true;
         }
@@ -219,9 +232,26 @@ export class Battlefield{
      */
     public RemoveEnemy(_enemy:Enemy) : boolean {
         if(_enemy.id in this.enemyArray_){
+            _enemy.OnRemovedBattlefield();
             delete this.enemyArray_[_enemy.id];
             return true;
         }
         return false;
+    }
+
+    /**
+     * 敵ターゲットから外す
+     * @private
+     * @param {Character} _character キャラクタ
+     * @memberof Battlefield
+     */
+    private ClearEnemyTarget(_character:Character) : void {
+        this.enemyArray_.forEach(function(
+            _enemy : Enemy,
+            _index : number,
+            _enemyArray : Enemy[]
+        ) : void {
+            _enemy.RemoveTarget(_character);
+        });
     }
 }

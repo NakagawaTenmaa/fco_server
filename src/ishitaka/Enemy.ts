@@ -27,6 +27,12 @@ enum EnemyUpdateMode{
     Normal,
     Battle
 }
+enum EnemyBattleMode{
+    ActionJudge,
+    Move,
+    Cast,
+    Recast
+}
 
 /**
  * 敵
@@ -59,6 +65,14 @@ export class Enemy implements Character{
      * @memberof Enemy
      */
     private static readonly battleMoveInterval_ : number = 1000.0;
+    /**
+     * スキル中断インターバル
+     * @private
+     * @static
+     * @type {number}
+     * @memberof Enemy
+     */
+    private static readonly skillInterruptInterval_ : number = 500.0;
 
     
     /**
@@ -219,6 +233,13 @@ export class Enemy implements Character{
      */
     private toWalkPosition_ : Vector3;
     /**
+     * 戦闘モード
+     * @private
+     * @type {EnemyBattleMode}
+     * @memberof Enemy
+     */
+    private battleMode_ : EnemyBattleMode;
+    /**
      * 現在のバトルメソッド
      * @private
      * @type {function}
@@ -252,6 +273,7 @@ export class Enemy implements Character{
         this.currentUpdateMethod_ = this.UpdateOfNormal;
         this.restTime_ = 0;
         this.toWalkPosition_ = new Vector3();
+        this.battleMode_ = EnemyBattleMode.ActionJudge;
         this.currentBattleMethod_ = this.ButtleOfActionJudge;
         this.isNextMoveOfButtleAction_ = true;
     }
@@ -327,7 +349,10 @@ export class Enemy implements Character{
             return false;
         }
         
-        return skillEffect.Show(this, receiver);
+        if(skillEffect.Consume(this)){
+            return skillEffect.Show(this, receiver);
+        }
+        return false;
     }
 
     /**
@@ -409,6 +434,14 @@ export class Enemy implements Character{
         this.battlefieldId_ = _battlefieldId;
         return true;
     }
+    /**
+     * 戦場から出た
+     * @public
+     * @memberof Enemy
+     */
+    public OnRemovedBattlefield() : void {
+        this.battlefieldId_ = -1;
+    }
 
     /**
      * ヘイト変更
@@ -472,6 +505,7 @@ export class Enemy implements Character{
      * @memberof Enemy
      */
     public OnChangeButtleModeOfActionJudge() : void {
+        this.battleMode_ = EnemyBattleMode.ActionJudge;
         this.currentBattleMethod_ = this.ButtleOfActionJudge;
     }
     /**
@@ -480,6 +514,7 @@ export class Enemy implements Character{
      * @memberof Enemy
      */
     public OnChangeButtleModeOfMove() : void {
+        this.battleMode_ = EnemyBattleMode.Move;
         this.currentBattleMethod_ = this.ButtleOfMove;
         this.restTime_ = Enemy.battleMoveInterval_;
 
@@ -499,13 +534,30 @@ export class Enemy implements Character{
 
         // キャストタイム設定
         this.restTime_ = skill.castTime;
-
-        this.currentBattleMethod_ = this.ButtleOfSkillCastTimeConsumption;
+        this.OnChangeBattleModeOfCastTimeConsumption();
 
         // スキル使用情報送信
         this.SendUseSkill();
 
         // console.log('enemy [id:' + this.characterId_.toString() + '] change battle mode of skill use.');
+    }
+    /**
+     * キャストタイムに移行するときの処理
+     * @private
+     * @memberof Enemy
+     */
+    private OnChangeBattleModeOfCastTimeConsumption() : void {
+        this.battleMode_ = EnemyBattleMode.Cast;
+        this.currentBattleMethod_ = this.ButtleOfSkillCastTimeConsumption;
+    }
+    /**
+     * リキャストタイムに移行するときの処理
+     * @private
+     * @memberof Enemy
+     */
+    private OnChangeBattleModeOfRecastTimeConsumption() : void {
+        this.battleMode_ = EnemyBattleMode.Recast;
+        this.currentBattleMethod_ = this.ButtleOfSkillCastTimeConsumption;
     }
 
 
@@ -900,7 +952,7 @@ export class Enemy implements Character{
                 return true;
             }
             this.restTime_ = skill.recastTime;
-            this.currentBattleMethod_ = this.ButtleOfSkillRecastTimeConsumption
+            this.OnChangeBattleModeOfRecastTimeConsumption();
         }
         return true;
     }
@@ -917,6 +969,26 @@ export class Enemy implements Character{
             // 行動判定へ
             this.OnChangeButtleModeOfActionJudge();
         }
+        return true;
+    }
+    /**
+     * 使用中スキルを中断する
+     * @public
+     * @returns {boolean} true:成功 false:失敗
+     * @memberof Enemy
+     */
+    public InterruptTheUsingSkill() : boolean {
+        // スキルのキャストタイムでなければ失敗
+        if(this.updateMode_ !== EnemyUpdateMode.Battle){
+            return false;
+        }
+        else if(this.battleMode_ !== EnemyBattleMode.Cast){
+            return false;
+        }
+
+        // (リキャスト)タイム消費モードへ
+        this.restTime_ = Enemy.skillInterruptInterval_;
+        this.OnChangeBattleModeOfRecastTimeConsumption();
         return true;
     }
 
@@ -942,7 +1014,7 @@ export class Enemy implements Character{
         this.transform.worldMatrix = Matrix4x4.CreateRotationYMatrix(2.0*Math.PI * (Math.random()-0.5));
         {
             const direction:number = 2.0*Math.PI * (Math.random()-0.5);
-            const delta:number = area.popAreaRadius * Math.random();
+            const delta:number = area.areaRadius * Math.random();
             this.transform.position = new Vector3(
                 area.positionX + delta*Math.cos(direction),
                 area.positionY,
@@ -973,6 +1045,28 @@ export class Enemy implements Character{
         ) : boolean {
             return (_enemyTarget.character.id === _target.id);
         }).shift();
+    }
+    /**
+     * ターゲット削除
+     * @public
+     * @param {Character} _target ターゲットキャラクタ
+     * @returns {boolean} true:成功 false:失敗
+     * @memberof Enemy
+     */
+    public RemoveTarget(_target:Character) : boolean {
+        let isRemoved:boolean = false;
+        this.targetArray_ = this.targetArray_.filter(function (
+            _enemyTarget : EnemyTarget,
+            _index : number,
+            _array : EnemyTarget[]
+        ) : boolean {
+            if(_enemyTarget.character.id === _target.id){
+                isRemoved = true;
+                return false;
+            }
+            return true;
+        });
+        return isRemoved;
     }
 
 
