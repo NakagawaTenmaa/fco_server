@@ -150,36 +150,13 @@ export namespace CommunicationData{
              * @memberof SimpleDisplayOfCharacter
              */
             public readonly command : number = SimpleDisplayOfCharacter.id;
+
             /**
-             * キャラクタID
-             * @public
-             * @type {number}
+             * キャラクターのデータ
+             * @type {StatusData}
              * @memberof SimpleDisplayOfCharacter
              */
-            public user_id : number;
-            /**
-             * 体力比率 [0%～100%～]
-             * 100%以上の場合は2本目以上のバーが重なる
-             * @public
-             * @type {number}
-             * @memberof SimpleDisplayOfCharacter
-             */
-            public hp : number;
-            /**
-             * 魔力比率 [0%～100%]
-             * 100%以上の場合は2本目以上のバーが重なる
-             * @public
-             * @type {number}
-             * @memberof SimpleDisplayOfCharacter
-             */
-            public mp : number;
-            /**
-             * 状態異常フラグ
-             * @public
-             * @type {number}
-             * @memberof SimpleDisplayOfCharacter
-             */
-            public status : number;
+            public status: Array<StatusData> = [];
 
             /**
              * デフォルトコンストラクタ
@@ -188,7 +165,25 @@ export namespace CommunicationData{
              * @memberof SimpleDisplayOfCharacter
              */
             public constructor(){
-                this.user_id = 0;
+            }
+        }
+
+
+        /**
+         * 状態共有用のデータ
+         * @class StatusData
+         */
+        export class StatusData{
+            // キャラのID
+            public charcter_id: number;
+            // ヒットポイント
+            public hp: number;
+            // マジックポイント
+            public mp: number;
+            // 状態異常
+            public status: number;
+            constructor(){
+                this.charcter_id = 0;
                 this.hp = 0;
                 this.mp = 0;
                 this.status = 0;
@@ -660,9 +655,9 @@ export namespace CommunicationData{
             public readonly command: number = 205;
             public static id = 205;
             public user_id: number = 0;
-            public hp: number = 0;
-            public mp: number = 0;
-            public status : number = 0;
+            public target_id: number = 0;
+            public type: number = 0;
+
             constructor(){}
         }
 
@@ -867,9 +862,6 @@ export namespace CommunicationData{
                 case SendData.SimpleDisplayOfCharacter.id:
                 {
                     const data:SendData.SimpleDisplayOfCharacter = new SendData.SimpleDisplayOfCharacter();
-                    data.user_id = parse.user_id;
-                    data.hp = parse.hp;
-                    data.mp = parse.mp;
                     data.status = parse.status;
                     return data;
                 }
@@ -952,9 +944,8 @@ export namespace CommunicationData{
                 {
                     const data: ReceiveData.PlayerStatus = new ReceiveData.PlayerStatus();
                     data.user_id = parse.user_id;
-                    data.hp = parse.hp;
-                    data.mp = parse.mp;
-                    data.status = parse.static;
+                    data.target_id = parse.target_id;
+                    data.type = parse.type;
                     return data;
                 }
                 case ReceiveData.LoadCharacter.id:

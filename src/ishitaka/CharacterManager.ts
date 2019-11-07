@@ -407,20 +407,26 @@ export class CharacterManager{
      * 状態の取得
      * @memberof CharacterManager
      */
-    public FindStatus(_characterId: number){
-        const character: Character | undefined = this.FindCharacter(_characterId);
-        if(character === undefined) {
-            console.error("not character id status");
-            return;
+    public FindStatus(_data: CommunicationData.ReceiveData.PlayerStatus){
+        // 送ったプレイヤーの取得
+        const player: Player | undefined = this.FindPlayer(_data.user_id);
+        if(player === undefined) return;
+        
+        let data: CommunicationData.SendData.SimpleDisplayOfCharacter = new CommunicationData.SendData.SimpleDisplayOfCharacter();
+        if(_data.type === 0){
+            const status: CommunicationData.SendData.StatusData = new CommunicationData.SendData.StatusData(); 
+            status.charcter_id = _data.user_id;
+            status.hp = player.status.hitPoint;
+            status.mp = player.status.magicPoint;
+            status.status = 0;
+            data.status.push(status);
+        } else if(_data.type === 1){
+            // TODO: 他のキャラ
+        } else if(_data.type === 2){
+            // TODO: 敵のキャラ
         }
 
-        let data: CommunicationData.SendData.SimpleDisplayOfCharacter = new CommunicationData.SendData.SimpleDisplayOfCharacter();
-        data.user_id = character.id;
-        data.hp = character.status.hitPoint;
-        data.mp = character.status.magicPoint;
-        data.status = 0;
-        
-        this.SendAll(JSON.stringify(data));
+        this.SendOne(player.id, JSON.stringify(data));
     }
     
     /**
