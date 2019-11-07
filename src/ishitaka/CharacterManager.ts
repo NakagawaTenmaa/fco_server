@@ -401,6 +401,27 @@ export class CharacterManager{
 
         this.SendOne(_characterid,JSON.stringify(data));
     }
+
+    
+    /**
+     * 状態の取得
+     * @memberof CharacterManager
+     */
+    public FindStatus(_characterId: number){
+        const character: Character | undefined = this.FindCharacter(_characterId);
+        if(character === undefined) {
+            console.error("not character id status");
+            return;
+        }
+
+        let data: CommunicationData.SendData.SimpleDisplayOfCharacter = new CommunicationData.SendData.SimpleDisplayOfCharacter();
+        data.user_id = character.id;
+        data.hp = character.status.hitPoint;
+        data.mp = character.status.magicPoint;
+        data.status = 0;
+        
+        this.SendAll(JSON.stringify(data));
+    }
     
     /**
      * IDからプレイヤーの検索
@@ -445,7 +466,7 @@ export class CharacterManager{
                 const dropData: EnemyDrop = await model.createItems(enemy.tribeId);
                 
                 data = new CommunicationData.SendData.EnemyDie();
-                data.drop = dropData.randomItem();;
+                data.drop = dropData.randomItem();
             } else {
                 // 生きている
                 data = new CommunicationData.SendData.EnemyAlive();
