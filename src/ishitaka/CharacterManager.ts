@@ -455,24 +455,29 @@ export class CharacterManager{
     public async ReceiveUseSkill(_useSkill: CommunicationData.ReceiveData.Attack){
         const useCharacter:Character = this.characterArray_[_useSkill.user_id];
         
-        if(useCharacter.UseSkill(_useSkill.skill_id, _useSkill.enemy_id)){
-            // TODO:成功時処理
-            const enemy = this.FindEnemy(_useSkill.enemy_id);
-            if(enemy === undefined) return;
-
+        if(useCharacter.UseSkill(_useSkill.skill_id, _useSkill.enemy_id)){            
+            // 攻撃を受けた相手の取得
+            const receiveCharacter = this.FindCharacter(_useSkill.enemy_id);
+            if(receiveCharacter === undefined) return;
+            
             let data;
-            if(enemy.status.hitPoint <= 0) {
-                const model: EnemyDropModel = new EnemyDropModel();
-                const dropData: EnemyDrop = await model.createItems(enemy.tribeId);
-                
-                data = new CommunicationData.SendData.EnemyDie();
-                data.drop = dropData.randomItem();
-            } else {
-                // 生きている
+            if(receiveCharacter.status.hitPoint > 0){
                 data = new CommunicationData.SendData.EnemyAlive();
-                data.hp = Math.ceil(enemy.status.hitPoint);
-                data.unique_id = enemy.id;
+                data.hp = Math.ceil(receiveCharacter.status.hitPoint);
+                data.unique_id = receiveCharacter.id;
                 data.status = 0;
+            } else {
+                // 倒れたときの処理
+                if(receiveCharacter instanceof Enemy){
+                    // 敵の時の処理
+                    const model: EnemyDropModel = new EnemyDropModel();
+                    const dropData: EnemyDrop = await model.createItems(receiveCharacter.tribeId);
+                    
+                    data = new CommunicationData.SendData.EnemyDie();
+                    data.drop = dropData.randomItem();
+                } else if(receiveCharacter instanceof Player){
+                    // プレイヤーの時の処理
+                } else console.error("not player and enemy");
             }
             this.SendAll(JSON.stringify(data));
         }
