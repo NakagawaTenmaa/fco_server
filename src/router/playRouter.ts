@@ -51,7 +51,7 @@ export class playRouter{
                 }
                 // 状態の共有
                 else if(data instanceof CommunicationData.ReceiveData.PlayerStatus){
-                    this.characterManager.FindStatus(data.user_id);
+                    this.characterManager.FindStatus(data);
                 }
                 // 攻撃処理
                 else if(data instanceof CommunicationData.ReceiveData.Attack){
