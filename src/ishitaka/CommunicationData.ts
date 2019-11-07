@@ -447,6 +447,163 @@ export namespace CommunicationData{
 			public constructor(){
 				this.drop = 0;
 			}
+        }
+        
+        /**
+		 * 敵のスキル使用申請
+		 * @export
+		 * @class EnemyUseSkillRequest
+		 * @implements {Send}
+		 */
+		export class EnemyUseSkillRequest implements Send{
+			/**
+			 * コマンドID
+			 * @public
+			 * @static 
+			 * @readonly 
+			 * @type {number}
+			 * @memberof {EnemyUseSkillRequest}
+			 */
+			public static readonly id : number = 225;
+
+			/**
+			 * コマンド識別子
+			 * @public
+			 * @readonly 
+			 * @type {number}
+			 * @memberof {EnemyUseSkillRequest}
+			 */
+			public readonly command : number = EnemyUseSkillRequest.id;
+			/**
+			 * スキルのID
+			 * @public
+			 * @type {number}
+			 * @memberof {EnemyUseSkillRequest}
+			 */
+			public skill_id : number;
+			/**
+			 * 敵のID
+			 * @public
+			 * @type {number}
+			 * @memberof {EnemyUseSkillRequest}
+			 */
+			public enemy_id : number;
+
+
+			/**
+			 * デフォルトコンストラクタ
+			 * @public
+			 * @constructor
+			 * @memberof {EnemyUseSkillRequest}
+			 */
+			public constructor(){
+				this.skill_id = 0;
+				this.enemy_id = 0;
+			}
+		}
+		/**
+		 * 敵のスキル使用
+		 * @export
+		 * @class EnemyUseSkill
+		 * @implements {Send}
+		 */
+		export class EnemyUseSkill implements Send{
+			/**
+			 * コマンドID
+			 * @public
+			 * @static 
+			 * @readonly 
+			 * @type {number}
+			 * @memberof {EnemyUseSkill}
+			 */
+			public static readonly id : number = 226;
+
+			/**
+			 * コマンド識別子
+			 * @public
+			 * @readonly 
+			 * @type {number}
+			 * @memberof {EnemyUseSkill}
+			 */
+			public readonly command : number = EnemyUseSkill.id;
+			/**
+			 * スキルのID
+			 * @public
+			 * @type {number}
+			 * @memberof {EnemyUseSkill}
+			 */
+			public skill_id : number;
+			/**
+			 * 敵のID
+			 * @public
+			 * @type {number}
+			 * @memberof {EnemyUseSkill}
+			 */
+			public enemy_id : number;
+
+
+			/**
+			 * デフォルトコンストラクタ
+			 * @public
+			 * @constructor
+			 * @memberof {EnemyUseSkill}
+			 */
+			public constructor(){
+				this.skill_id = 0;
+				this.enemy_id = 0;
+			}
+		}
+		/**
+		 * 敵の攻撃
+		 * @export
+		 * @class EnemyAttackResult
+		 * @implements {Send}
+		 */
+		export class EnemyAttackResult implements Send{
+			/**
+			 * コマンドID
+			 * @public
+			 * @static 
+			 * @readonly 
+			 * @type {number}
+			 * @memberof {EnemyAttackResult}
+			 */
+			public static readonly id : number = 227;
+
+			/**
+			 * コマンド識別子
+			 * @public
+			 * @readonly 
+			 * @type {number}
+			 * @memberof {EnemyAttackResult}
+			 */
+			public readonly command : number = EnemyAttackResult.id;
+			/**
+			 * ユーザーのID
+			 * @public
+			 * @type {number}
+			 * @memberof {EnemyAttackResult}
+			 */
+			public user_id : number;
+			/**
+			 * ヒットポイント
+			 * @public
+			 * @type {number}
+			 * @memberof {EnemyAttackResult}
+			 */
+			public hp : number;
+
+
+			/**
+			 * デフォルトコンストラクタ
+			 * @public
+			 * @constructor
+			 * @memberof {EnemyAttackResult}
+			 */
+			public constructor(){
+				this.user_id = 0;
+				this.hp = 0;
+			}
 		}
 
         export type AllTypes = 
@@ -459,7 +616,10 @@ export namespace CommunicationData{
         LogoutCharacter |
         EnemysData |
         EnemyAlive |
-        EnemyDie;
+        EnemyDie |
+        EnemyUseSkillRequest | 
+        EnemyUseSkill | 
+        EnemyAttackResult;
     }
     /**
      * 受信データ
@@ -615,9 +775,70 @@ export namespace CommunicationData{
 				this.skill_id = 0;
 				this.map_id = 0;
 			}
+        }
+        
+        /**
+		 * comment
+		 * @export
+		 * @class UserHit
+		 * @implements {Receive}
+		 */
+		export class UserHit implements Receive{
+			/**
+			 * コマンドID
+			 * @public
+			 * @static 
+			 * @readonly 
+			 * @type {number}
+			 * @memberof {UserHit}
+			 */
+			public static readonly id : number = 228;
+
+			/**
+			 * コマンド識別子
+			 * @public
+			 * @readonly 
+			 * @type {number}
+			 * @memberof {UserHit}
+			 */
+			public readonly command : number = UserHit.id;
+			/**
+			 * ユーザーのID
+			 * @public
+			 * @type {number}
+			 * @memberof {UserHit}
+			 */
+			public user_id : number;
+			/**
+			 * 敵のID
+			 * @public
+			 * @type {number}
+			 * @memberof {UserHit}
+			 */
+			public enemy_id : number;
+
+
+			/**
+			 * デフォルトコンストラクタ
+			 * @public
+			 * @constructor
+			 * @memberof {UserHit}
+			 */
+			public constructor(){
+				this.user_id = 0;
+				this.enemy_id = 0;
+			}
 		}
 
-        export type AllTypes = CharacterTransform | PlayerStatus | LoadCharacter | LogoutCharacter | LoadOK | GetEnemy | Attack;
+        export type AllTypes = 
+        CharacterTransform | 
+        PlayerStatus | 
+        LoadCharacter | 
+        LogoutCharacter | 
+        LoadOK | 
+        GetEnemy | 
+        Attack | 
+        UserHit;
     }
 
     export type AllTypes = SendData.AllTypes | ReceiveData.AllTypes;
