@@ -460,7 +460,10 @@ export class CharacterManager{
      */
     public async ReceiveUseSkill(_useSkill: CommunicationData.ReceiveData.Attack){
         const useCharacter:Character | undefined = this.FindCharacter(_useSkill.user_id);
-        if(useCharacter === undefined) return;
+        if(useCharacter === undefined) {
+            console.log("attack none charcter id:" + _useSkill.user_id.toString());
+            return;
+        }
 
         if(useCharacter.UseSkill(_useSkill.skill_id, _useSkill.enemy_id)){            
             // 攻撃を受けた相手の取得
