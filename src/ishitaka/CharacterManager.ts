@@ -386,17 +386,20 @@ export class CharacterManager{
      */
     public SendEnemy(_characterid: number, _mapid: number){
         let data: CommunicationData.SendData.EnemysData = new CommunicationData.SendData.EnemysData();
-        this.enemyArray_.forEach((_enemy: Enemy) => { 
-            let enemyData = new SendEnemyData(); 
-            enemyData.master_id = _enemy.tribeId;
-            enemyData.x = _enemy.transform.position.x;
-            enemyData.y = _enemy.transform.position.y;
-            enemyData.z = _enemy.transform.position.z;
-            enemyData.dir = _enemy.transform.rotationY;
-            enemyData.hp = _enemy.status.hitPoint;
-            enemyData.unique_id = _enemy.id;
 
-            data.enemys.push(enemyData);
+        this.enemyArray_.forEach((_enemy: Enemy) => {
+            if(!_enemy.isDead){ 
+                let enemyData = new SendEnemyData(); 
+                enemyData.master_id = _enemy.tribeId;
+                enemyData.x = _enemy.transform.position.x;
+                enemyData.y = _enemy.transform.position.y;
+                enemyData.z = _enemy.transform.position.z;
+                enemyData.dir = _enemy.transform.rotationY;
+                enemyData.hp = _enemy.status.hitPoint;
+                enemyData.unique_id = _enemy.id;
+
+                data.enemys.push(enemyData);
+            }
         })
 
         this.SendOne(_characterid,JSON.stringify(data));
