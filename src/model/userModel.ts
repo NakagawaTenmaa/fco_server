@@ -33,7 +33,7 @@ export class UserModel extends BaseModel{
      * @memberof UserModel
      */
     public async allLogout(){
-        const query = "update `users` set `status` = 0 where `id` > -1";
+        const query = "update `users` set `status` = 0 where `status` = 1";
         return await this.myQuery(query);
     }
 

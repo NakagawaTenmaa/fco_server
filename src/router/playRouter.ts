@@ -85,8 +85,8 @@ export class playRouter{
      * 終了処理
      * @memberof playRouter
      */
-    public end(){
+    public async end(){
         const model: UserModel = new UserModel();
-        model.allLogout();
+        await model.allLogout();
     }
 }
