@@ -992,11 +992,11 @@ export class Enemy implements Character{
 
     /**
      * ポップ
-     * @private
+     * @public
      * @returns {boolean} true:成功 false:失敗
      * @memberof Enemy
      */
-    private Populate() : boolean {
+    public Populate() : boolean {
         this.ChangeTribe(EnemyTribeDataAccessor.instance.GetRandomID(), 1);
 
         // TODO:
