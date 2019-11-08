@@ -292,7 +292,7 @@ export class CharacterManager{
      * @memberof CharacterManager
      */
     public FindCharacter(_searchCharacterId:number) : Character|undefined {
-        return this.characterArray_[_searchCharacterId];
+        return this.characterArray_.find((character: Character) => character.id === _searchCharacterId);
     }
 
     /**
@@ -459,8 +459,9 @@ export class CharacterManager{
      * @memberof CharacterManager
      */
     public async ReceiveUseSkill(_useSkill: CommunicationData.ReceiveData.Attack){
-        const useCharacter:Character = this.characterArray_[_useSkill.user_id];
-        
+        const useCharacter:Character | undefined = this.FindCharacter(_useSkill.user_id);
+        if(useCharacter === undefined) return;
+
         if(useCharacter.UseSkill(_useSkill.skill_id, _useSkill.enemy_id)){            
             // 攻撃を受けた相手の取得
             const receiveCharacter = this.FindCharacter(_useSkill.enemy_id);
