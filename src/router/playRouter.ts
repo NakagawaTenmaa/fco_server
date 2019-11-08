@@ -1,6 +1,7 @@
 import { Server, } from 'ws';
 import { CharacterManager } from '../ishitaka/CharacterManager';
 import { CommunicationData } from '../ishitaka/CommunicationData';
+import { UserModel } from '../model/userModel';
 import WebSocket = require('ws');
 
 
@@ -78,5 +79,14 @@ export class playRouter{
                 }
             })
         })
+    }
+
+    /**
+     * 終了処理
+     * @memberof playRouter
+     */
+    public end(){
+        const model: UserModel = new UserModel();
+        model.allLogout();
     }
 }
