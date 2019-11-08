@@ -95,4 +95,53 @@ export class Transform{
     public constructor(){
         this.worldMatrix_ = new Matrix4x4();
     }
+
+    /**
+     * 移動
+     * @public
+     * @param {Vector3} _targetPosition 目的地
+     * @param {number} _deltaTime 移動時間
+     * @param {number} _maxMoveSpeed 最大移動速度
+     * @param {number} _maxRotateSpeed 最大回転速度
+     * @returns {boolean} true:成功 false:失敗
+     * @memberof Transform
+     */
+    public Move(
+        _targetPosition : Vector3,
+        _deltaTime : number,
+        _maxMoveSpeed : number,
+        _maxRotateSpeed : number
+    ) : boolean {
+        // 目的地に近づく
+        const toWalkMatrix:Matrix4x4 = Matrix4x4.identity;
+        toWalkMatrix.column4.xyz = _targetPosition;
+        const toPosition:Vector3 = toWalkMatrix.Multiplication(this.worldMatrix.invertMatrix).column4.xyz;
+        const move:Vector3 = new Vector3(0, 0, 0);
+
+        let rotation:number = 0.0;
+        // 前に進む
+        if(toPosition.z > 0.0){
+            // 移動量と回転量を計算
+            const moveDistance:number = (toPosition.z>_maxMoveSpeed) ? (_maxMoveSpeed) : (toPosition.z);
+            // 移動
+            move.z += moveDistance * (_deltaTime / 1000.0);
+
+            // 回転量を計算
+            rotation = _maxRotateSpeed*(toPosition.x*toPosition.x)/(toPosition.x*toPosition.x + toPosition.z*toPosition.z);
+            if(toPosition.x < 0.0){
+                rotation = -rotation;
+            }
+        }
+        else{
+            // 回転量を計算
+            rotation = (toPosition.x < 0.0) ? (-_maxRotateSpeed) : (_maxRotateSpeed);
+        }
+
+        // 移動、回転
+        const transformMatrix:Matrix4x4 = Matrix4x4.CreateRotationYMatrix(-rotation * (_deltaTime / 1000.0));
+        transformMatrix.column4.xyz = move;
+        this.worldMatrix = transformMatrix.Multiplication(this.worldMatrix);
+
+        return true;
+    }
 }
