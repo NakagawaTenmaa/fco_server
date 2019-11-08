@@ -136,14 +136,13 @@ export class EnemyTribeStatus implements Status{
     }
 
     /**
-     * 種族(またはレベル)の変更
+     * 種族の変更
      * @public
      * @param {EnemyTribeData} _tribeData 種族情報
-     * @param {number} _level レベル
      * @returns {boolean} true:成功 false:失敗
      * @memberof EnemyTribeStatus
      */
-    public ChangeTribe(_tribeData:EnemyTribeData, _level:number) : boolean {
+    public ChangeTribe(_tribeData:EnemyTribeData) : boolean {
         this.tribeData_ = _tribeData;
         return true;
     }

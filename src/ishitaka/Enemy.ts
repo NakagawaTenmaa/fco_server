@@ -562,32 +562,29 @@ export class Enemy implements Character{
 
 
     /**
-     * 種族(またはレベル)の変更
+     * 種族の変更
      * @public
      * @param {number} _tribeID 種族ID
-     * @param {number} _level レベル
      * @returns {boolean} true:成功 false:失敗
      * @memberof Enemy
      */
-    public ChangeTribe(_tribeID:number, _level:number) : boolean 
+    public ChangeTribe(_tribeID:number) : boolean 
     /**
-     * 種族(またはレベル)の変更
+     * 種族の変更
      * @public
      * @param {string} _tribeName 種族名
-     * @param {number} _level レベル
      * @returns {boolean} true:成功 false:失敗
      * @memberof Enemy
      */
-    public ChangeTribe(_tribeName:string, _level:number) : boolean 
+    public ChangeTribe(_tribeName:string) : boolean 
     /**
-     * 種族(またはレベル)変更の実装
+     * 種族変更の実装
      * @public
      * @param {number|string} _tribeKey 種族キー
-     * @param {number} _level レベル
      * @returns {boolean} true:成功 false:失敗
      * @memberof Enemy
      */
-    public ChangeTribe(_tribeKey:number|string, _level:number) : boolean {
+    public ChangeTribe(_tribeKey:number|string) : boolean {
         // データベース情報から読み込み
         const tribeData:EnemyTribeData|undefined =
             EnemyTribeDataAccessor.instance.Find(_tribeKey);
@@ -606,7 +603,7 @@ export class Enemy implements Character{
             this.tribeId_ = _tribeKey;
         }
 
-        if(!(this.enemyStatus_.tribeStatus.ChangeTribe(tribeData, _level))){
+        if(!(this.enemyStatus_.tribeStatus.ChangeTribe(tribeData))){
             return false;
         }
         this.enemyStatus_.Initialize();
