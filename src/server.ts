@@ -21,5 +21,6 @@ chatUpdate();
 process.on("SIGINT", async () => {
     const conn = await connection();
     try {await conn.end();} catch(e){ console.log('not open mysql'); }
+    play.end();
     process.exit(0);
 })

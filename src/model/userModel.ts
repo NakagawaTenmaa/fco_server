@@ -27,6 +27,16 @@ export class UserModel extends BaseModel{
         return await this.update([status, id]);
     }
 
+    
+    /**
+     * 全員のログアウト
+     * @memberof UserModel
+     */
+    public async allLogout(){
+        const query = "update `users` set `status` = 0 where `id` > -1";
+        return await this.myQuery(query);
+    }
+
     // 重複確認
     private async isDuplicateUser(name: string){
         const data = await this.findUserByName(name);
