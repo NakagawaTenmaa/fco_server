@@ -1,6 +1,7 @@
 import { Server, } from 'ws';
 import { CharacterManager } from '../ishitaka/CharacterManager';
 import { CommunicationData } from '../ishitaka/CommunicationData';
+import { UserModel } from '../model/userModel';
 import WebSocket = require('ws');
 
 
@@ -49,6 +50,11 @@ export class playRouter{
                 else if(data instanceof CommunicationData.ReceiveData.GetEnemy){
                     this.characterManager.SendEnemy(data.user_id, data.map_id);
                 }
+                // 状態の共有
+                else if(data instanceof CommunicationData.ReceiveData.PlayerStatus){
+                    this.characterManager.FindStatus(data);
+                }
+                // 攻撃処理
                 else if(data instanceof CommunicationData.ReceiveData.Attack){
                     this.characterManager.ReceiveUseSkill(data);
                 }
@@ -73,5 +79,14 @@ export class playRouter{
                 }
             })
         })
+    }
+
+    /**
+     * 終了処理
+     * @memberof playRouter
+     */
+    public async end(){
+        const model: UserModel = new UserModel();
+        await model.allLogout();
     }
 }

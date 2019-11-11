@@ -23,18 +23,18 @@ export class EnemyDropModel extends BaseModel{
      */
     public async createItems(_enemyId: number): Promise<EnemyDrop>{
         // データの取得
-        const data: any = this.find(["enemy_id",_enemyId]);
+        const data: any = await this.find(["enemy_id",_enemyId]);
         
         const items: EnemyDrop = new EnemyDrop();
-        items.addItem(data.drop1);
-        items.addItem(data.drop2);
-        items.addItem(data.drop3);
-        items.addItem(data.drop4);
-        items.addItem(data.drop5);
-        items.addItem(data.drop6);
-        items.addItem(data.drop7);
-        items.addItem(data.drop8);
-        items.addItem(data.drop9);
+        items.addItem(data[0].drop1);
+        items.addItem(data[0].drop2);
+        items.addItem(data[0].drop3);
+        items.addItem(data[0].drop4);
+        items.addItem(data[0].drop5);
+        items.addItem(data[0].drop6);
+        items.addItem(data[0].drop7);
+        items.addItem(data[0].drop8);
+        items.addItem(data[0].drop9);
         return items;
     }
 }

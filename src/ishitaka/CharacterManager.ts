@@ -292,7 +292,7 @@ export class CharacterManager{
      * @memberof CharacterManager
      */
     public FindCharacter(_searchCharacterId:number) : Character|undefined {
-        return this.characterArray_[_searchCharacterId];
+        return this.characterArray_.find((character: Character) => character.id === _searchCharacterId);
     }
 
     /**
@@ -386,20 +386,48 @@ export class CharacterManager{
      */
     public SendEnemy(_characterid: number, _mapid: number){
         let data: CommunicationData.SendData.EnemysData = new CommunicationData.SendData.EnemysData();
-        this.enemyArray_.forEach((_enemy: Enemy) => { 
-            let enemyData = new SendEnemyData(); 
-            enemyData.master_id = _enemy.tribeId;
-            enemyData.x = _enemy.transform.position.x;
-            enemyData.y = _enemy.transform.position.y;
-            enemyData.z = _enemy.transform.position.z;
-            enemyData.dir = _enemy.transform.rotationY;
-            enemyData.hp = _enemy.status.hitPoint;
-            enemyData.unique_id = _enemy.id;
+        this.enemyArray_.forEach((_enemy: Enemy) => {
+            if(!_enemy.isDead){ 
+                let enemyData = new SendEnemyData(); 
+                enemyData.master_id = _enemy.tribeId;
+                enemyData.x = _enemy.transform.position.x;
+                enemyData.y = _enemy.transform.position.y;
+                enemyData.z = _enemy.transform.position.z;
+                enemyData.dir = _enemy.transform.rotationY;
+                enemyData.hp = _enemy.status.hitPoint;
+                enemyData.unique_id = _enemy.id;
 
-            data.enemys.push(enemyData);
+                data.enemys.push(enemyData);
+            }
         })
-
         this.SendOne(_characterid,JSON.stringify(data));
+    }
+
+    
+    /**
+     * 状態の取得
+     * @memberof CharacterManager
+     */
+    public FindStatus(_data: CommunicationData.ReceiveData.PlayerStatus){
+        // 送ったプレイヤーの取得
+        const player: Player | undefined = this.FindPlayer(_data.user_id);
+        if(player === undefined) return;
+        
+        let data: CommunicationData.SendData.SimpleDisplayOfCharacter = new CommunicationData.SendData.SimpleDisplayOfCharacter();
+        if(_data.type === 0){
+            const status: CommunicationData.SendData.StatusData = new CommunicationData.SendData.StatusData(); 
+            status.charcter_id = _data.user_id;
+            status.hp = player.status.hitPoint;
+            status.mp = player.status.magicPoint;
+            status.status = 0;
+            data.status.push(status);
+        } else if(_data.type === 1){
+            // TODO: 他のキャラ
+        } else if(_data.type === 2){
+            // TODO: 敵のキャラ
+        }
+
+        this.SendOne(player.id, JSON.stringify(data));
     }
     
     /**
@@ -432,26 +460,35 @@ export class CharacterManager{
      * @memberof CharacterManager
      */
     public async ReceiveUseSkill(_useSkill: CommunicationData.ReceiveData.Attack){
-        const useCharacter:Character = this.characterArray_[_useSkill.user_id];
-        
-        if(useCharacter.UseSkill(_useSkill.skill_id, _useSkill.enemy_id)){
-            // TODO:成功時処理
-            const enemy = this.FindEnemy(_useSkill.enemy_id);
-            if(enemy === undefined) return;
+        const useCharacter:Character | undefined = this.FindCharacter(_useSkill.user_id);
+        if(useCharacter === undefined) {
+            console.log("attack none charcter id:" + _useSkill.user_id.toString());
+            return;
+        }
 
+        if(useCharacter.UseSkill(_useSkill.skill_id, _useSkill.enemy_id)){            
+            // 攻撃を受けた相手の取得
+            const receiveCharacter = this.FindCharacter(_useSkill.enemy_id);
+            if(receiveCharacter === undefined) return;
+            
             let data;
-            if(enemy.status.hitPoint <= 0) {
-                const model: EnemyDropModel = new EnemyDropModel();
-                const dropData: EnemyDrop = await model.createItems(enemy.tribeId);
-                
-                data = new CommunicationData.SendData.EnemyDie();
-                data.drop = dropData.randomItem();;
-            } else {
-                // 生きている
+            if(receiveCharacter.status.hitPoint > 0){
                 data = new CommunicationData.SendData.EnemyAlive();
-                data.hp = Math.ceil(enemy.status.hitPoint);
-                data.unique_id = enemy.id;
+                data.hp = Math.ceil(receiveCharacter.status.hitPoint);
+                data.unique_id = receiveCharacter.id;
                 data.status = 0;
+            } else {
+                // 倒れたときの処理
+                if(receiveCharacter instanceof Enemy){
+                    // 敵の時の処理
+                    const model: EnemyDropModel = new EnemyDropModel();
+                    const dropData: EnemyDrop = await model.createItems(receiveCharacter.tribeId);
+                    
+                    data = new CommunicationData.SendData.EnemyDie();
+                    data.drop = dropData.randomItem();
+                } else if(receiveCharacter instanceof Player){
+                    // プレイヤーの時の処理
+                } else console.error("not player and enemy");
             }
             this.SendAll(JSON.stringify(data));
         }

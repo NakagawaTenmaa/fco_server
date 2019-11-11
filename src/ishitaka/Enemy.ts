@@ -1098,11 +1098,12 @@ export class Enemy implements Character{
         const data : CommunicationData.SendData.SimpleDisplayOfCharacter =
             new CommunicationData.SendData.SimpleDisplayOfCharacter();
 
+            /*
         data.user_id = this.characterId_;
         data.hp = 100.0 * this.status.hitPoint / this.status.maxHitPoint;
         data.mp = 100.0 * this.status.magicPoint / this.status.maxMagicPoint;
         data.status = this.status.abnormalConditionStatus.flag;
-
+*/
         return true;
         //return CharacterManager.instance.Send(this.id, this.mapId, JSON.stringify(data));
     }
