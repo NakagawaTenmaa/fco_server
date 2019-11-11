@@ -997,7 +997,7 @@ export class Enemy implements Character{
      * @memberof Enemy
      */
     public Populate() : boolean {
-        this.ChangeTribe(EnemyTribeDataAccessor.instance.GetRandomID(), 1);
+        this.ChangeTribe(EnemyTribeDataAccessor.instance.GetRandomID());
 
         // TODO:
         const area:EnemyPopAreaData|undefined = EnemyPopAreaDataAccessor.instance.Find(0);
