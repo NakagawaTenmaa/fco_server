@@ -104,7 +104,7 @@ export class EnemyBattleOfMove implements EnemyBattleUpdate{
      */
     public Update(_elapsedTime:number) : boolean {
         // ターゲットに近づく
-        const targetCharacter:Character|undefined = this.battle_.GetTargetCharacter();
+        const targetCharacter:Character|undefined = this.battle_.attackTarget;
         if(targetCharacter === undefined){
             console.warn("Couldn't get target character.");
             // 行動選択ヘ
