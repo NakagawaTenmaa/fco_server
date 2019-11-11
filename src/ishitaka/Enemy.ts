@@ -180,6 +180,34 @@ export class Enemy implements Character{
      */
     public get status() : CharacterStatus { return this.enemyStatus_; }
     /**
+     * スキルのキャストタイム
+     * @public
+     * @readonly
+     * @type {number}
+     * @memberof Enemy
+     */
+    public get skillCastTime() : number {
+        const skill:SkillData|undefined = SkillDataAccessor.instance.Find(this.enemyStatus_.tribeStatus.useSkillId);
+        if(skill === undefined){
+            return 0.0;
+        }
+        return skill.castTime;
+    }
+    /**
+     * スキルのリキャストタイム
+     * @public
+     * @readonly
+     * @type {number}
+     * @memberof Enemy
+     */
+    public get skillRecastTime() : number {
+        const skill:SkillData|undefined = SkillDataAccessor.instance.Find(this.enemyStatus_.tribeStatus.useSkillId);
+        if(skill === undefined){
+            return 0.0;
+        }
+        return skill.recastTime;
+    }
+    /**
      * 死んでいるかのフラグ
      * @public
      * @readonly
@@ -537,7 +565,7 @@ export class Enemy implements Character{
         this.OnChangeBattleModeOfCastTimeConsumption();
 
         // スキル使用情報送信
-        this.SendUseSkill();
+        this.SendUseSkillRequest();
 
         // console.log('enemy [id:' + this.characterId_.toString() + '] change battle mode of skill use.');
     }
@@ -941,6 +969,7 @@ export class Enemy implements Character{
             //console.log("enemy [id:" + this.id.toString() + "] use skill.");
 
             // Comment: 攻撃判定はクライアントが行う
+            this.SendUseSkill();
 
             // リキャストタイム消費モードへ
             const skill:SkillData|undefined = SkillDataAccessor.instance.Find(this.enemyStatus_.tribeStatus.useSkillId);
@@ -1108,18 +1137,33 @@ export class Enemy implements Character{
         //return CharacterManager.instance.Send(this.id, this.mapId, JSON.stringify(data));
     }
     /**
-     * スキル使用情報送信
-     * @private
+     * スキルリクエスト情報送信
+     * @public
      * @returns {boolean} true:成功 false:失敗
      * @memberof Enemy
      */
-    private SendUseSkill() : boolean {
-        const data : CommunicationData.SendData.SkillUse =
-            new CommunicationData.SendData.SkillUse();
+    public SendUseSkillRequest() : boolean {
+        const data : CommunicationData.SendData.EnemyUseSkillRequest =
+            new CommunicationData.SendData.EnemyUseSkillRequest();
 
-        data.user_id = this.characterId_;
+        data.enemy_id = this.characterId_;
         data.skill_id = this.enemyStatus_.tribeStatus.useSkillId;
 
-        return CharacterManager.instance.Send(this.id, this.mapId, JSON.stringify(data));
+        return CharacterManager.instance.SendAll(JSON.stringify(data));
+    }
+    /**
+     * スキル使用情報送信
+     * @public
+     * @returns {boolean} true:成功 false:失敗
+     * @memberof Enemy
+     */
+    public SendUseSkill() : boolean {
+        const data : CommunicationData.SendData.EnemyUseSkill =
+            new CommunicationData.SendData.EnemyUseSkill();
+
+        data.enemy_id = this.characterId_;
+        data.skill_id = this.enemyStatus_.tribeStatus.useSkillId;
+
+        return CharacterManager.instance.SendAll(JSON.stringify(data));
     }
 }

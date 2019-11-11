@@ -58,6 +58,7 @@ export class EnemyBattleOfSkillStandby implements EnemyBattleUpdate{
      */
     public HasChanged() : boolean {
         this.waitTime_ = this.battle_.enemy.skillCastTime;
+        this.battle_.enemy.SendUseSkillRequest();
         return true;
     }
     /**
@@ -80,7 +81,7 @@ export class EnemyBattleOfSkillStandby implements EnemyBattleUpdate{
         this.waitTime_ -= _elapsedTime;
         if(this.waitTime_ < 0){
             // スキル使用
-            this.battle_.enemy.OnUseSkill();
+            this.battle_.enemy.SendUseSkill();
             // スキル硬直ヘ
             this.battle_.updater.ChangeMode(EnemyBattleUpdateMode.SkillRigid);
             return true;
