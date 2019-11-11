@@ -11,7 +11,6 @@ import {EnemyBattleOfSkillStandby} from './EnemyBattleOfSkillStandby'
 import {EnemyBattleOfSkillRigid} from './EnemyBattleOfSkillRigid'
 import {EnemyBattleOfSkillInterruption} from './EnemyBattleOfSkillInterruption'
 import {EnemyUpdateOfBattle} from './EnemyUpdateOfBattle'
-import {EnemyTarget} from './EnemyTarget'
 
 /**
  * 敵更新者
@@ -77,13 +76,6 @@ export class EnemyBattleUpdater{
     public get currentState() : EnemyBattleUpdate {
         return this.currentState_;
     }
-    /**
-     * ターゲット情報
-     * @private
-     * @type {Array<EnemyTarget>}
-     * @memberof EnemyBattleUpdater
-     */
-    private targetArray_ : Array<EnemyTarget>;
 
 
     /**
@@ -99,7 +91,6 @@ export class EnemyBattleUpdater{
         this.skillRigid_ = new EnemyBattleOfSkillRigid(_battle);
         this.skillInterruption_ = new EnemyBattleOfSkillInterruption(_battle);
         this.currentState_ = this.judgeAction_;
-        this.targetArray_ = new Array<EnemyTarget>();
         if(!(this.currentState_.HasChanged())){
             console.error("error!! [EnemyBattleUpdater.constructor()]");
         }
