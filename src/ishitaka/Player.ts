@@ -269,6 +269,14 @@ export class Player implements Character{
      * @memberof Player
      */
     public Finalize() : boolean {
+        if(this.isJoinedBattlefield){
+            // 戦場に入っていたならその戦場のターゲットから外す
+            const currentBattlefield:Battlefield|undefined = BattlefieldManager.instance.Search(this.battlefieldId_);
+            if(currentBattlefield !== undefined){
+                currentBattlefield.ClearEnemyTarget(this);
+                this.OnRemovedBattlefield();
+            }
+        }
         return true;
     }
 
