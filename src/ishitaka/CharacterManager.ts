@@ -369,7 +369,7 @@ export class CharacterManager{
      */
     public RemoveCharacter(_characterId:number) : boolean{
         if(_characterId in this.characterArray_){
-            
+            this.characterArray_[_characterId].Finalize();
             delete this.characterArray_[_characterId];
             console.log("delete charcter");
             return true;
