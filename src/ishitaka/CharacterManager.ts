@@ -57,7 +57,7 @@ export class CharacterManager{
      * @type {number}
      * @memberof CharacterManager
      */
-    private static readonly enemyCount_ : number = 3;
+    private static readonly enemyCount_ : number = 5;
 
 
     /**
