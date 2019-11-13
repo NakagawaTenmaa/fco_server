@@ -585,7 +585,7 @@ export class Enemy implements Character{
      */
     private OnChangeBattleModeOfRecastTimeConsumption() : void {
         this.battleMode_ = EnemyBattleMode.Recast;
-        this.currentBattleMethod_ = this.ButtleOfSkillCastTimeConsumption;
+        this.currentBattleMethod_ = this.ButtleOfSkillRecastTimeConsumption;
     }
 
 

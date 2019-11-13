@@ -241,11 +241,11 @@ export class Battlefield{
 
     /**
      * 敵ターゲットから外す
-     * @private
+     * @public
      * @param {Character} _character キャラクタ
      * @memberof Battlefield
      */
-    private ClearEnemyTarget(_character:Character) : void {
+    public ClearEnemyTarget(_character:Character) : void {
         this.enemyArray_.forEach(function(
             _enemy : Enemy,
             _index : number,
