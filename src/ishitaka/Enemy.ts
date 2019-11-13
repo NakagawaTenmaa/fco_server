@@ -180,6 +180,34 @@ export class Enemy implements Character{
      */
     public get status() : CharacterStatus { return this.enemyStatus_; }
     /**
+     * スキルのキャストタイム
+     * @public
+     * @readonly
+     * @type {number}
+     * @memberof Enemy
+     */
+    public get skillCastTime() : number {
+        const skill:SkillData|undefined = SkillDataAccessor.instance.Find(this.enemyStatus_.tribeStatus.useSkillId);
+        if(skill === undefined){
+            return 0.0;
+        }
+        return skill.castTime;
+    }
+    /**
+     * スキルのリキャストタイム
+     * @public
+     * @readonly
+     * @type {number}
+     * @memberof Enemy
+     */
+    public get skillRecastTime() : number {
+        const skill:SkillData|undefined = SkillDataAccessor.instance.Find(this.enemyStatus_.tribeStatus.useSkillId);
+        if(skill === undefined){
+            return 0.0;
+        }
+        return skill.recastTime;
+    }
+    /**
      * 死んでいるかのフラグ
      * @public
      * @readonly
@@ -537,7 +565,7 @@ export class Enemy implements Character{
         this.OnChangeBattleModeOfCastTimeConsumption();
 
         // スキル使用情報送信
-        this.SendUseSkill();
+        this.SendUseSkillRequest();
 
         // console.log('enemy [id:' + this.characterId_.toString() + '] change battle mode of skill use.');
     }
@@ -562,32 +590,29 @@ export class Enemy implements Character{
 
 
     /**
-     * 種族(またはレベル)の変更
+     * 種族の変更
      * @public
      * @param {number} _tribeID 種族ID
-     * @param {number} _level レベル
      * @returns {boolean} true:成功 false:失敗
      * @memberof Enemy
      */
-    public ChangeTribe(_tribeID:number, _level:number) : boolean 
+    public ChangeTribe(_tribeID:number) : boolean 
     /**
-     * 種族(またはレベル)の変更
+     * 種族の変更
      * @public
      * @param {string} _tribeName 種族名
-     * @param {number} _level レベル
      * @returns {boolean} true:成功 false:失敗
      * @memberof Enemy
      */
-    public ChangeTribe(_tribeName:string, _level:number) : boolean 
+    public ChangeTribe(_tribeName:string) : boolean 
     /**
-     * 種族(またはレベル)変更の実装
+     * 種族変更の実装
      * @public
      * @param {number|string} _tribeKey 種族キー
-     * @param {number} _level レベル
      * @returns {boolean} true:成功 false:失敗
      * @memberof Enemy
      */
-    public ChangeTribe(_tribeKey:number|string, _level:number) : boolean {
+    public ChangeTribe(_tribeKey:number|string) : boolean {
         // データベース情報から読み込み
         const tribeData:EnemyTribeData|undefined =
             EnemyTribeDataAccessor.instance.Find(_tribeKey);
@@ -606,7 +631,7 @@ export class Enemy implements Character{
             this.tribeId_ = _tribeKey;
         }
 
-        if(!(this.enemyStatus_.tribeStatus.ChangeTribe(tribeData, _level))){
+        if(!(this.enemyStatus_.tribeStatus.ChangeTribe(tribeData))){
             return false;
         }
         this.enemyStatus_.Initialize();
@@ -944,6 +969,7 @@ export class Enemy implements Character{
             //console.log("enemy [id:" + this.id.toString() + "] use skill.");
 
             // Comment: 攻撃判定はクライアントが行う
+            this.SendUseSkill();
 
             // リキャストタイム消費モードへ
             const skill:SkillData|undefined = SkillDataAccessor.instance.Find(this.enemyStatus_.tribeStatus.useSkillId);
@@ -995,12 +1021,12 @@ export class Enemy implements Character{
 
     /**
      * ポップ
-     * @private
+     * @public
      * @returns {boolean} true:成功 false:失敗
      * @memberof Enemy
      */
-    private Populate() : boolean {
-        this.ChangeTribe(EnemyTribeDataAccessor.instance.GetRandomID(), 1);
+    public Populate() : boolean {
+        this.ChangeTribe(EnemyTribeDataAccessor.instance.GetRandomID());
 
         // TODO:
         const area:EnemyPopAreaData|undefined = EnemyPopAreaDataAccessor.instance.Find(0);
@@ -1111,18 +1137,33 @@ export class Enemy implements Character{
         //return CharacterManager.instance.Send(this.id, this.mapId, JSON.stringify(data));
     }
     /**
-     * スキル使用情報送信
-     * @private
+     * スキルリクエスト情報送信
+     * @public
      * @returns {boolean} true:成功 false:失敗
      * @memberof Enemy
      */
-    private SendUseSkill() : boolean {
-        const data : CommunicationData.SendData.SkillUse =
-            new CommunicationData.SendData.SkillUse();
+    public SendUseSkillRequest() : boolean {
+        const data : CommunicationData.SendData.EnemyUseSkillRequest =
+            new CommunicationData.SendData.EnemyUseSkillRequest();
 
-        data.user_id = this.characterId_;
+        data.enemy_id = this.characterId_;
         data.skill_id = this.enemyStatus_.tribeStatus.useSkillId;
 
-        return CharacterManager.instance.Send(this.id, this.mapId, JSON.stringify(data));
+        return CharacterManager.instance.SendAll(JSON.stringify(data));
+    }
+    /**
+     * スキル使用情報送信
+     * @public
+     * @returns {boolean} true:成功 false:失敗
+     * @memberof Enemy
+     */
+    public SendUseSkill() : boolean {
+        const data : CommunicationData.SendData.EnemyUseSkill =
+            new CommunicationData.SendData.EnemyUseSkill();
+
+        data.enemy_id = this.characterId_;
+        data.skill_id = this.enemyStatus_.tribeStatus.useSkillId;
+
+        return CharacterManager.instance.SendAll(JSON.stringify(data));
     }
 }
