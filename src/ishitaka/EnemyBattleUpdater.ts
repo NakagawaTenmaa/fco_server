@@ -152,12 +152,14 @@ export class EnemyBattleUpdater{
     /**
      * スキル中断
      * @public
+     * @returns {boolean} true:成功 false:失敗
      * @memberof EnemyBattleUpdater
      */
-    public OnInterruptSkill() : void {
+    public OnInterruptSkill() : boolean {
         if(this.currentState.mode === EnemyBattleUpdateMode.SkillStandby){
             // スキルスタンバイモードなら中断させる
-            this.ChangeMode(EnemyBattleUpdateMode.SkillInterruption);
+            return this.ChangeMode(EnemyBattleUpdateMode.SkillInterruption);
         }
+        return false;
     }
 }

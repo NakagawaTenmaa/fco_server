@@ -143,6 +143,15 @@ export class LevelStatus implements Status{
     }
     
     /**
+     * レベルの変更
+     * @public
+     * @param {number} _level レベル
+     * @memberof PlayerStatus
+     */
+    public ChangeLevel(_level:number) : void {
+        this.level_ = _level;
+    }
+    /**
      * 職業の変更
      * @public
      * @param {JobData} _jobData 職業データ

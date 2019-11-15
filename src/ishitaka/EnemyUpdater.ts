@@ -86,6 +86,17 @@ export class EnemyUpdater{
     }
 
     /**
+     * 更新処理
+     * @public
+     * @param {number} _elapsedTime 経過時間
+     * @returns {boolean} true:継続 false:終了
+     * @memberof EnemyUpdater
+     */
+    public Update(_elapesdTime:number) : boolean {
+        return this.currentState.Update(_elapesdTime);
+    }
+
+    /**
      * 状態切り替え
      * @public
      * @param {EnemyUpdateMode} _nextMode 切り換え後の状態

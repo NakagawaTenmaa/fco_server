@@ -105,7 +105,6 @@ export interface Character{
      * @memberof Character
      */
     Initialize() : boolean;
-
     /**
      * 更新処理
      * @public
@@ -114,7 +113,6 @@ export interface Character{
      * @memberof Character
      */
     Update(_elapsedTime:number) : boolean;
-
     /**
      * 終了処理
      * @public
@@ -122,6 +120,13 @@ export interface Character{
      * @memberof Character
      */
     Finalize() : boolean;
+
+    /**
+     * 死んだときの処理
+     * @public
+     * @memberof Character
+     */
+    OnDead() : void;
 
     
     /**

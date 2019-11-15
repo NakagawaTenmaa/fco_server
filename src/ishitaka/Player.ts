@@ -243,6 +243,16 @@ export class Player implements Character{
      */
     public get status() : CharacterStatus { return this.playerStatus_; }
     /**
+     * レベル
+     * @public
+     * @readonly
+     * @type {number}
+     * @memberof Player
+     */
+    public get level() : number {
+        return this.playerStatus_.levelStatus.level;
+    }
+    /**
      * 死んでいるかのフラグ
      * @public
      * @readonly
@@ -289,7 +299,6 @@ export class Player implements Character{
         this.playerStatus_.Initialize();
         return true;
     }
-
     /**
      * 更新処理
      * @public
@@ -303,7 +312,6 @@ export class Player implements Character{
         this.SendSimpleDisplay();
         return true;
     }
-
     /**
      * 終了処理
      * @public
@@ -327,6 +335,15 @@ export class Player implements Character{
             }
         }
         return true;
+    }
+    
+    /**
+     * 死んだときの処理
+     * @public
+     * @memberof Enemy
+     */
+    public OnDead() : void {
+        // nothing
     }
 
 

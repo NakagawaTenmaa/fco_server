@@ -58,15 +58,25 @@ export class PlayerStatus implements CharacterStatus {
      * レベルステータス
      * @public
      * @readonly
+     * @type {LevelStatus}
      * @memberof PlayerStatus
      */
     public get levelStatus() : LevelStatus{
         return this.levelStatus_;
+    }/**
+     * レベル
+     * @public
+     * @type {number}
+     * @memberof PlayerStatus
+     */
+    public get level() : number {
+        return this.levelStatus_.level;
     }
     /**
      * ポイントステータス
      * @public
      * @readonly
+     * @type {PointStatus}
      * @memberof PlayerStatus
      */
     public get pointStatus() : PointStatus{
@@ -76,6 +86,7 @@ export class PlayerStatus implements CharacterStatus {
      * 状態異常ステータス
      * @public
      * @readonly
+     * @type {AbnormalConditionStatus}
      * @memberof PlayerStatus
      */
     public get abnormalConditionStatus() : AbnormalConditionStatus{
