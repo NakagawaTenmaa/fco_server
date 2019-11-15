@@ -55,6 +55,24 @@ export class PartyManager{
         this.partyArray_ = new Array<Party>();
     }
 
+    /**
+     * 更新
+     * @public
+     * @returns {boolean} true:成功 false:失敗
+     * @memberof PartyManager
+     */
+    public Update() : boolean {
+        this.partyArray_ = this.partyArray_.filter(function(
+            _party : Party,
+            _index : number,
+            _array : Party[]
+        ) : boolean {
+            return (!(_party.isDead));
+        });
+
+        return true;
+    }
+
 
     /**
      * 作成

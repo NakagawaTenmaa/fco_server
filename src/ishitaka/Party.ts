@@ -7,6 +7,8 @@
 
 import {Character} from './Character'
 import {Player} from './Player'
+import {Battlefield} from './Battlefield';
+import {BattlefieldManager} from './BattlefieldManager';
 
 /**
  * パーティ
@@ -39,6 +41,23 @@ export class Party{
      */
     private battlefieldId_ : number;
     /**
+     * 戦場
+     * @private
+     * @type {Battlefield|undefined}
+     * @memberof Party
+     */
+    private battlefield_ : Battlefield|undefined;
+    /**
+     * 戦場
+     * @public
+     * @readonly
+     * @type {(Battlefield|undefined)}
+     * @memberof Party
+     */
+    public get battlefield() : Battlefield|undefined {
+        return this.battlefield_;
+    }
+    /**
      * 戦場ID
      * @public
      * @readonly
@@ -48,6 +67,33 @@ export class Party{
     public get battlefieldId() : number {
         return this.battlefieldId_;
     }
+    /**
+     * 戦場IDの設定
+     * @private
+     * @param {number} _battlefieldId 戦場ID
+     * @memberof Party
+     */
+    private SetBattlefieldId(_battlefieldId:number) : void {
+        this.battlefieldId_ = _battlefieldId;
+
+        if(_battlefieldId < 0){
+            this.battlefield_ = undefined;
+        }
+        else{
+            this.battlefield_ = BattlefieldManager.instance.Search(_battlefieldId);
+        }
+    }
+    /**
+     * 戦場にいるか
+     * @public
+     * @readonly
+     * @type {boolean}
+     * @memberof Party
+     */
+    public get isJoinedBattlefield() : boolean {
+        return (this.battlefieldId_ >= 0);
+    }
+
     /**
      * パーティキャラクタ配列
      * @private
@@ -108,6 +154,7 @@ export class Party{
     public constructor(_id:number){
         this.id_ = _id;
         this.battlefieldId_ = -1;
+        this.battlefield_ = undefined;
         this.characterArray_ = new Array<Character>();
         this.isResetPriority_ = false;
     }
@@ -119,7 +166,7 @@ export class Party{
      * @memberof Party
      */
     public OnAddBattlefield(_battlefieldId:number) : void {
-        this.battlefieldId_ = _battlefieldId;
+        this.SetBattlefieldId(_battlefieldId);
         this.characterArray.forEach(function(
             _character : Character,
             _priority : number,
@@ -145,7 +192,7 @@ export class Party{
             _Remove(_character);
             _character.OnRemovedBattlefield();
         });
-        this.battlefieldId_ = -1;
+        this.SetBattlefieldId(-1);
     }
 
     /**
@@ -190,6 +237,15 @@ export class Party{
 
         // 削除
         this.characterArray_.splice(index, 1);
+
+        // 戦場に入っていたならその戦場にいる敵のターゲットから外す
+        if(this.isJoinedBattlefield){
+            const currentBattlefield:Battlefield|undefined = this.battlefield;
+            if(currentBattlefield !== undefined){
+                currentBattlefield.ClearEnemyTarget(_player);
+                _player.OnRemovedBattlefield();
+            }
+        }
 
         this.isResetPriority_ = true;
         return true;

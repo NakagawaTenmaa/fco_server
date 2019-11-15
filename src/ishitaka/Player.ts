@@ -14,8 +14,8 @@ import {CommunicationData} from './CommunicationData';
 import {JobData,JobDataAccessor} from './DatabaseAccessors/JobDataAccessor'
 import WebSocket = require('ws')
 import {  } from '../model/characterDataModel';
-import { Vector3 } from './Vector3'
-import { Weapon } from '../controller/object/playerWeapon'
+import {Vector3} from './Vector3'
+import {Weapon} from '../controller/object/playerWeapon'
 import {PartyManager} from './PartyManager'
 import {Party} from './Party'
 import {SkillEffectManager} from './SkillEffectManager'
@@ -80,6 +80,23 @@ export class Player implements Character{
      */
     private partyId_ : number;
     /**
+     * パーティ
+     * @private
+     * @type {Party|undefined}
+     * @memberof Player
+     */
+    private party_ : Party|undefined;
+    /**
+     * パーティ
+     * @public
+     * @readonly
+     * @type {Party|undefined}
+     * @memberof Player
+     */
+    public get party() : Party|undefined {
+        return this.party_;
+    }
+    /**
      * パーティID
      * @public
      * @readonly
@@ -88,6 +105,22 @@ export class Player implements Character{
      */
     public get partyId() : number {
         return this.partyId_;
+    }
+    /**
+     * パーティIDの設定
+     * @private
+     * @param {number} _partyId
+     * @memberof Player
+     */
+    private SetPartyId(_partyId : number) : void {
+        this.partyId_ = _partyId;
+
+        if(_partyId < 0){
+            this.party_ = undefined
+        }
+        else{
+            this.party_ = PartyManager.instance.Search(_partyId);
+        }
     }
     /**
      * パーティ優先度
@@ -111,20 +144,16 @@ export class Player implements Character{
     }
     /**
      * 戦場ID
-     * @private
-     * @type {number}
-     * @memberof Player
-     */
-    private battlefieldId_ : number;
-    /**
-     * 戦場ID
      * @public
      * @readonly
      * @type {number}
      * @memberof Player
      */
     public get battlefieldId() : number {
-        return this.battlefieldId_;
+        if(this.party_ === undefined){
+            return (-1);
+        }
+        return this.party_.battlefieldId;
     }
     /**
      * 戦場にいるか
@@ -134,7 +163,20 @@ export class Player implements Character{
      * @memberof Player
      */
     public get isJoinedBattlefield() : boolean {
-        return (this.battlefieldId_ >= 0);
+        return (this.battlefieldId >= 0);
+    }
+    /**
+     * 戦場
+     * @public
+     * @readonly
+     * @type {Battlefield|undefined}
+     * @memberof Player
+     */
+    public get battlefield() : Battlefield|undefined {
+        if(this.party_ === undefined){
+            return undefined;
+        }
+        return this.party_.battlefield;
     }
     /**
      * ターゲットID
@@ -227,8 +269,8 @@ export class Player implements Character{
         this.dbId_ = -1;
         this.characterId_ = -1;
         this.partyId_ = -1;
+        this.party_ = undefined;
         this.partyPriority_ = -1;
-        this.battlefieldId_ = -1;
         this.targetId_ = -1;
         this.mapId_ = 0;
         this.transform_ = new Transform();
@@ -269,9 +311,16 @@ export class Player implements Character{
      * @memberof Player
      */
     public Finalize() : boolean {
+        // 所属しているパーティから抜ける
+        const currentParty:Party|undefined = this.party_;
+        if(currentParty !== undefined){
+            currentParty.RemovePlayer(this);
+            this.SetPartyId(-1);
+        }
+
         if(this.isJoinedBattlefield){
             // 戦場に入っていたならその戦場のターゲットから外す
-            const currentBattlefield:Battlefield|undefined = BattlefieldManager.instance.Search(this.battlefieldId_);
+            const currentBattlefield:Battlefield|undefined = this.battlefield;
             if(currentBattlefield !== undefined){
                 currentBattlefield.ClearEnemyTarget(this);
                 this.OnRemovedBattlefield();
@@ -355,7 +404,7 @@ export class Player implements Character{
         if(this.isJoinedBattlefield){
             // 自身が戦場に入っているなら
             // 攻撃してきたキャラクタを自身と同じ戦場に引きずり込む
-            _attacker.JoinBattlefield(this.battlefieldId_, true);
+            _attacker.JoinBattlefield(this.battlefieldId, true);
         }
         else if(_attacker.isJoinedBattlefield){
             // 自信が入っていなくて相手が戦場に入っているなら
@@ -385,7 +434,7 @@ export class Player implements Character{
             // IDが不正なら何もしない
             return false;
         }
-        if(_battlefieldId === this.battlefieldId_){
+        if(_battlefieldId === this.battlefieldId){
             // 既に入っている戦場なら何もしない
             return false;
         }
@@ -399,7 +448,7 @@ export class Player implements Character{
             }
             if(this.isJoinedBattlefield){
                 // 現在戦場に入っている場合なら、同じ戦場にいるキャラクタを引きずり込む
-                const currentBattlefield:Battlefield|undefined = BattlefieldManager.instance.Search(this.battlefieldId_);
+                const currentBattlefield:Battlefield|undefined = this.battlefield;
                 if(currentBattlefield === undefined){
                     return false;
                 }
@@ -410,15 +459,13 @@ export class Player implements Character{
             }
             else{
                 // 同じパーティのキャラクタを引きずり込む
-                const myParty:Party|undefined = PartyManager.instance.Search(this.partyId_);
+                const myParty:Party|undefined = this.party;
                 if(myParty === undefined){
                     return false;
                 }
                 toBattlefield.AddParty(myParty);
             }
         }
-        
-        this.battlefieldId_ = _battlefieldId;
         return true;
     }
     /**
@@ -427,7 +474,7 @@ export class Player implements Character{
      * @memberof Player
      */
     public OnRemovedBattlefield() : void {
-        this.battlefieldId_ = -1;
+        // nothing
     }
 
     /**
@@ -449,7 +496,7 @@ export class Player implements Character{
      * @memberof Player
      */
     public JoinParty(_partyId:number) : boolean {
-        const beforeParty:Party|undefined = PartyManager.instance.Search(this.partyId_);
+        const beforeParty:Party|undefined = this.party;
         if(beforeParty === undefined){
             return false;
         }
@@ -464,10 +511,10 @@ export class Player implements Character{
 
         const isSuccess:boolean = afterParty.AddPlayer(this);
         if(isSuccess){
-            this.partyId_ = _partyId;
+            this.SetPartyId(_partyId);
         }
         else{
-            console.error('Couldn\'t join the party.');
+            console.error('Couldn\'t join the new party.');
         }
 
         return isSuccess;
@@ -479,7 +526,7 @@ export class Player implements Character{
      * @memberof Player
      */
     public leaveParty() : boolean {
-        const beforeParty:Party|undefined = PartyManager.instance.Search(this.partyId_);
+        const beforeParty:Party|undefined = this.party;
         if(beforeParty === undefined){
             return false;
         }
@@ -494,10 +541,10 @@ export class Player implements Character{
 
         const isSuccess:boolean = afterParty.AddPlayer(this);
         if(isSuccess){
-            this.partyId_ = this.characterId_;
+            this.SetPartyId(this.characterId_);
         }
         else{
-            console.error('Couldn\'t join the party.');
+            console.error('Couldn\'t join the my party.');
         }
 
         return isSuccess;
