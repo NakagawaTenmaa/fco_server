@@ -38,14 +38,8 @@ export class loginRouter{
     private async resultCreateUser(data: any, ws: any){   
         const result = await this.controller.createUser(data);
         if(result === 0) {
-            const characterManager: CharacterManager = CharacterManager.instance;
-            let player: Player = new Player();
-            player.dbId = result;
-            player.Initialize();
-            characterManager.AddCharacter(player);
-
             const res = new MakeOk();
-            res.user_id = player.id;
+            res.user_id = 0;
 
             console.log('send makeok : ' + JSON.stringify(res));
             ws.send(JSON.stringify(res));
