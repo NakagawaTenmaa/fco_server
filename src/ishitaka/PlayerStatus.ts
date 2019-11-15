@@ -63,7 +63,8 @@ export class PlayerStatus implements CharacterStatus {
      */
     public get levelStatus() : LevelStatus{
         return this.levelStatus_;
-    }/**
+    }
+    /**
      * レベル
      * @public
      * @type {number}
