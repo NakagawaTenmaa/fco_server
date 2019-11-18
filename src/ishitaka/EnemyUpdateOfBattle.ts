@@ -146,6 +146,11 @@ export class EnemyUpdateOfBattle implements EnemyUpdate{
         if(!(this.UpdateOfAllTargetHate(_elapsedTime))){
             return false;
         }
+        this.UpdateOfTargetArray();
+        if(this.DoSetNormalMode()){
+            this.enemy.OnNormal();
+            return true;
+        }
         if(!(this.battleUpdater_.currentState.Update(_elapsedTime))){
             return false;
         }
@@ -188,6 +193,47 @@ export class EnemyUpdateOfBattle implements EnemyUpdate{
         });
 
         return true;
+    }
+    /**
+     * ターゲット配列の更新
+     * @private
+     * @memberof EnemyUpdateOfBattle
+     */
+    private UpdateOfTargetArray() : void {
+        const maxLength:number = 10.0;
+        const check:number = maxLength * maxLength;
+        const this_:EnemyUpdateOfBattle = this;
+
+        this.targetArray_ = this.targetArray_.filter(function(
+            _enemyTarget : EnemyTarget,
+            _index : number,
+            _array : EnemyTarget[]
+        ) : boolean {
+            // ヘイトを持っていないキャラは外す
+            if(_enemyTarget.hate <= 0){
+                return false;
+            }
+            // 距離が離れすぎたキャラも外す
+            if(
+                _enemyTarget.character.transform.position.Subtraction(
+                    this_.enemy.transform.position
+                ).lengthSquared > check
+            ){
+                return false;
+            }
+
+            // 存続
+            return true;
+        });
+    }
+    /**
+     * 通常状態に移行するか?
+     * @private
+     * @returns {boolean} true:する false:しない
+     * @memberof EnemyUpdateOfBattle
+     */
+    private DoSetNormalMode() : boolean {
+        return (this.targetArray_.length <= 0);
     }
 
     /**
