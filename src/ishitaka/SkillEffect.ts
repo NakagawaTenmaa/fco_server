@@ -71,13 +71,16 @@ export class SkillEffect implements CharacterEffect{
      */
     public Show(_user:Character, _receiver:Character) : boolean {
         // 物理と魔法の攻撃値計算
-        const physicalAttack:number = this.skillData_.fixedPhysicalDamage + this.skillData_.strengthPhysicalDamageRate*_user.status.strength;
-        const magicalAttack:number = this.skillData_.fixedMagicalDamage + this.skillData_.intelligenceMagicalDamageRate*_user.status.intelligence;
+        const physicalAttack:number = this.skillData_.strengthPhysicalDamageRate*_user.status.strength;
+        const magicalAttack:number = this.skillData_.intelligenceMagicalDamageRate*_user.status.intelligence;
+        // ダメージ倍率計算
+        const damageRate:number = physicalAttack/_receiver.status.vitality + magicalAttack/_receiver.status.mind;
         // ダメージ算出
-        const hitPointDamage:number = physicalAttack/_receiver.status.vitality + magicalAttack/_receiver.status.mind;
+        const hitPointDamage:number = this.skillData_.basePhysicalDamage * damageRate;
+        const magicPointDamage:number = this.skillData_.baseMagicalDamage * damageRate;
         
         // ダメージ反映
-        _receiver.ReceiveDamage(_user, hitPointDamage, 0);
+        _receiver.ReceiveDamage(_user, hitPointDamage, magicPointDamage);
 
         // ヘイト変更
         _receiver.ChangeHate(_user, hitPointDamage);
