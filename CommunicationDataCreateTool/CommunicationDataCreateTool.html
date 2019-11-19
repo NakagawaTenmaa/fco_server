@@ -943,7 +943,11 @@
             strFileData += "\t\t\t\t\t" + 'const data:' + dataTypeName + ' = new ' + dataTypeName + '();' + backReturn;
             typeData.members.forEach((member)=>{
                 if(member.name !== 'command'){
-                    strFileData += "\t\t\t\t\t" + 'data.' + member.name + ' = parseData.' + member.name + ';' + backReturn;
+                    strFileData += "\t\t\t\t\t" + 'data.' + member.name + ' = parseData.' + member.name;
+                    if(member.typeTs === 'number'){
+                        strFileData += ' - 0';
+                    }
+                    strFileData += ';' + backReturn;
                 }
             });
             strFileData += "\t\t\t\t\t" + 'return data;' + backReturn;
