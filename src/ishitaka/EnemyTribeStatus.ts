@@ -23,6 +23,16 @@ export class EnemyTribeStatus implements Status{
      */
     private tribeData_ : EnemyTribeData;
 
+    /**
+     * レベル
+     * @public
+     * @readonly
+     * @type {number}
+     * @memberof EnemyTribeStatus
+     */
+    public get level() : number {
+        return this.tribeData_.level;
+    }
     
     /**
      * 利用するスキルID
@@ -125,6 +135,7 @@ export class EnemyTribeStatus implements Status{
     public constructor(){
         this.tribeData_ = new EnemyTribeData(
             'None',
+            0,
             0,
             0,
             0, 0,

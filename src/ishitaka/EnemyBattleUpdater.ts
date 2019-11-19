@@ -91,9 +91,6 @@ export class EnemyBattleUpdater{
         this.skillRigid_ = new EnemyBattleOfSkillRigid(_battle);
         this.skillInterruption_ = new EnemyBattleOfSkillInterruption(_battle);
         this.currentState_ = this.judgeAction_;
-        if(!(this.currentState_.HasChanged())){
-            console.error("error!! [EnemyBattleUpdater.constructor()]");
-        }
     }
 
     /**
@@ -152,12 +149,14 @@ export class EnemyBattleUpdater{
     /**
      * スキル中断
      * @public
+     * @returns {boolean} true:成功 false:失敗
      * @memberof EnemyBattleUpdater
      */
-    public OnInterruptSkill() : void {
+    public OnInterruptSkill() : boolean {
         if(this.currentState.mode === EnemyBattleUpdateMode.SkillStandby){
             // スキルスタンバイモードなら中断させる
-            this.ChangeMode(EnemyBattleUpdateMode.SkillInterruption);
+            return this.ChangeMode(EnemyBattleUpdateMode.SkillInterruption);
         }
+        return false;
     }
 }

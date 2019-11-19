@@ -116,21 +116,21 @@ export class SkillData{
         return this.consumptionMagicPoint_;
     }
     /**
-     * 固定物理ダメージ
+     * 基本物理ダメージ
      * @private
      * @type {number}
      * @memberof SkillData
      */
-    private fixedPhysicalDamage_ : number;
+    private basePhysicalDamage_ : number;
     /**
-     * 固定物理ダメージ
+     * 基本物理ダメージ
      * @public
      * @readonly
      * @type {number}
      * @memberof SkillData
      */
-    public get fixedPhysicalDamage() : number {
-        return this.fixedPhysicalDamage_;
+    public get basePhysicalDamage() : number {
+        return this.basePhysicalDamage_;
     }
     /**
      * 物理攻撃力による物理ダメージ増加率
@@ -150,21 +150,21 @@ export class SkillData{
         return this.strengthPhysicalDamageRate_;
     }
     /**
-     * 固定魔法ダメージ
+     * 基本魔法ダメージ
      * @private
      * @type {number}
      * @memberof SkillData
      */
-    private fixedMagicalDamage_ : number;
+    private baseMagicalDamage_ : number;
     /**
-     * 固定魔法ダメージ
+     * 基本魔法ダメージ
      * @public
      * @readonly
      * @type {number}
      * @memberof SkillData
      */
-    public get fixedMagicalDamage() : number {
-        return this.fixedMagicalDamage_;
+    public get baseMagicalDamage() : number {
+        return this.baseMagicalDamage_;
     }
     /**
      * 魔法攻撃力による魔法ダメージ増加率
@@ -263,9 +263,9 @@ export class SkillData{
      * @param {number} _recastTime リキャストタイム
      * @param {number} _consumptionHitPoint 消費体力
      * @param {number} _consumptionMagicPoint 消費魔力
-     * @param {number} _fixedPhysicalDamage 固定物理ダメージ
+     * @param {number} _basePhysicalDamage 基本物理ダメージ
      * @param {number} _strengthPhysicalDamageRate 物理攻撃力による物理ダメージ増加率
-     * @param {number} _fixedMagicalDamage 固定魔法ダメージ
+     * @param {number} _baseMagicalDamage 基本魔法ダメージ
      * @param {number} _intelligenceMagicalDamageRate 魔法攻撃力による魔法ダメージ増加率
      * @param {number} _effectFlag 効果フラグ [バフ、デバフ等]
      * @param {number} _effectTarget 効果対象
@@ -280,9 +280,9 @@ export class SkillData{
         _recastTime : number,
         _consumptionHitPoint : number,
         _consumptionMagicPoint : number,
-        _fixedPhysicalDamage : number,
+        _basePhysicalDamage : number,
         _strengthPhysicalDamageRate : number,
-        _fixedMagicalDamage : number,
+        _baseMagicalDamage : number,
         _intelligenceMagicalDamageRate : number,
         _effectFlag : number,
         _effectTarget : number,
@@ -295,9 +295,9 @@ export class SkillData{
         this.recastTime_ = _recastTime;
         this.consumptionHitPoint_ = _consumptionHitPoint;
         this.consumptionMagicPoint_ = _consumptionMagicPoint;
-        this.fixedPhysicalDamage_ = _fixedPhysicalDamage;
+        this.basePhysicalDamage_ = _basePhysicalDamage;
         this.strengthPhysicalDamageRate_ = _strengthPhysicalDamageRate;
-        this.fixedMagicalDamage_ = _fixedMagicalDamage;
+        this.baseMagicalDamage_ = _baseMagicalDamage;
         this.intelligenceMagicalDamageRate_ = _intelligenceMagicalDamageRate;
         this.effectFlag_ = _effectFlag;
         this.effectTarget_ = _effectTarget;

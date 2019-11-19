@@ -31,6 +31,23 @@ export class EnemyTribeData{
         return this.tribeName_;
     }
     /**
+     * レベル
+     * @private
+     * @type {number}
+     * @memberof EnemyTribeData
+     */
+    private level_ : number;
+    /**
+     * レベル
+     * @public
+     * @readonly
+     * @type {number}
+     * @memberof EnemyTribeData
+     */
+    public get level() : number {
+        return this.level_;
+    }
+    /**
      * 使用スキルID
      * @private
      * @type {number}
@@ -207,6 +224,7 @@ export class EnemyTribeData{
      * @public
      * @constructor
      * @param {string} _tribeName 種族名
+     * @param {number} _level レベル
      * @param {number} _useSkillId 使用スキルID
      * @param {number} _modelId モデルID
      * @param {number} _maxHitPoint 最大体力
@@ -221,6 +239,7 @@ export class EnemyTribeData{
      */
     public constructor(
         _tribeName : string,
+        _level : number,
         _useSkillId : number,
         _modelId : number,
         _maxHitPoint : number,
@@ -233,6 +252,7 @@ export class EnemyTribeData{
         _agility : number
     ){
         this.tribeName_ = _tribeName;
+        this.level_ = _level;
         this.useSkillId_ = _useSkillId;
         this.modelId_ = _modelId;
         this.maxHitPoint_ = _maxHitPoint;
@@ -352,6 +372,7 @@ export class EnemyTribeDataAccessor implements DatabaseAccessor{
         // テスト用データ
         const testTribe:EnemyTribeData = new EnemyTribeData(
             'test',
+            1,
             0,
             0,
             30, 50,
@@ -398,5 +419,24 @@ export class EnemyTribeDataAccessor implements DatabaseAccessor{
         );
 
         return id;
+    }
+
+    /**
+     * IDの取得
+     * @public
+     * @param {string} _name 名前
+     * @returns {number} 対応するエリアのID
+     * @memberof EnemyTribeDataAccessor
+     */
+    public GetId(_name:string) : number {
+        return this.dataArray_.findIndex(
+            function(
+                _data : EnemyTribeData,
+                _id : number,
+                _array : EnemyTribeData[]
+            ) : boolean {
+                return (_name === _data.tribeName);
+            }
+        );
     }
 }

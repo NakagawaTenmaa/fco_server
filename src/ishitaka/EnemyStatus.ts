@@ -58,15 +58,27 @@ export class EnemyStatus implements CharacterStatus {
      * 種族ステータス
      * @public
      * @readonly
+     * @type {EnemyTribeStatus}
      * @memberof EnemyStatus
      */
     public get tribeStatus() : EnemyTribeStatus{
         return this.tribeStatus_;
     }
     /**
+     * レベル
+     * @public
+     * @readonly
+     * @type {number}
+     * @memberof EnemyStatus
+     */
+    public get level() : number {
+        return this.tribeStatus.level;
+    }
+    /**
      * 状態異常ステータス
      * @public
      * @readonly
+     * @type {AbnormalConditionStatus}
      * @memberof EnemyStatus
      */
     public get abnormalConditionStatus() : AbnormalConditionStatus{

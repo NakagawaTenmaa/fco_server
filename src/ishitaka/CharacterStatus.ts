@@ -16,6 +16,15 @@ import {AbnormalConditionStatus} from './AbnormalConditionStatus'
  */
 export interface CharacterStatus extends Status {
     /**
+     * レベル
+     * @public
+     * @readonly
+     * @type {number}
+     * @memberof Status
+     */
+    readonly level : number;
+
+    /**
      * 状態異常ステータス
      * @public
      * @readonly
