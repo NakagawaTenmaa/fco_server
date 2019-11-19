@@ -251,6 +251,7 @@ export class Enemy implements Character{
     public Initialize() : boolean {
         this.enemyStatus_.Initialize();
         this.Populate();
+        this.updater_.Initialize();
         return true;
     }
     /**
@@ -271,6 +272,7 @@ export class Enemy implements Character{
      * @memberof Enemy
      */
     public Finalize() : boolean {
+        this.updater_.Finalize();
         return true;
     }
     

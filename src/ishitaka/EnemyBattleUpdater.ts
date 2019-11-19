@@ -91,9 +91,6 @@ export class EnemyBattleUpdater{
         this.skillRigid_ = new EnemyBattleOfSkillRigid(_battle);
         this.skillInterruption_ = new EnemyBattleOfSkillInterruption(_battle);
         this.currentState_ = this.judgeAction_;
-        if(!(this.currentState_.HasChanged())){
-            console.error("error!! [EnemyBattleUpdater.constructor()]");
-        }
     }
 
     /**

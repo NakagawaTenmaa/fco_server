@@ -106,8 +106,8 @@ export class CharacterManager{
         // 敵の生成
         for(i=0; i<CharacterManager.enemyCount_; ++i){
             const enemy:Enemy = new Enemy();
-            enemy.Initialize();
             this.AddCharacter(enemy);
+            enemy.Initialize();
         }
         return true;
     }

@@ -80,11 +80,23 @@ export class EnemyUpdater{
         this.battle_ = new EnemyUpdateOfBattle(_enemy);
         this.dead_ = new EnemyUpdateOfDead(_enemy);
         this.currentState_ = this.normal_;
-        if(!(this.currentState_.HasChanged())){
-            console.error("error!! [EnemyUpdater.constructor()]");
-        }
     }
 
+    /**
+     * 初期化
+     * @public
+     * @returns {boolean} true:成功 false:失敗
+     * @memberof EnemyUpdater
+     */
+    public Initialize() : boolean {
+        if(!(this.currentState_.HasChanged())){
+            return false;
+        }
+        if(!(this.battleState.updater.currentState.HasChanged())){
+            return false;
+        }
+        return true;
+    }
     /**
      * 更新処理
      * @public
@@ -94,6 +106,21 @@ export class EnemyUpdater{
      */
     public Update(_elapesdTime:number) : boolean {
         return this.currentState.Update(_elapesdTime);
+    }
+    /**
+     * 終了処理
+     * @public
+     * @returns {boolean} true:成功 false:失敗
+     * @memberof EnemyUpdater
+     */
+    public Finalize() : boolean {
+        if(!(this.battleState.updater.currentState.OnChange())){
+            return false;
+        }
+        if(!(this.currentState_.OnChange())){
+            return false;
+        }
+        return true;
     }
 
     /**
