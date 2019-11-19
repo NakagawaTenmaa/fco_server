@@ -565,6 +565,7 @@ export class Enemy implements Character{
             );
         }
 
+        //console.log("Enemy pop. [id:" + this.id.toString() + ", map:" + this.mapId.toString() + "]");
         this.updater.ChangeMode(EnemyUpdateMode.Normal);
 
         return true;

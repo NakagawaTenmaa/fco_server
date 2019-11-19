@@ -67,10 +67,10 @@ export class EnemyPopAreaManager{
                 _array : EnemyPopAreaData[]
             ) : void {
                 if(_id in this_.areaArray_){
-                    this_.areaArray_[_id] = new EnemyPopArea(_data);
+                    this_.areaArray_[_id].ChangeData(_data);
                 }
                 else{
-                    this_.areaArray_[_id].ChangeData(_data);
+                    this_.areaArray_[_id] = new EnemyPopArea(_data);
                 }
                 useIdArray.push(_id);
             }
