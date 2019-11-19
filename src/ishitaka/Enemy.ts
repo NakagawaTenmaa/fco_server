@@ -366,8 +366,8 @@ export class Enemy implements Character{
             _attacker.JoinBattlefield(battlefield.id, true);
         }
 
-        // バトルモードでなければバトルモードへ
-        if(this.updater.currentState.mode !== EnemyUpdateMode.Battle){
+        // 通常モードならバトルモードへ
+        if(this.updater.currentState.mode === EnemyUpdateMode.Normal){
             this.updater.ChangeMode(EnemyUpdateMode.Battle);
         }
 
