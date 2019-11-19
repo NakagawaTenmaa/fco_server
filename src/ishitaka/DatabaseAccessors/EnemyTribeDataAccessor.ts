@@ -420,4 +420,23 @@ export class EnemyTribeDataAccessor implements DatabaseAccessor{
 
         return id;
     }
+
+    /**
+     * IDの取得
+     * @public
+     * @param {string} _name 名前
+     * @returns {number} 対応するエリアのID
+     * @memberof EnemyTribeDataAccessor
+     */
+    public GetId(_name:string) : number {
+        return this.dataArray_.findIndex(
+            function(
+                _data : EnemyTribeData,
+                _id : number,
+                _array : EnemyTribeData[]
+            ) : boolean {
+                return (_name === _data.tribeName);
+            }
+        );
+    }
 }

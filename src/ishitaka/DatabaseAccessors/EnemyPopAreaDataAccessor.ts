@@ -6,6 +6,7 @@
  */
 
 import {DatabaseAccessor} from './DatabaseAccessor'
+import {EnemyPopAreaManager} from './../EnemyPopAreaManager'
 
 /**
  * 敵ポップエリア情報
@@ -381,6 +382,8 @@ export class EnemyPopAreaDataAccessor implements DatabaseAccessor{
 
         // TODO:データベースから情報を読み取る
         console.log('Loaded the enemy pop area data.');
+        // ポップエリアの更新
+        EnemyPopAreaManager.instance.ReloadData();
         return true;
     }
 }

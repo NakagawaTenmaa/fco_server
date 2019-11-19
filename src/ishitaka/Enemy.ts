@@ -12,19 +12,18 @@ import {Transform} from './Transform'
 import {EnemyTribeData,EnemyTribeDataAccessor} from './DatabaseAccessors/EnemyTribeDataAccessor'
 import {CharacterManager} from './CharacterManager'
 import {CommunicationData} from './CommunicationData';
-import {EnemyPopAreaData, EnemyPopAreaDataAccessor} from './DatabaseAccessors/EnemyPopAreaDataAccessor'
+import {EnemyPopAreaData} from './DatabaseAccessors/EnemyPopAreaDataAccessor'
 import {Vector3} from './Vector3'
 import {Matrix4x4} from './Matrix4x4'
 import {SkillData, SkillDataAccessor} from './DatabaseAccessors/SkillDataAccessor'
-import {EnemyTarget} from './EnemyTarget'
 import {SkillEffectManager} from './SkillEffectManager'
 import {SkillEffect} from './SkillEffect'
-import {Vector4} from './Vector4'
 import {Battlefield} from './Battlefield'
 import {BattlefieldManager} from './BattlefieldManager'
 import {EnemyUpdater} from './EnemyUpdater'
-import { EnemyUpdateMode } from './EnemyUpdate'
-import { EnemyBattleUpdateMode } from './EnemyBattleUpdate'
+import {EnemyUpdateMode} from './EnemyUpdate'
+import {EnemyPopArea} from './EnemyPopArea'
+import {EnemyPopAreaManager} from './EnemyPopAreaManager'
 
 /**
  * 敵
@@ -34,37 +33,13 @@ import { EnemyBattleUpdateMode } from './EnemyBattleUpdate'
  */
 export class Enemy implements Character{
     /**
-     * リポップインターバル
+     * 最大ポップ挑戦数
      * @private
      * @static
      * @type {number}
      * @memberof Enemy
      */
-    private static readonly repopulateInterval_ : number = 3000.0;
-    /**
-     * 歩行終了インターバル
-     * @private
-     * @static
-     * @type {number}
-     * @memberof Enemy
-     */
-    private static readonly walkEndInterval_ : number = 1000.0;
-    /**
-     * 戦闘移動インターバル
-     * @private
-     * @static
-     * @type {number}
-     * @memberof Enemy
-     */
-    private static readonly battleMoveInterval_ : number = 1000.0;
-    /**
-     * スキル中断インターバル
-     * @private
-     * @static
-     * @type {number}
-     * @memberof Enemy
-     */
-    private static readonly skillInterruptInterval_ : number = 500.0;
+    private static readonly maxTryPopCount : number = 100;
 
     
     /**
@@ -120,12 +95,22 @@ export class Enemy implements Character{
         return (this.battlefieldId_ >= 0);
     }
     /**
-     * マップID
+     * ポップエリア
      * @private
-     * @type {number}
+     * @type {(EnemyPopArea|undefined)}
      * @memberof Enemy
      */
-    private mapId_ : number;
+    private popArea_ : EnemyPopArea|undefined;
+    /**
+     * ポップエリア
+     * @private
+     * @readonly
+     * @type {(EnemyPopArea|undefined)}
+     * @memberof Enemy
+     */
+    private get popArea() : EnemyPopArea|undefined {
+        return this.popArea_;
+    }
     /**
      * マップID
      * @public
@@ -133,7 +118,12 @@ export class Enemy implements Character{
      * @type {number}
      * @memberof Enemy
      */
-    public get mapId() : number { return this.mapId_; }
+    public get mapId() : number {
+        if(this.popArea === undefined){
+            return -1;
+        }
+        return this.popArea.data.mapId;
+    }
     /**
      * トランスフォーム
      * @private
@@ -244,7 +234,7 @@ export class Enemy implements Character{
     public constructor(){
         this.characterId_ = -1;
         this.battlefieldId_ = -1;
-        this.mapId_ = -1;
+        this.popArea_ = undefined;
         this.transform_ = new Transform();
         this.enemyStatus_ = new EnemyStatus(this);
         this.tribeId_ = 0;
@@ -484,6 +474,9 @@ export class Enemy implements Character{
         if(typeof(_tribeKey) === 'number'){
             this.tribeId_ = _tribeKey;
         }
+        else{
+            this.tribeId_ = EnemyTribeDataAccessor.instance.GetId(_tribeKey);
+        }
 
         if(!(this.enemyStatus_.tribeStatus.ChangeTribe(tribeData))){
             return false;
@@ -514,25 +507,61 @@ export class Enemy implements Character{
      * @memberof Enemy
      */
     public Populate() : boolean {
-        this.ChangeTribe(EnemyTribeDataAccessor.instance.GetRandomID());
+        // エリアから外れる
+        const currentPopArea:EnemyPopArea|undefined = this.popArea;
+        if(currentPopArea !== undefined){
+            currentPopArea.OnDeadEnemy(this.tribeId);
+        }
 
-        // TODO:
-        const area:EnemyPopAreaData|undefined = EnemyPopAreaDataAccessor.instance.Find(0);
+        // 種族IDとエリアの選定
+        let tryPopCount = 0;
+        let popAreaArray:Array<EnemyPopArea> = new Array<EnemyPopArea>();
+        let area:EnemyPopArea|undefined = this.popArea;
+        while(tryPopCount < Enemy.maxTryPopCount){
+            this.ChangeTribe(EnemyTribeDataAccessor.instance.GetRandomID());
+
+            popAreaArray = EnemyPopAreaManager.instance.FindPopAreaArray(this.tribeId);
+            if(popAreaArray.length == 0){
+                ++tryPopCount;
+                continue;
+            }
+
+            const getting:number = Math.floor(popAreaArray.length * Math.random());
+            let i:number = 0;
+            popAreaArray.every(
+                function(
+                    _area : EnemyPopArea,
+                    _id : number,
+                    _array : EnemyPopArea[]
+                ) : boolean {
+                    if(i === 0){
+                        area = _area;
+                    }
+                    if(i == getting){
+                        area = _area;
+                        return false;
+                    }
+                    ++i;
+                    return true;
+                }
+            );
+            break;
+        }
         if(area === undefined){
             console.error('Couldn\'t get pop area.');
             return false;
         }
 
-        this.mapId_ = area.mapId;
+        this.popArea_ = area;
 
         this.transform.worldMatrix = Matrix4x4.CreateRotationYMatrix(2.0*Math.PI * (Math.random()-0.5));
         {
             const direction:number = 2.0*Math.PI * (Math.random()-0.5);
-            const delta:number = area.areaRadius * Math.random();
+            const delta:number = area.data.areaRadius * Math.random();
             this.transform.position = new Vector3(
-                area.positionX + delta*Math.cos(direction),
-                area.positionY,
-                area.positionZ + delta*Math.sin(direction)
+                area.data.positionX + delta*Math.cos(direction),
+                area.data.positionY,
+                area.data.positionZ + delta*Math.sin(direction)
             );
         }
 
