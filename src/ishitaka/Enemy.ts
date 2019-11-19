@@ -250,8 +250,8 @@ export class Enemy implements Character{
      */
     public Initialize() : boolean {
         this.enemyStatus_.Initialize();
-        this.Populate();
         this.updater_.Initialize();
+        this.Populate();
         return true;
     }
     /**
