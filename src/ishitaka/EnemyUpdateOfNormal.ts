@@ -111,6 +111,7 @@ export class EnemyUpdateOfNormal implements EnemyUpdate{
     public HasChanged() : boolean {
         this.waitTime_ = 0.0;
         this.ChangeWalkPosition();
+        //console.log("Enemy [id:" + this.enemy_.id.toString() + "] has changed to normal mode.");
         return true;
     }
     /**
