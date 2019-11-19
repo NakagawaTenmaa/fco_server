@@ -250,8 +250,8 @@ export class Enemy implements Character{
      */
     public Initialize() : boolean {
         this.enemyStatus_.Initialize();
-        this.Populate();
         this.updater_.Initialize();
+        this.Populate();
         return true;
     }
     /**
@@ -314,6 +314,9 @@ export class Enemy implements Character{
      * @memberof Enemy
      */
     public UseSkill(_skillId:number, _receiverId:number) : boolean {
+        _skillId = _skillId - 0;
+        _receiverId = _receiverId - 0;
+
         if(!(this.IsUsableSkill(_skillId))){
             console.error("Couldn't use a skill. [skill id : " + _skillId.toString() + "]");
             return false;
@@ -366,8 +369,8 @@ export class Enemy implements Character{
             _attacker.JoinBattlefield(battlefield.id, true);
         }
 
-        // バトルモードでなければバトルモードへ
-        if(this.updater.currentState.mode !== EnemyUpdateMode.Battle){
+        // 通常モードならバトルモードへ
+        if(this.updater.currentState.mode === EnemyUpdateMode.Normal){
             this.updater.ChangeMode(EnemyUpdateMode.Battle);
         }
 
@@ -568,7 +571,7 @@ export class Enemy implements Character{
         }
 
         //console.log("Enemy pop. [id:" + this.id.toString() + ", map:" + this.mapId.toString() + "]");
-        this.updater.ChangeMode(EnemyUpdateMode.Normal);
+        this.OnNormal();
 
         return true;
     }

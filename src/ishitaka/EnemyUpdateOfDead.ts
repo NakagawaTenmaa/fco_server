@@ -76,6 +76,8 @@ export class EnemyUpdateOfDead implements EnemyUpdate{
      * @memberof EnemyUpdateOfDead
      */
     public HasChanged() : boolean {
+        this.waitTime_ = EnemyUpdateOfDead.repopulateInterval_;
+        //console.log("Enemy [id:" + this.enemy_.id.toString() + "] has changed to dead mode.");
         return true;
     }
     /**
@@ -98,7 +100,6 @@ export class EnemyUpdateOfDead implements EnemyUpdate{
         this.waitTime_ -= _elapsedTime;
         if(this.waitTime_ < 0){
             this.enemy_.Populate();
-            this.enemy_.updater.ChangeMode(EnemyUpdateMode.Normal);
             return true;
         }
         return true;

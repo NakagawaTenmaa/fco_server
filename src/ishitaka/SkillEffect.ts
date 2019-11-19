@@ -82,6 +82,15 @@ export class SkillEffect implements CharacterEffect{
         // ダメージ反映
         _receiver.ReceiveDamage(_user, hitPointDamage, magicPointDamage);
 
+//        console.log(
+//            "skill attacked. [atk_id:" + _user.id +
+//            ", def_id:" + _receiver.id +
+//            ", hpd:" + hitPointDamage +
+//            ", mpd:" + magicPointDamage +
+//            ", def_hp:" + _receiver.status.hitPoint +
+//            "]"
+//        );
+
         // ヘイト変更
         _receiver.ChangeHate(_user, hitPointDamage);
 

@@ -383,6 +383,9 @@ export class Player implements Character{
      * @memberof Player
      */
     public UseSkill(_skillId:number, _receiverId:number) : boolean {
+        _skillId = _skillId - 0;
+        _receiverId = _receiverId - 0;
+
         if(!(this.IsUsableSkill(_skillId))){
             console.error("Couldn't use a skill. [skill id : " + _skillId.toString() + "]");
             return false;

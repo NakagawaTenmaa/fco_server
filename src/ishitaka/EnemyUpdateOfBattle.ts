@@ -123,6 +123,7 @@ export class EnemyUpdateOfBattle implements EnemyUpdate{
      */
     public HasChanged() : boolean {
         this.ClearTargetArray();
+        //console.log("Enemy [id:" + this.enemy_.id.toString() + "] has changed to battle mode.");
         return true;
     }
     /**
