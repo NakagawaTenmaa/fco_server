@@ -319,8 +319,8 @@ export namespace CommunicationData{
 
         // キャラクターのログアウト
         export class LogoutCharacter implements Send {
-            public readonly command: number = 702;
-            public static id: number = 702;
+            public readonly command: number = 707;
+            public static id: number = 707;
             public user_id: number = 0;
             constructor(){}
         }
