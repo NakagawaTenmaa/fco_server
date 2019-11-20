@@ -15,7 +15,7 @@ export class loginController{
     }
 
     // ユーザーのログイン (ユーザーID : 正常終了) (-1 : 重複ログイン) (-2 : 間違えてまっせ)
-    public async loginUser(data: any): Promise<number>{
+    public async loginUser(data: any): Promise<any>{
         const userData = await this.model.findUserByName(data.user_name);
         const user = userData[0];
         if(user){
@@ -24,7 +24,7 @@ export class loginController{
                 if(!user.status){
                     // 状態の変更
                     this.model.changeStatus(user.id, 1);
-                    return user.id;
+                    return user;
                 } else return -1;
             }
             return -2;

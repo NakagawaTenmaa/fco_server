@@ -16,6 +16,7 @@ export class LoginOK
 {
     command: number = 103;
     user_id: number = 0;
+    name: string = "";
 }
 
 // 作成OK
