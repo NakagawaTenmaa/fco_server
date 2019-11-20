@@ -111,6 +111,12 @@ export namespace CommunicationData{
             public dir : number;
 
             /**
+             * 名前
+             * @type {string}
+             * @memberof CharacterTransform
+             */
+            public name: string;
+            /**
              * デフォルトコンストラクタ
              * @public
              * @constructor
@@ -123,6 +129,7 @@ export namespace CommunicationData{
                 this.y = 0;
                 this.z = 0;
                 this.dir = 0;
+                this.name = "";
             }
         }
 
@@ -858,6 +865,7 @@ export namespace CommunicationData{
                     data.y = parse.y;
                     data.z = parse.z;
                     data.dir = parse.dir;
+                    data.name = parse.name;
                     return data;
                 }
                 case SendData.SimpleDisplayOfCharacter.id:
