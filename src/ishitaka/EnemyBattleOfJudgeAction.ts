@@ -96,9 +96,9 @@ export class EnemyBattleOfJudgeAction implements EnemyBattleUpdate{
     }
 
     /**
-     * 戦闘行動ポイントの計算
+     * 戦闘移動ポイントの計算
      * @private
-     * @returns {number} 戦闘行動ポイント
+     * @returns {number} 戦闘移動ポイント
      * @memberof EnemyBattleOfJudgeAction
      */
     private CalculateBattleMovePoint() : number {
