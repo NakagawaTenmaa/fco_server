@@ -360,6 +360,7 @@ export class CharacterManager{
         const player = this.FindPlayer(_characterId);
         if(typeof player === 'undefined') return false;
         this.userModel.changeStatus(player.dbId, 0);
+        this.RemoveCharacter(_characterId);
     }
 
     /**
