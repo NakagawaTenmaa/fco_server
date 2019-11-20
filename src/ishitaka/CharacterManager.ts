@@ -468,7 +468,13 @@ export class CharacterManager{
             return;
         }
 
-        if(useCharacter.UseSkill(_useSkill.skill_id, _useSkill.enemy_id)){            
+        if(useCharacter.UseSkill(_useSkill.skill_id, _useSkill.enemy_id)){      
+            console.log(
+                "Character can use skill. [" +
+                _useSkill.user_id.toString() + "->" + _useSkill.enemy_id.toString() +
+                "]"
+            );
+            
             // 攻撃を受けた相手の取得
             const receiveCharacter = this.FindCharacter(_useSkill.enemy_id);
             if(receiveCharacter === undefined) return;
@@ -496,6 +502,13 @@ export class CharacterManager{
         }
         else{
             console.error("Attack miss");
+            console.log("character array {");
+            this.characterArray_.forEach(
+                (_character:Character)=>{
+                    console.log("  " + _character.id.toString());
+                }
+            );
+            console.log("}");
         }
     }
 }
