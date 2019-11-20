@@ -60,12 +60,16 @@ export class loginRouter{
             const characterManager: CharacterManager = CharacterManager.instance;
             let player: Player = new Player();
 
-            player.dbId = result;
+            player.dbId = result.id;
             player.Initialize();
+            player.name = result.character_name;
+
             characterManager.AddCharacter(player);
 
             const res = new LoginOK();
             res.user_id = player.id;
+            res.name = player.name;
+
 
             console.log('send loginok : ' + JSON.stringify(res));
             ws.send(JSON.stringify(res));

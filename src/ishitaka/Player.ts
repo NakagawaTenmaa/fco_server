@@ -72,6 +72,10 @@ export class Player implements Character{
      */
     public get id() : number { return this.characterId_; }
     public set id(_id:number){ this.characterId_ = _id; }
+
+    private name_: string;
+    public get name(): string{ return this.name_; }
+    public set name(_name: string){ this.name_ = _name; }
     /**
      * パーティID
      * @private
@@ -285,6 +289,7 @@ export class Player implements Character{
         this.mapId_ = 0;
         this.transform_ = new Transform();
         this.playerStatus_ = new PlayerStatus();
+        this.name_ = "";
     }
 
 

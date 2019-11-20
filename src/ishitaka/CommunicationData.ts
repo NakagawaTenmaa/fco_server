@@ -314,6 +314,7 @@ export namespace CommunicationData{
             public readonly command: number = 212;
             public static id: number = 212;
             public user_id: number = 0;
+            public name: string = "";
             constructor(){}
         }
 
@@ -893,6 +894,7 @@ export namespace CommunicationData{
                 {
                     const data: SendData.InitCharacter = new SendData.InitCharacter();
                     data.user_id = parse.user_id;
+                    data.name = parse.name;
                     return data;
                 }
                 case SendData.LogoutCharacter.id:
