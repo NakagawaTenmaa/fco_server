@@ -57,7 +57,6 @@ export class EnemyBattleOfJudgeAction implements EnemyBattleUpdate{
      * @memberof EnemyBattleOfJudgeAction
      */
     public HasChanged() : boolean {
-        this.isNextMoveOfButtleAction_ = true;
         return true;
     }
     /**
