@@ -145,6 +145,7 @@ export class CharacterManager{
             }
         );
 
+        PartyManager.instance.Update();
         BattlefieldManager.instance.Update();
         return isSuccess;
     }
