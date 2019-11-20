@@ -255,10 +255,10 @@ export class CharacterManager{
         // 移動処理
         if(data instanceof CommunicationData.ReceiveData.CharacterTransform){
             const user: Player| undefined = this.FindPlayer(data.user_id);
-            if(user !== undefined) {
-                user.transform.position = new Vector3(data.x,data.y,data.z);
-                user.dir = data.dir;
-            }
+            if(user === undefined) return false;
+            
+            user.transform.position = new Vector3(data.x,data.y,data.z);
+            user.dir = data.dir;
 
             let sendData:CommunicationData.SendData.CharacterTransform = new CommunicationData.SendData.CharacterTransform();
             sendData.x = data.x;
@@ -266,6 +266,7 @@ export class CharacterManager{
             sendData.z = data.z;
             sendData.dir = data.dir;
             sendData.user_id = data.user_id;
+            sendData.name = user.name;
             isSuccess = this.SendAll(JSON.stringify(sendData));
         }
         return isSuccess;
