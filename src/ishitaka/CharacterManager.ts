@@ -135,6 +135,7 @@ export class CharacterManager{
 
                 const isContinued:boolean = _character.Update(_elapsedTime);
                 if(!isContinued){
+                    console.error("Error of Character::Update() [id:" + _character.id.toString() + "]");
                     if(!(_character.Finalize())){
                         console.error('Error: Character::Finalize()');
                         isSuccess = false;
