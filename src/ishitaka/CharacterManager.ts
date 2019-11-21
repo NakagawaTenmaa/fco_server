@@ -470,12 +470,20 @@ export class CharacterManager{
             return;
         }
 
+        {
+            // 他プレイヤにスキル使用を通知
+            const sendUseSkill = new CommunicationData.SendData.OtherPlayerUseSkill();
+            sendUseSkill.user_id = _useSkill.user_id;
+            sendUseSkill.skill_id = _useSkill.skill_id;
+            this.SendAll(JSON.stringify(sendUseSkill));
+        }
+
         if(useCharacter.UseSkill(_useSkill.skill_id, _useSkill.enemy_id)){      
-            console.log(
-                "Character can use skill. [" +
-                _useSkill.user_id.toString() + "->" + _useSkill.enemy_id.toString() +
-                "]"
-            );
+//            console.log(
+//                "Character can use skill. [" +
+//                _useSkill.user_id.toString() + "->" + _useSkill.enemy_id.toString() +
+//                "]"
+//            );
             
             // 攻撃を受けた相手の取得
             const receiveCharacter = this.FindCharacter(_useSkill.enemy_id);
@@ -505,13 +513,13 @@ export class CharacterManager{
         }
         else{
             console.error("Attack miss");
-            console.log("character array {");
-            this.characterArray_.forEach(
-                (_character:Character)=>{
-                    console.log("  " + _character.id.toString());
-                }
-            );
-            console.log("}");
+//            console.log("character array {");
+//            this.characterArray_.forEach(
+//                (_character:Character)=>{
+//                    console.log("  " + _character.id.toString());
+//                }
+//            );
+//            console.log("}");
         }
     }
 }

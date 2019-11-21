@@ -29,4 +29,6 @@ process.on("SIGINT", async () => {
 
 }catch(_errorMessage){
     // 例外発生
+    console.error("Has catched exception.");
+    console.log("End execution.");
 }

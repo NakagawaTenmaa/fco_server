@@ -615,6 +615,58 @@ export namespace CommunicationData{
 				this.user_id = 0;
 				this.hp = 0;
 			}
+        }
+        /**
+		 * 他のプレイヤーがスキルを使用したとき
+		 * @export
+		 * @class OtherPlayerUseSkill
+		 * @implements {Send}
+		 */
+		export class OtherPlayerUseSkill implements Send{
+			/**
+			 * コマンドID
+			 * @public
+			 * @static 
+			 * @readonly 
+			 * @type {number}
+			 * @memberof {OtherPlayerUseSkill}
+			 */
+			public static readonly id : number = 204;
+
+			/**
+			 * コマンド識別子
+			 * @public
+			 * @readonly 
+			 * @type {number}
+			 * @memberof {OtherPlayerUseSkill}
+			 */
+			public readonly command : number = OtherPlayerUseSkill.id;
+			/**
+			 * 使用者ID
+			 * @public
+			 * @type {number}
+			 * @memberof {OtherPlayerUseSkill}
+			 */
+			public user_id : number;
+			/**
+			 * スキルID
+			 * @public
+			 * @type {number}
+			 * @memberof {OtherPlayerUseSkill}
+			 */
+			public skill_id : number;
+
+
+			/**
+			 * デフォルトコンストラクタ
+			 * @public
+			 * @constructor
+			 * @memberof {OtherPlayerUseSkill}
+			 */
+			public constructor(){
+				this.user_id = 0;
+				this.skill_id = 0;
+			}
 		}
 
         export type AllTypes = 
@@ -630,7 +682,8 @@ export namespace CommunicationData{
         EnemyDie |
         EnemyUseSkillRequest | 
         EnemyUseSkill | 
-        EnemyAttackResult;
+        EnemyAttackResult |
+        OtherPlayerUseSkill;
     }
     /**
      * 受信データ
@@ -938,6 +991,13 @@ export namespace CommunicationData{
 					const data:SendData.EnemyDie = new SendData.EnemyDie();
 					data.drop = parse.drop;
 					data.unique_id = parse.unique_id;
+					return data;
+                }
+                case SendData.OtherPlayerUseSkill.id:
+				{
+					const data:SendData.OtherPlayerUseSkill = new SendData.OtherPlayerUseSkill();
+					data.user_id = parse.user_id - 0;
+					data.skill_id = parse.skill_id - 0;
 					return data;
 				}
 
