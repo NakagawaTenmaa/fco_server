@@ -4,6 +4,8 @@ import { playRouter } from './router/playRouter';
 import { chatUpdate } from './router/chatRouter'
 import { AllDatabaseAccessor } from './ishitaka/AllDatabaseAccessor';
 
+try{
+
 AllDatabaseAccessor.Initialize();
 
 // ルートの作成
@@ -23,4 +25,8 @@ process.on("SIGINT", async () => {
     try {await conn.end();} catch(e){ console.log('not open mysql'); }
     await play.end();
     process.exit(0);
-})
+});
+
+}catch(_errorMessage){
+    // 例外発生
+}

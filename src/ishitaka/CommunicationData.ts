@@ -375,7 +375,7 @@ export namespace CommunicationData{
 			/**
 			 * 敵のID
 			 * @public
-			 * @type {numbaer}
+			 * @type {number}
 			 * @memberof {EnemyAlive}
 			 */
 			public unique_id : number;
@@ -439,6 +439,13 @@ export namespace CommunicationData{
 			 * @memberof {EnemyDie}
 			 */
 			public drop : number;
+			/**
+			 * 敵のID
+			 * @public
+			 * @type {number}
+			 * @memberof {EnemyDie}
+			 */
+			public unique_id : number;
 
 
 			/**
@@ -448,7 +455,8 @@ export namespace CommunicationData{
 			 * @memberof {EnemyDie}
 			 */
 			public constructor(){
-				this.drop = 0;
+                this.drop = 0;
+                this.unique_id = 0;
 			}
         }
         
@@ -929,6 +937,7 @@ export namespace CommunicationData{
 				{
 					const data:SendData.EnemyDie = new SendData.EnemyDie();
 					data.drop = parse.drop;
+					data.unique_id = parse.unique_id;
 					return data;
 				}
 

@@ -496,6 +496,7 @@ export class CharacterManager{
                     
                     data = new CommunicationData.SendData.EnemyDie();
                     data.drop = dropData.randomItem();
+                    data.unique_id = receiveCharacter.id;
                 } else if(receiveCharacter instanceof Player){
                     // プレイヤーの時の処理
                 } else console.error("not player and enemy");
