@@ -631,7 +631,7 @@ export namespace CommunicationData{
 			 * @type {number}
 			 * @memberof {OtherPlayerUseSkill}
 			 */
-			public static readonly id : number = 204;
+			public static readonly id : number = 224;
 
 			/**
 			 * コマンド識別子
