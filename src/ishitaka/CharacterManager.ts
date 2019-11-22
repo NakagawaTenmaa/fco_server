@@ -5,7 +5,7 @@
  * @license Copyright(c) 2019 Ishikawa Takayoshi All Rights Reserved.
  */
 
-import {Character} from './Character'
+import {Character, CharacterType} from './Character'
 import {Player} from './Player'
 import {Enemy} from './Enemy'
 import {CommunicationData, SendEnemyData} from './CommunicationData';
@@ -373,12 +373,71 @@ export class CharacterManager{
      */
     public RemoveCharacter(_characterId:number) : boolean{
         if(_characterId in this.characterArray_){
-            this.characterArray_[_characterId].Finalize();
+            const character:Character = this.characterArray_[_characterId];
+            character.Finalize();
+            switch(character.type){
+                case CharacterType.Player:
+                    this.RemovePlayer(_characterId);
+                    break;
+
+                case CharacterType.Enemy:
+                    this.RemoveEnemy(_characterId);
+                    break;
+
+                default:
+                    console.log("delete charcter");
+                    break;
+            }
             delete this.characterArray_[_characterId];
-            console.log("delete charcter");
             return true;
         }
         return false;
+    }
+    /**
+     * プレイヤの削除
+     * @private
+     * @param {number} _characterId キャラクタID
+     * @returns {boolean} true:成功 false:失敗
+     * @memberof CharacterManager
+     */
+    private RemovePlayer(_characterId:number) : boolean{
+        let isNotDeleted:boolean = false;
+        this.playerArray_ = this.playerArray_.filter(
+            (_player:Player)=>{
+                const isNotDelete:boolean = (_player.id !== _characterId);
+                isNotDeleted = isNotDeleted && isNotDelete;
+                return isNotDelete;
+            }
+        );
+
+        if(isNotDeleted){
+            return false;
+        }
+        console.log("delete player.");
+        return true;
+    }
+    /**
+     * 敵の削除
+     * @private
+     * @param {number} _characterId キャラクタID
+     * @returns {boolean} true:成功 false:失敗
+     * @memberof CharacterManager
+     */
+    private RemoveEnemy(_characterId:number) : boolean{
+        let isNotDeleted:boolean = false;
+        this.enemyArray_ = this.enemyArray_.filter(
+            (_enemy:Enemy)=>{
+                const isNotDelete:boolean = (_enemy.id !== _characterId);
+                isNotDeleted = isNotDeleted && isNotDelete;
+                return isNotDelete;
+            }
+        );
+
+        if(isNotDeleted){
+            return false;
+        }
+        console.log("delete enemy.");
+        return true;
     }
     
 

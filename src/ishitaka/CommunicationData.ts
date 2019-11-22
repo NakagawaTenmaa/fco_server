@@ -631,7 +631,7 @@ export namespace CommunicationData{
 			 * @type {number}
 			 * @memberof {OtherPlayerUseSkill}
 			 */
-			public static readonly id : number = 204;
+			public static readonly id : number = 224;
 
 			/**
 			 * コマンド識別子
@@ -920,12 +920,12 @@ export namespace CommunicationData{
                 case SendData.CharacterTransform.id:
                 {
                     const data:SendData.CharacterTransform = new SendData.CharacterTransform();
-                    data.user_id = parse.user_id;
-                    data.map_id = parse.map_id;
-                    data.x = parse.x;
-                    data.y = parse.y;
-                    data.z = parse.z;
-                    data.dir = parse.dir;
+                    data.user_id = parse.user_id - 0;
+                    data.map_id = parse.map_id - 0;
+                    data.x = parse.x - 0;
+                    data.y = parse.y - 0;
+                    data.z = parse.z - 0;
+                    data.dir = parse.dir - 0;
                     data.name = parse.name;
                     return data;
                 }
@@ -938,23 +938,23 @@ export namespace CommunicationData{
                 case SendData.ModelSetting.id:
                 {
                     const data:SendData.ModelSetting = new SendData.ModelSetting();
-                    data.user_id = parse.user_id;
-                    data.model_id = parse.model_id;
-                    data.color_id = parse.color_id;
+                    data.user_id = parse.user_id - 0;
+                    data.model_id = parse.model_id - 0;
+                    data.color_id = parse.color_id - 0;
                     return data;
                 }
                 case SendData.SkillUse.id:
                 {
                     const data:SendData.SkillUse = new SendData.SkillUse();
-                    data.user_id = parse.user_id;
-                    data.skill_id = parse.skill_id;
+                    data.user_id = parse.user_id - 0;
+                    data.skill_id = parse.skill_id - 0;
                     return data;
                 }
                 case SendData.LoadCharacter.id:
                 {
                     const data: SendData.LoadCharacter = new SendData.LoadCharacter();
-                    data.exp = parse.exp;
-                    data.lv = parse.lv;
+                    data.exp = parse.exp - 0;
+                    data.lv = parse.lv - 0;
                     data.position = parse.position;
                     data.weapon = parse.weapon;
                     return data;
@@ -962,14 +962,14 @@ export namespace CommunicationData{
                 case SendData.InitCharacter.id:
                 {
                     const data: SendData.InitCharacter = new SendData.InitCharacter();
-                    data.user_id = parse.user_id;
+                    data.user_id = parse.user_id - 0;
                     data.name = parse.name;
                     return data;
                 }
                 case SendData.LogoutCharacter.id:
                 {
                     const data: SendData.LogoutCharacter = new SendData.LogoutCharacter();
-                    data.user_id = parse.user_id;
+                    data.user_id = parse.user_id - 0;
                     return data;
                 }
                 case SendData.EnemysData.id:
@@ -981,16 +981,16 @@ export namespace CommunicationData{
 				case SendData.EnemyAlive.id:
 				{
 					const data:SendData.EnemyAlive = new SendData.EnemyAlive();
-					data.unique_id = parse.unique_id;
-					data.hp = parse.hp;
+					data.unique_id = parse.unique_id - 0;
+					data.hp = parse.hp - 0;
 					data.status = parse.status;
 					return data;
 				}
 				case SendData.EnemyDie.id:
 				{
 					const data:SendData.EnemyDie = new SendData.EnemyDie();
-					data.drop = parse.drop;
-					data.unique_id = parse.unique_id;
+					data.drop = parse.drop - 0;
+					data.unique_id = parse.unique_id - 0;
 					return data;
                 }
                 case SendData.OtherPlayerUseSkill.id:
@@ -1006,59 +1006,59 @@ export namespace CommunicationData{
                 case ReceiveData.CharacterTransform.id:
                 {
                     const data: ReceiveData.CharacterTransform = new ReceiveData.CharacterTransform();
-                    data.x = parse.x;
-                    data.y = parse.y;
-                    data.z = parse.z;
-                    data.dir = parse.dir;
-                    data.user_id = parse.user_id;
+                    data.x = parse.x - 0;
+                    data.y = parse.y - 0;
+                    data.z = parse.z - 0;
+                    data.dir = parse.dir - 0;
+                    data.user_id = parse.user_id - 0;
                     return data;
                 }
                 case ReceiveData.LoadCharacter.id:
                 {
                     const data: ReceiveData.LoadCharacter = new ReceiveData.LoadCharacter();
-                    data.user_id = parse.user_id;
+                    data.user_id = parse.user_id - 0;
                     return data;
                 }
                 case ReceiveData.PlayerStatus.id:
                 {
                     const data: ReceiveData.PlayerStatus = new ReceiveData.PlayerStatus();
-                    data.user_id = parse.user_id;
-                    data.target_id = parse.target_id;
-                    data.type = parse.type;
+                    data.user_id = parse.user_id - 0;
+                    data.target_id = parse.target_id - 0;
+                    data.type = parse.type - 0;
                     return data;
                 }
                 case ReceiveData.LoadCharacter.id:
                 {
                     const data: ReceiveData.LoadCharacter = new ReceiveData.LoadCharacter();
-                    data.user_id = parse.user_id;
+                    data.user_id = parse.user_id - 0;
                     return data;
                 }
                 case ReceiveData.LogoutCharacter.id:
                 {
                     const data: ReceiveData.LogoutCharacter = new ReceiveData.LogoutCharacter();
-                    data.user_id = parse.user_id;
+                    data.user_id = parse.user_id - 0;
                     return data;
                 }
                 case ReceiveData.LoadOK.id:
                 {
                     const data: ReceiveData.LoadOK = new ReceiveData.LoadOK();
-                    data.user_id = parse.user_id;
+                    data.user_id = parse.user_id - 0;
                     return data;
                 }
                 case ReceiveData.GetEnemy.id:
                 {
                     const data: ReceiveData.GetEnemy = new ReceiveData.GetEnemy();
-                    data.map_id = parse.map_id;
-                    data.user_id = parse.user_id;
+                    data.map_id = parse.map_id - 0;
+                    data.user_id = parse.user_id - 0;
                     return data;
                 }
                 case ReceiveData.Attack.id:
                 {
                     const data:ReceiveData.Attack = new ReceiveData.Attack();
-                    data.enemy_id = parse.enemy_id;
-                    data.user_id = parse.user_id;
-                    data.skill_id = parse.skill_id;
-                    data.map_id = parse.map_id;
+                    data.enemy_id = parse.enemy_id - 0;
+                    data.user_id = parse.user_id - 0;
+                    data.skill_id = parse.skill_id - 0;
+                    data.map_id = parse.map_id - 0;
                     return data;
                 }
             }
