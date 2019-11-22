@@ -7,7 +7,7 @@ export class loginController{
 
     // ユーザーの作成
     public async createUser(data: any): Promise<number>{
-        const user = await this.model.newUser(data.user_name, data.pass);
+        const user = await this.model.newUser(data.user_name, data.pass, data.character_name);
         if(!user) return -1;
         this.model.changeStatus(user.id, 1);
         // 状態の変更
