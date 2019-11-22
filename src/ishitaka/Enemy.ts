@@ -600,6 +600,7 @@ export class Enemy implements Character{
         data.enemy_id = this.characterId_;
         data.skill_id = this.enemyStatus_.tribeStatus.useSkillId;
 
+        //console.log("enemy skill use request. [id:" + this.id.toString() + "]");
         return CharacterManager.instance.SendAll(JSON.stringify(data));
     }
     /**
@@ -615,6 +616,7 @@ export class Enemy implements Character{
         data.enemy_id = this.characterId_;
         data.skill_id = this.enemyStatus_.tribeStatus.useSkillId;
 
+        //console.log("enemy skill use. [id:" + this.id.toString() + "]");
         return CharacterManager.instance.SendAll(JSON.stringify(data));
     }
 }
