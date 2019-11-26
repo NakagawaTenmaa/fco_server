@@ -3,14 +3,11 @@ import { EnemyTribeData } from '../ishitaka/DatabaseAccessors/EnemyTribeDataAcce
 
 // 敵のモデル
 export class EnemyModel extends BaseModel{
-    // コンストラクタ
-    constructor(){
-        super('enemys');
-    }
+    static TABLE_NAME = 'enemys';
 
     // 敵の一覧の取得 連想配列を返す
-    public async getEnemyList(): Promise<EnemyTribeData[]>{
-        const enemyModel = await this.findAll();
+    public static async getEnemyList(): Promise<EnemyTribeData[]>{
+        const enemyModel = await EnemyModel.findAll();
         let enemys: Array<EnemyTribeData> = [];
         enemyModel.forEach((_enemy: any) => {
             enemys.push(new EnemyTribeData(

@@ -7,21 +7,13 @@ import { EnemyDrop } from './../controller/object/enemyDrop';
  * @extends {BaseModel}
  */
 export class EnemyDropModel extends BaseModel{
-
-    /**
-     *Creates an instance of EnemyDrop.
-     * @memberof EnemyDropModel
-     */
-    constructor(){
-        super('enemy_drop');
-    }
-
+    static TABLE_NAME = "enemy_drop";
 
     /**
      * アイテムのリストの作成
      * @memberof EnemyDrop
      */
-    public async createItems(_enemyId: number): Promise<EnemyDrop>{
+    public static async createItems(_enemyId: number): Promise<EnemyDrop>{
         // データの取得
         const data: any = await this.find(["enemy_id",_enemyId]);
         

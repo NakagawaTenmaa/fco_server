@@ -3,15 +3,10 @@ import { format } from 'mysql'
 
 // モデルクラスのベース
 export abstract class BaseModel{
-    TABLE_NAME: string;
-
-    // コンストラクタ
-    constructor(name: string){
-        this.TABLE_NAME = name;
-    }
+    static TABLE_NAME: string;
 
     // 作成
-    async create(col: any) {
+    static async create(col: any) {
         const conn = await connection();
         const query = "insert into ?? set ?";
         const data = await conn.query(query, [this.TABLE_NAME, col]);
@@ -20,7 +15,7 @@ export abstract class BaseModel{
     }
 
     // 更新
-    async update(col: any){
+    static async update(col: any){
         const conn = await connection();
         const query = "update ?? set ?? = ? where = ?";
         const data = await conn.query(query, [this.TABLE_NAME, col]);
@@ -29,7 +24,7 @@ export abstract class BaseModel{
     }
 
     // 一覧
-    async findAll(){
+    static async findAll(){
         const conn = await connection();
         const query = "select * from ??";
         const data = await conn.query(query, [this.TABLE_NAME]);
@@ -38,7 +33,7 @@ export abstract class BaseModel{
     }
 
     // 検索
-    async find(col: Array<any>){
+    static async find(col: Array<any>){
         const conn = await connection();
         const query = "select * from ?? where ?? = ?";
         col.unshift(this.TABLE_NAME);
@@ -50,7 +45,7 @@ export abstract class BaseModel{
     }
 
     // 削除
-    async delete(table: string, col: any){
+    static async delete(table: string, col: any){
         const conn = await connection();
         const query = "delete form ?? where = ?";
         const data = await conn.query(query, [table, col]);
@@ -59,7 +54,7 @@ export abstract class BaseModel{
     }
 
     // クエリ直
-    async myQuery(que: string){
+    static async myQuery(que: string){
         const conn = await connection();
         const data = await conn.query(que);
         conn.end();

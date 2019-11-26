@@ -8,7 +8,6 @@ import WebSocket = require('ws');
 
 
 export class playRouter{
-    //controller: playController = new playController();
     wss: Server;
 
     characterManager: CharacterManager;
@@ -85,7 +84,6 @@ export class playRouter{
      * @memberof playRouter
      */
     public async end(){
-        const model: UserModel = new UserModel();
-        await model.allLogout();
+        await UserModel.allLogout();
     }
 }
