@@ -13,22 +13,28 @@ export abstract class BaseModel{
     // 作成
     async create(col: any) {
         const conn = await connection();
-        const query = "insert into ?? set ?"
-        return await conn.query(query, [this.TABLE_NAME, col]);
+        const query = "insert into ?? set ?";
+        const data = await conn.query(query, [this.TABLE_NAME, col]);
+        conn.end();
+        return data;
     }
 
     // 更新
     async update(col: any){
         const conn = await connection();
         const query = "update ?? set ?? = ? where = ?";
-        return await conn.query(query, [this.TABLE_NAME, col]);
+        const data = await conn.query(query, [this.TABLE_NAME, col]);
+        conn.end();
+        return data;
     }
 
     // 一覧
     async findAll(){
         const conn = await connection();
         const query = "select * from ??";
-        return await conn.query(query, [this.TABLE_NAME]);
+        const data = await conn.query(query, [this.TABLE_NAME]);
+        conn.end();
+        return data;
     }
 
     // 検索
@@ -38,19 +44,25 @@ export abstract class BaseModel{
         col.unshift(this.TABLE_NAME);
         const sql = format(query, col);
         conn.query(sql);
-        return await conn.query(sql);
+        const data = await conn.query(sql);
+        conn.end();
+        return data;
     }
 
     // 削除
     async delete(table: string, col: any){
         const conn = await connection();
         const query = "delete form ?? where = ?";
-        return await conn.query(query, [table, col]);
+        const data = await conn.query(query, [table, col]);
+        conn.end();
+        return data;
     }
 
     // クエリ直
     async myQuery(que: string){
         const conn = await connection();
-        return await conn.query(que);
+        const data = await conn.query(que);
+        conn.end();
+        return data;
     }
 }
