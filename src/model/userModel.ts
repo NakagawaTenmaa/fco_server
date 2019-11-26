@@ -4,13 +4,10 @@ import { format } from 'mysql'
 
 // ユーザーモデル
 export class UserModel extends BaseModel{
-    // コンストラクタ
-    constructor(){
-        super("users");
-    }
+    static TABLE_NAME = "users";
 
     // ユーザーの新規作成
-    public async newUser(name: string, pass: string, characterName: string){
+    public static async newUser(name: string, pass: string, characterName: string){
         if(await this.isDuplicateUser(name)) return null;
         const salt = await createSalt();
         const hash = await createHash(pass, salt);
@@ -18,12 +15,12 @@ export class UserModel extends BaseModel{
     }
 
     // ユーザー名の検索
-    public async findUserByName(name: string){
+    public static async findUserByName(name: string){
         return await this.find(["name", name]);
     }
 
     // ログアウト
-    public async logout(id: number, status: number){
+    public static async logout(id: number, status: number){
         return await this.update([status, id]);
     }
 
@@ -32,13 +29,13 @@ export class UserModel extends BaseModel{
      * 全員のログアウト
      * @memberof UserModel
      */
-    public async allLogout(){
+    public static async allLogout(){
         const query = "update `users` set `status` = 0 where `status` = 1";
         return await this.myQuery(query);
     }
 
     // 重複確認
-    private async isDuplicateUser(name: string){
+    private static async isDuplicateUser(name: string){
         const data = await this.findUserByName(name);
         return (data.length !== 0);
     }
@@ -49,7 +46,7 @@ export class UserModel extends BaseModel{
      * @param {boolean} state 新しい状態
      * @memberof UserModel
      */
-    public async changeStatus(_id: number, _status: number){
+    public static async changeStatus(_id: number, _status: number){
         const query = "update `users` set `status` = ? where `id` = ?";
         const col = [_status, _id];
         const sql = format(query, col);

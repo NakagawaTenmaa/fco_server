@@ -24,9 +24,6 @@ import { BattlefieldManager } from './BattlefieldManager';
  * @class CharacterManager
  */
 export class CharacterManager{
-    // ユーザーのモデル
-    private userModel = new UserModel();
-
     /**
      * シングルトンインスタンス
      * @private
@@ -360,7 +357,7 @@ export class CharacterManager{
     public PlayerLogout(_characterId: number){
         const player = this.FindPlayer(_characterId);
         if(typeof player === 'undefined') return false;
-        this.userModel.changeStatus(player.dbId, 0);
+        UserModel.changeStatus(player.dbId, 0);
         this.RemoveCharacter(_characterId);
     }
 
@@ -558,8 +555,7 @@ export class CharacterManager{
                 // 倒れたときの処理
                 if(receiveCharacter instanceof Enemy){
                     // 敵の時の処理
-                    const model: EnemyDropModel = new EnemyDropModel();
-                    const dropData: EnemyDrop = await model.createItems(receiveCharacter.tribeId);
+                    const dropData: EnemyDrop = await EnemyDropModel.createItems(receiveCharacter.tribeId);
                     
                     data = new CommunicationData.SendData.EnemyDie();
                     data.drop = dropData.randomItem();
