@@ -14,7 +14,7 @@ export class UserModel extends BaseModel{
         if(await this.isDuplicateUser(name)) return null;
         const salt = await createSalt();
         const hash = await createHash(pass, salt);
-        return await this.create({ name: name, hash: hash, salt: salt, status: 0, characterName: characterName });
+        return await this.create({ name: name, hash: hash, salt: salt, status: 0, character_name: characterName });
     }
 
     // ユーザー名の検索
