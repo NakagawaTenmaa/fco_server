@@ -103,12 +103,12 @@ export class Enemy implements Character{
     private popArea_ : EnemyPopArea|undefined;
     /**
      * ポップエリア
-     * @private
+     * @public
      * @readonly
      * @type {(EnemyPopArea|undefined)}
      * @memberof Enemy
      */
-    private get popArea() : EnemyPopArea|undefined {
+    public get popArea() : EnemyPopArea|undefined {
         return this.popArea_;
     }
     /**

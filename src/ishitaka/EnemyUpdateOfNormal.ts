@@ -7,7 +7,7 @@
 import {EnemyUpdate,EnemyUpdateMode} from './EnemyUpdate'
 import {Enemy} from './Enemy'
 import {Vector3} from './Vector3'
-import {EnemyPopAreaData,EnemyPopAreaDataAccessor} from './DatabaseAccessors/EnemyPopAreaDataAccessor'
+import {EnemyPopArea} from './EnemyPopArea'
 
 /**
  * 敵通常更新
@@ -176,17 +176,17 @@ export class EnemyUpdateOfNormal implements EnemyUpdate{
      * @memberof EnemyUpdateOfNormal
      */
     private ChangeWalkPosition() : boolean {
-        const area:EnemyPopAreaData|undefined = EnemyPopAreaDataAccessor.instance.Find(this.enemy_.mapId);
+        const area:EnemyPopArea|undefined = this.enemy_.popArea;
         if(area === undefined){
             return false;
         }
 
         const direction:number = 2.0*Math.PI * (Math.random()-0.5);
-        const delta:number = area.areaRadius * Math.random();
+        const delta:number = area.data.areaRadius * Math.random();
         this.walkTargetPosition_ = new Vector3(
-            area.positionX + delta*Math.cos(direction),
-            area.positionY,
-            area.positionZ + delta*Math.sin(direction)
+            area.data.positionX + delta*Math.cos(direction),
+            area.data.positionY,
+            area.data.positionZ + delta*Math.sin(direction)
         );
 
         return true;
