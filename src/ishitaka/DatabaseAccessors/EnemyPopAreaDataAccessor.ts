@@ -7,6 +7,7 @@
 
 import {DatabaseAccessor} from './DatabaseAccessor'
 import {EnemyPopAreaManager} from './../EnemyPopAreaManager'
+import { PopAreaModel } from '../../model/popAreaModel';
 
 /**
  * 敵ポップエリア情報
@@ -366,6 +367,7 @@ export class EnemyPopAreaDataAccessor implements DatabaseAccessor{
      * @memberof EnemyPopAreaDataAccessor
      */
     public async Load() : Promise<boolean> {
+        /*
         // テスト用データ
         const testArea:EnemyPopAreaData = new EnemyPopAreaData(
             0,
@@ -379,7 +381,8 @@ export class EnemyPopAreaDataAccessor implements DatabaseAccessor{
         );
 
         this.dataArray_[0] = testArea;
-
+        */
+        this.dataArray_ = await PopAreaModel.getPopArea();
         // TODO:データベースから情報を読み取る
         console.log('Loaded the enemy pop area data.');
         // ポップエリアの更新
