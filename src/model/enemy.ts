@@ -25,10 +25,7 @@ export class EnemyModel extends BaseModel{
                 _enemy.agi
             ));
         })
-
-        enemys.forEach(element => {
-            console.log(element);
-        });
+        
        return enemys;
     }
 }

@@ -4,9 +4,10 @@ import { playRouter } from './router/playRouter';
 import { chatUpdate } from './router/chatRouter'
 import { AllDatabaseAccessor } from './ishitaka/AllDatabaseAccessor';
 
+async function Root() {
 try{
 
-AllDatabaseAccessor.Initialize();
+await AllDatabaseAccessor.Initialize();
 
 // ルートの作成
 const login: loginRouter = new loginRouter();
@@ -32,3 +33,6 @@ process.on("SIGINT", async () => {
     console.error("Has catched exception.");
     console.log("End execution.");
 }
+}
+
+Root();
