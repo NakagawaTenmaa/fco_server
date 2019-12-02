@@ -103,12 +103,12 @@ export class Enemy implements Character{
     private popArea_ : EnemyPopArea|undefined;
     /**
      * ポップエリア
-     * @private
+     * @public
      * @readonly
      * @type {(EnemyPopArea|undefined)}
      * @memberof Enemy
      */
-    private get popArea() : EnemyPopArea|undefined {
+    public get popArea() : EnemyPopArea|undefined {
         return this.popArea_;
     }
     /**
@@ -615,6 +615,9 @@ export class Enemy implements Character{
 
         data.enemy_id = this.characterId_;
         data.skill_id = this.enemyStatus_.tribeStatus.useSkillId;
+        const target:Character|undefined = this.updater.battleState.attackTarget;
+        // TODO:範囲攻撃の場合はターゲットIDをマイナス値にする
+        data.target_id = (target === undefined) ? (0) : (target.id);
 
         //console.log("enemy skill use. [id:" + this.id.toString() + "]");
         return CharacterManager.instance.SendAll(JSON.stringify(data));

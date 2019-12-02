@@ -550,7 +550,14 @@ export namespace CommunicationData{
 			 * @type {number}
 			 * @memberof {EnemyUseSkill}
 			 */
-			public enemy_id : number;
+            public enemy_id : number;
+            /**
+             * ターゲットのID
+             * @public
+             * @type {number}
+             * @memberof EnemyUseSkill
+             */
+            public target_id : number;
 
 
 			/**
@@ -561,7 +568,8 @@ export namespace CommunicationData{
 			 */
 			public constructor(){
 				this.skill_id = 0;
-				this.enemy_id = 0;
+                this.enemy_id = 0;
+                this.target_id = 0;
 			}
 		}
 		/**
