@@ -64,7 +64,7 @@ export class playRouter{
                 // セーブデータの読み込み
                 else if(data instanceof CommunicationData.ReceiveData.SaveLoadCtoS){
                     // 一人以外に送信
-                    this.characterManager.SendOther(data.user_id, "");
+                    this.characterManager.SendOne(data.user_id, "");
                 }
                 // 読み込み完了
                 else if(data instanceof CommunicationData.ReceiveData.LodingOK){
