@@ -73,6 +73,11 @@ export class Player implements Character{
     public get id() : number { return this.characterId_; }
     public set id(_id:number){ this.characterId_ = _id; }
 
+    private modelId_: number;
+
+    public get modelId() : number { return this.modelId_; }
+    public set modelId(_id: number) { this.modelId_ = _id; }
+
     private name_: string;
     public get name(): string{ return this.name_; }
     public set name(_name: string){ this.name_ = _name; }
@@ -290,6 +295,7 @@ export class Player implements Character{
         this.transform_ = new Transform();
         this.playerStatus_ = new PlayerStatus();
         this.name_ = "";
+        this.modelId_ = 0;
     }
 
 

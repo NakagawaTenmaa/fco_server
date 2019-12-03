@@ -8,7 +8,7 @@
 import {Character, CharacterType} from './Character'
 import {Player} from './Player'
 import {Enemy} from './Enemy'
-import {CommunicationData, SendEnemyData} from './CommunicationData';
+import {CommunicationData, SendEnemyData, PacketPlayer} from './CommunicationData';
 import WebSocket = require('ws');
 import {Vector3} from './Vector3';
 import {PartyManager} from './PartyManager';
@@ -232,6 +232,24 @@ export class CharacterManager{
                 isSuccess = false;
             }
         });
+        return isSuccess;
+    }
+
+    /**
+     * 一人以外に送信
+     * @param {number} _userId
+     * @param {string} _sendData
+     * @memberof CharacterManager
+     */
+    public SendOther(_userId: number, _sendData: string): boolean{
+        let isSuccess: boolean = true;
+        this.playerArray_.forEach((_player: Player) => {
+            if(_player.id !== _userId) {
+                if(!_player.SendToClient(_sendData)) {
+                    isSuccess = false;
+                }
+            }
+        })
         return isSuccess;
     }
 
@@ -497,7 +515,7 @@ export class CharacterManager{
      * @returns {Player} 検索結果
      * @memberof CharacterManager
      */
-    private FindPlayer(_characterId: number): Player | undefined{
+    public FindPlayer(_characterId: number): Player | undefined{
         return this.playerArray_.find((player: Player) => player.id === _characterId);
     }
 
@@ -576,5 +594,40 @@ export class CharacterManager{
 //            );
 //            console.log("}");
         }
+    }
+
+
+    /**
+     * プレイヤーの初期化
+     * @memberof CharacterManager
+     */
+    public initPlayer(_userId: number){
+        // ユーザーにログイン許可
+        let user: CommunicationData.SendData.OtherPlayerList = new CommunicationData.SendData.OtherPlayerList();
+        this.playerArray_.forEach((_player: Player) =>{
+            user.players.push(new PacketPlayer(
+                _player.transform.position.x,
+                _player.transform.position.y,
+                _player.transform.position.z,
+                _player.modelId,
+                _player.name
+                ));
+        })
+        this.SendOne(_userId, JSON.stringify(user));
+        
+        // 他の人に新規通達
+        let other: CommunicationData.SendData.NewOtherUser = new CommunicationData.SendData.NewOtherUser();
+        const player = this.FindPlayer(_userId);
+        if(player === undefined) {
+            console.error("init not player");
+            return;
+        }
+        other.x = player.transform.position.x;
+        other.y = player.transform.position.y;
+        other.z = player.transform.position.z;
+        other.user_id = _userId;
+        other.model_id = player.modelId;
+        other.name = player.name;
+        this.SendOther(_userId, JSON.stringify(other));
     }
 }
