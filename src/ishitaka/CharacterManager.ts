@@ -298,7 +298,9 @@ export class CharacterManager{
         const player: Player | undefined = this.playerArray_.find((_player: Player) => { return _player.id === _characterId; })
         if(typeof player === 'undefined') return false;
         player.webSocket = _ws;
-        player.LoadSaveData();
+        //player.LoadSaveData();
+        let res: CommunicationData.SendData.SaveLoadStoC = new CommunicationData.SendData.SaveLoadStoC();
+        this.SendOne(_characterId, JSON.stringify(res));
         return true;
     }
 

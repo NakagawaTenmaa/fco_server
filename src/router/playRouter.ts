@@ -3,6 +3,7 @@ import { CharacterManager } from '../ishitaka/CharacterManager';
 import { CommunicationData } from '../ishitaka/CommunicationData';
 import { UserModel } from '../model/userModel';
 import WebSocket = require('ws');
+import { UserMaster } from '../model/userMaster';
 
 
 
@@ -63,8 +64,7 @@ export class playRouter{
                 }
                 // セーブデータの読み込み
                 else if(data instanceof CommunicationData.ReceiveData.SaveLoadCtoS){
-                    // 一人以外に送信
-                    this.characterManager.SendOne(data.user_id, "");
+                    this.characterManager.LoadCharacter(ws,data.user_id);
                 }
                 // 読み込み完了
                 else if(data instanceof CommunicationData.ReceiveData.LodingOK){
