@@ -3,6 +3,7 @@ import { CharacterManager } from '../ishitaka/CharacterManager';
 import { CommunicationData } from '../ishitaka/CommunicationData';
 import { UserModel } from '../model/userModel';
 import WebSocket = require('ws');
+import { UserMaster } from '../model/userMaster';
 
 
 
@@ -61,11 +62,13 @@ export class playRouter{
                 else if(data instanceof CommunicationData.ReceiveData.LoadCharacter){
                     this.characterManager.LoadCharacter(ws,data.user_id);
                 }
-                // 初回IN
-                else if(data instanceof CommunicationData.ReceiveData.LoadOK){
-                    let sendData:CommunicationData.SendData.InitCharacter = new CommunicationData.SendData.InitCharacter();
-                    sendData.user_id = data.user_id;                    
-                    this.characterManager.SendAll(JSON.stringify(sendData));
+                // セーブデータの読み込み
+                else if(data instanceof CommunicationData.ReceiveData.SaveLoadCtoS){
+                    this.characterManager.LoadCharacter(ws,data.user_id);
+                }
+                // 読み込み完了
+                else if(data instanceof CommunicationData.ReceiveData.LodingOK){
+                    this.characterManager.initPlayer(data.user_id);
                 }
                 // ログアウト
                 else if(data instanceof CommunicationData.ReceiveData.LogoutCharacter){
@@ -74,6 +77,20 @@ export class playRouter{
                     sendData.user_id = data.user_id;
                     this.characterManager.SendAll(JSON.stringify(sendData));
                     this.characterManager.PlayerLogout(data.user_id);
+                } 
+                // プレイヤーの検索
+                else if(data instanceof CommunicationData.ReceiveData.FindOfPlayerCtoS){
+                    let res: CommunicationData.SendData.FindOfPlayerStoC = new CommunicationData.SendData.FindOfPlayerStoC();
+                    const player = this.characterManager.FindPlayer(data.user_id);
+                    if(player === undefined) return;
+                    
+                    res.user_id = player.id;
+                    res.x = player.transform.position.x;
+                    res.y = player.transform.position.y;
+                    res.z = player.transform.position.z;
+                    res.model_id = player.modelId;
+                    res.name = player.name;
+                    this.characterManager.SendOne(data.user_id, JSON.stringify(res));
                 }
             })
         })

@@ -1,8 +1,9 @@
 import { BaseModel } from './modelBase'
 import { format } from 'mysql'
+import { UserMasterData } from '../controller/object/userMasterData';
 
 // ユーザーのセーブデータ
-class UserMaster extends BaseModel{
+export class UserMaster extends BaseModel{
     static TABLE_NAME = "save_data";
 
     // ユーザーの読み込み

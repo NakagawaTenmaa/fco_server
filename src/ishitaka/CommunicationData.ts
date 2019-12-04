@@ -316,15 +316,203 @@ export namespace CommunicationData{
             public exp: number = 0;
             constructor(){}
         }
+        		/**
+		 * セーブデータの読み込み
+		 * @export
+		 * @class SaveLoadStoC
+		 * @implements {Send}
+		 */
+		export class SaveLoadStoC implements Send{
+			/**
+			 * コマンドID
+			 * @public
+			 * @static 
+			 * @readonly 
+			 * @type {number}
+			 * @memberof {SaveLoadStoC}
+			 */
+			public static readonly id : number = 212;
 
+			/**
+			 * コマンド識別子
+			 * @public
+			 * @readonly 
+			 * @type {number}
+			 * @memberof {SaveLoadStoC}
+			 */
+			public readonly command : number = SaveLoadStoC.id;
+			/**
+			 * 位置X
+			 * @public
+			 * @type {number}
+			 * @memberof {SaveLoadStoC}
+			 */
+			public x : number;
+			/**
+			 * 位置Y
+			 * @public
+			 * @type {number}
+			 * @memberof {SaveLoadStoC}
+			 */
+			public y : number;
+			/**
+			 * 位置Z
+			 * @public
+			 * @type {number}
+			 * @memberof {SaveLoadStoC}
+			 */
+			public z : number;
+			/**
+			 * モデルID
+			 * @public
+			 * @type {number}
+			 * @memberof {SaveLoadStoC}
+			 */
+			public model_id : number;
+
+
+			/**
+			 * デフォルトコンストラクタ
+			 * @public
+			 * @constructor
+			 * @memberof {SaveLoadStoC}
+			 */
+			public constructor(){
+				this.x = 0;
+				this.y = 0;
+				this.z = 0;
+				this.model_id = 0;
+			}
+		}
+/*
         export class InitCharacter implements Send{
             public readonly command: number = 212;
             public static id: number = 212;
             public user_id: number = 0;
             public name: string = "";
             constructor(){}
-        }
+        }*/
+        /**
+		 * プレイシーンにいる他ユーザーの一覧
+		 * @export
+		 * @class OtherPlayerList
+		 * @implements {Send}
+		 */
+		export class OtherPlayerList implements Send{
+			/**
+			 * コマンドID
+			 * @public
+			 * @static 
+			 * @readonly 
+			 * @type {number}
+			 * @memberof {OtherPlayerList}
+			 */
+			public static readonly id : number = 214;
 
+			/**
+			 * コマンド識別子
+			 * @public
+			 * @readonly 
+			 * @type {number}
+			 * @memberof {OtherPlayerList}
+			 */
+			public readonly command : number = OtherPlayerList.id;
+
+            public players: PacketPlayer[];
+			/**
+			 * デフォルトコンストラクタ
+			 * @public
+			 * @constructor
+			 * @memberof {OtherPlayerList}
+			 */
+			public constructor(){
+                this.players = [];
+			}
+		}
+		/**
+		 * キャラクターの詳細
+		 * @export
+		 * @class FindOfPlayerStoC
+		 * @implements {Send}
+		 */
+		export class FindOfPlayerStoC implements Send{
+			/**
+			 * コマンドID
+			 * @public
+			 * @static 
+			 * @readonly 
+			 * @type {number}
+			 * @memberof {FindOfPlayerStoC}
+			 */
+			public static readonly id : number = 712;
+
+			/**
+			 * コマンド識別子
+			 * @public
+			 * @readonly 
+			 * @type {number}
+			 * @memberof {FindOfPlayerStoC}
+			 */
+			public readonly command : number = FindOfPlayerStoC.id;
+			/**
+			 * ユーザーID
+			 * @public
+			 * @type {number}
+			 * @memberof {FindOfPlayerStoC}
+			 */
+			public user_id : number;
+			/**
+			 * 位置X
+			 * @public
+			 * @type {number}
+			 * @memberof {FindOfPlayerStoC}
+			 */
+			public x : number;
+			/**
+			 * 位置Y
+			 * @public
+			 * @type {number}
+			 * @memberof {FindOfPlayerStoC}
+			 */
+			public y : number;
+			/**
+			 * 位置Z
+			 * @public
+			 * @type {number}
+			 * @memberof {FindOfPlayerStoC}
+			 */
+			public z : number;
+			/**
+			 * モデルID
+			 * @public
+			 * @type {number}
+			 * @memberof {FindOfPlayerStoC}
+			 */
+			public model_id : number;
+			/**
+			 * 名前
+			 * @public
+			 * @type {string}
+			 * @memberof {FindOfPlayerStoC}
+			 */
+			public name : string;
+
+
+			/**
+			 * デフォルトコンストラクタ
+			 * @public
+			 * @constructor
+			 * @memberof {FindOfPlayerStoC}
+			 */
+			public constructor(){
+				this.user_id = 0;
+				this.x = 0;
+				this.y = 0;
+				this.z = 0;
+				this.model_id = 0;
+				this.name = '';
+			}
+		}
         // キャラクターのログアウト
         export class LogoutCharacter implements Send {
             public readonly command: number = 707;
@@ -676,6 +864,84 @@ export namespace CommunicationData{
 				this.skill_id = 0;
 			}
 		}
+		        /**
+		 * 他ユーザーの途中ログイン
+		 * @export
+		 * @class NewOtherUser
+		 * @implements {Receive}
+		 */
+		export class NewOtherUser implements Send{
+			/**
+			 * コマンドID
+			 * @public
+			 * @static 
+			 * @readonly 
+			 * @type {number}
+			 * @memberof {NewOtherUser}
+			 */
+			public static readonly id : number = 215;
+
+			/**
+			 * コマンド識別子
+			 * @public
+			 * @readonly 
+			 * @type {number}
+			 * @memberof {NewOtherUser}
+			 */
+			public readonly command : number = NewOtherUser.id;
+			/**
+			 * ユーザーのID
+			 * @public
+			 * @type {number}
+			 * @memberof {NewOtherUser}
+			 */
+			public user_id : number;
+			/**
+			 * 位置X
+			 * @public
+			 * @type {number}
+			 * @memberof {NewOtherUser}
+			 */
+			public x : number;
+			/**
+			 * 位置Y
+			 * @public
+			 * @type {number}
+			 * @memberof {NewOtherUser}
+			 */
+			public y : number;
+			/**
+			 * 位置Z
+			 * @public
+			 * @type {number}
+			 * @memberof {NewOtherUser}
+			 */
+			public z : number;
+			/**
+			 * キャラクター名
+			 * @public
+			 * @type {string}
+			 * @memberof {NewOtherUser}
+			 */
+			public name : string;
+
+			public model_id: number;
+			/**
+			 * デフォルトコンストラクタ
+			 * @public
+			 * @constructor
+			 * @memberof {NewOtherUser}
+			 */
+			public constructor(){
+				this.user_id = 0;
+				this.x = 0;
+				this.y = 0;
+				this.z = 0;
+				this.name = '';
+				this.model_id = 0;
+			}
+		}
+
 
         export type AllTypes = 
         CharacterTransform |
@@ -683,7 +949,7 @@ export namespace CommunicationData{
         ModelSetting |
         SkillUse |
         LoadCharacter | 
-        InitCharacter | 
+        SaveLoadStoC | 
         LogoutCharacter |
         EnemysData |
         EnemyAlive |
@@ -691,7 +957,10 @@ export namespace CommunicationData{
         EnemyUseSkillRequest | 
         EnemyUseSkill | 
         EnemyAttackResult |
-        OtherPlayerUseSkill;
+        OtherPlayerUseSkill |
+        OtherPlayerList |
+		FindOfPlayerStoC | 
+		NewOtherUser;
     }
     /**
      * 受信データ
@@ -752,12 +1021,143 @@ export namespace CommunicationData{
          * @class LoadOK
          * @implements {Receive}
          */
+        /*
         export class LoadOK implements Receive{
             public readonly command: number = 211;
             public static id = 211;
             public user_id: number = 0;
             constructor(){}
         }
+        */
+
+        /**
+		 * セーブデータの読み込み
+		 * @export
+		 * @class SaveLoadCtoS
+		 * @implements {Receive}
+		 */
+		export class SaveLoadCtoS implements Receive{
+			/**
+			 * コマンドID
+			 * @public
+			 * @static 
+			 * @readonly 
+			 * @type {number}
+			 * @memberof {SaveLoadCtoS}
+			 */
+			public static readonly id : number = 211;
+
+			/**
+			 * コマンド識別子
+			 * @public
+			 * @readonly 
+			 * @type {number}
+			 * @memberof {SaveLoadCtoS}
+			 */
+			public readonly command : number = SaveLoadCtoS.id;
+
+			public user_id : number;
+
+			/**
+			 * デフォルトコンストラクタ
+			 * @public
+			 * @constructor
+			 * @memberof {SaveLoadCtoS}
+			 */
+			public constructor(){
+				this.user_id = 0;
+			}
+		}
+		/**
+		 * セーブデータの読み込み完了
+		 * @export
+		 * @class LodingOK
+		 * @implements {Receive}
+		 */
+		export class LodingOK implements Receive{
+			/**
+			 * コマンドID
+			 * @public
+			 * @static 
+			 * @readonly 
+			 * @type {number}
+			 * @memberof {LodingOK}
+			 */
+			public static readonly id : number = 213;
+
+			/**
+			 * コマンド識別子
+			 * @public
+			 * @readonly 
+			 * @type {number}
+			 * @memberof {LodingOK}
+			 */
+			public readonly command : number = LodingOK.id;
+
+			public user_id : number = 0;
+			/**
+			 * デフォルトコンストラクタ
+			 * @public
+			 * @constructor
+			 * @memberof {LodingOK}
+			 */
+			public constructor(){
+				this.user_id = 0;
+			}
+        }
+        
+		/**
+		 * キャラクターの詳細取得
+		 * @export
+		 * @class FindOfPlayerCtoS
+		 * @implements {Receive}
+		 */
+		export class FindOfPlayerCtoS implements Receive{
+			/**
+			 * コマンドID
+			 * @public
+			 * @static 
+			 * @readonly 
+			 * @type {number}
+			 * @memberof {FindOfPlayerCtoS}
+			 */
+			public static readonly id : number = 711;
+
+			/**
+			 * コマンド識別子
+			 * @public
+			 * @readonly 
+			 * @type {number}
+			 * @memberof {FindOfPlayerCtoS}
+			 */
+			public readonly command : number = FindOfPlayerCtoS.id;
+			/**
+			 * ユーザーID
+			 * @public
+			 * @type {number}
+			 * @memberof {FindOfPlayerCtoS}
+			 */
+			public user_id : number;
+			/**
+			 * マップID
+			 * @public
+			 * @type {number}
+			 * @memberof {FindOfPlayerCtoS}
+			 */
+			public map_id : number;
+
+
+			/**
+			 * デフォルトコンストラクタ
+			 * @public
+			 * @constructor
+			 * @memberof {FindOfPlayerCtoS}
+			 */
+			public constructor(){
+				this.user_id = 0;
+				this.map_id = 0;
+			}
+		}
 
         // ログアウト
         export class LogoutCharacter implements Receive {
@@ -907,10 +1307,12 @@ export namespace CommunicationData{
         PlayerStatus | 
         LoadCharacter | 
         LogoutCharacter | 
-        LoadOK | 
+        FindOfPlayerCtoS | 
         GetEnemy | 
         Attack | 
-        UserHit;
+        UserHit |
+        LodingOK |
+        SaveLoadCtoS;
     }
 
     export type AllTypes = SendData.AllTypes | ReceiveData.AllTypes;
@@ -967,13 +1369,14 @@ export namespace CommunicationData{
                     data.weapon = parse.weapon;
                     return data;
                 }
+                /*
                 case SendData.InitCharacter.id:
                 {
                     const data: SendData.InitCharacter = new SendData.InitCharacter();
                     data.user_id = parse.user_id - 0;
                     data.name = parse.name;
                     return data;
-                }
+                }*/
                 case SendData.LogoutCharacter.id:
                 {
                     const data: SendData.LogoutCharacter = new SendData.LogoutCharacter();
@@ -1007,7 +1410,39 @@ export namespace CommunicationData{
 					data.user_id = parse.user_id - 0;
 					data.skill_id = parse.skill_id - 0;
 					return data;
-				}
+                }
+                case SendData.SaveLoadStoC.id:{
+					const data:SendData.SaveLoadStoC = new SendData.SaveLoadStoC();
+					data.x = parse.x - 0;
+					data.y = parse.y - 0;
+					data.z = parse.z - 0;
+					data.model_id = parse.model_id - 0;
+					return data;
+                }
+                case SendData.OtherPlayerList.id:{
+                    const data:SendData.OtherPlayerList = new SendData.OtherPlayerList();
+                    data.players = parse.players;
+                    return data;
+                }
+                case SendData.FindOfPlayerStoC.id:{
+					const data:SendData.FindOfPlayerStoC = new SendData.FindOfPlayerStoC();
+					data.user_id = parse.user_id - 0;
+					data.x = parse.x - 0;
+					data.y = parse.y - 0;
+					data.z = parse.z - 0;
+					data.model_id = parse.model_id - 0;
+					data.name = parse.name;
+					return data;
+				}                
+				case SendData.NewOtherUser.id:{
+					const data:SendData.NewOtherUser = new SendData.NewOtherUser();
+					data.user_id = parse.user_id - 0;
+					data.x = parse.x - 0;
+					data.y = parse.y - 0;
+					data.z = parse.z - 0;
+					data.name = parse.name;
+					return data;
+                }
 
 
 
@@ -1046,13 +1481,13 @@ export namespace CommunicationData{
                     const data: ReceiveData.LogoutCharacter = new ReceiveData.LogoutCharacter();
                     data.user_id = parse.user_id - 0;
                     return data;
-                }
+                }/*
                 case ReceiveData.LoadOK.id:
                 {
                     const data: ReceiveData.LoadOK = new ReceiveData.LoadOK();
                     data.user_id = parse.user_id - 0;
                     return data;
-                }
+                }*/
                 case ReceiveData.GetEnemy.id:
                 {
                     const data: ReceiveData.GetEnemy = new ReceiveData.GetEnemy();
@@ -1068,6 +1503,22 @@ export namespace CommunicationData{
                     data.skill_id = parse.skill_id - 0;
                     data.map_id = parse.map_id - 0;
                     return data;
+                }
+                case ReceiveData.SaveLoadCtoS.id:{
+					const data:ReceiveData.SaveLoadCtoS = new ReceiveData.SaveLoadCtoS();
+                    data.user_id = parse.user_id;
+                    return data;
+                }
+                case ReceiveData.LodingOK.id:{
+					const data:ReceiveData.LodingOK = new ReceiveData.LodingOK();
+                    data.user_id = parse.user_id;
+                    return data;
+                }
+                case ReceiveData.FindOfPlayerCtoS.id:{
+					const data:ReceiveData.FindOfPlayerCtoS = new ReceiveData.FindOfPlayerCtoS();
+					data.user_id = parse.user_id - 0;
+					data.map_id = parse.map_id - 0;
+					return data;
                 }
             }
             console.error("Convert Error");
@@ -1087,4 +1538,26 @@ export class SendEnemyData {
     public z: number = 0;
     public dir: number = 0;
     public hp: number = 0; 
+}
+
+/**
+ * プレイヤーの一覧時のデータ
+ * @export
+ * @class PacketPlayer
+ */
+export class PacketPlayer{
+    public user_id: number = 0;
+    public x: number = 0;
+    public y: number = 0;
+    public z: number = 0;
+    public model_id: number = 0;
+	public name: string = "";
+	
+	constructor(_x: number, _y: number, _z: number, _modelId: number, _name: string){
+		this.x = _x;
+		this.y = _y;
+		this.z = _z;
+		this.model_id = _modelId;
+		this.name = _name;
+	}
 }
