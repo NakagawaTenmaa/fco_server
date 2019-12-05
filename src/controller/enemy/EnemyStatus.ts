@@ -5,10 +5,10 @@
  * @license Copyright(c) 2019 Ishikawa Takayoshi All Rights Reserved.
  */
 
-import {CharacterStatus} from './CharacterStatus'
 import {Enemy} from './Enemy'
 import {EnemyTribeStatus} from './EnemyTribeStatus'
-import {AbnormalConditionStatus} from './AbnormalConditionStatus'
+import { CharacterStatus } from '../character/CharacterStatus';
+import { AbnormalConditionStatus } from '../status/AbnormalConditionStatus';
 
 /**
  * 敵ステータス

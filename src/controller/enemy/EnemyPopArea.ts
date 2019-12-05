@@ -1,3 +1,4 @@
+
 /**
  * @fileoverview 敵ポップ範囲の実装ファイル
  * @file EnemyPopArea.ts
@@ -5,7 +6,7 @@
  * @license Copyright(c) 2019 Ishikawa Takayoshi All Rights Reserved.
  */
 
-import {EnemyPopAreaData} from "./DatabaseAccessors/EnemyPopAreaDataAccessor"
+import { EnemyPopAreaData } from "../DatabaseAccessors/EnemyPopAreaDataAccessor";
 
 /**
  * 敵ポップ範囲

@@ -6,8 +6,8 @@
  */
 
 import {DatabaseAccessor} from './DatabaseAccessor'
-import {EnemyPopAreaManager} from './../EnemyPopAreaManager'
 import { PopAreaModel } from '../../model/popAreaModel';
+import { EnemyPopAreaManager } from '../enemy/EnemyPopAreaManager';
 
 /**
  * 敵ポップエリア情報

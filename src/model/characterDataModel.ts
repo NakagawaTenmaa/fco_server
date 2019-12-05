@@ -1,6 +1,6 @@
 import { Weapon } from './../controller/object/playerWeapon'
 import { connection } from './setting';
-import { Vector3 } from '../ishitaka/Vector3';
+import { Vector3 } from '../controller/utility/Vector3';
 
 // キャラクターのログアウト時の状態保存
 export async function userSaveModel(id: number, pos: Vector3, weapon: Weapon, lv: number, exp: number): Promise<any>{

@@ -1,8 +1,8 @@
 import { Server } from 'ws';
 import { IsThere, MakeOk, DuplicateLogin, NotUser, LoginOK } from '../model/packet';
 import { loginController } from './../controller/loginController';
-import { CharacterManager } from '../ishitaka/CharacterManager';
-import { Player } from '../ishitaka/Player';
+import { CharacterManager } from '../controller/character/CharacterManager';
+import { Player } from '../controller/player/Player';
 
 
 // ログインルーター

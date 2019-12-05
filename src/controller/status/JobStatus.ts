@@ -5,7 +5,7 @@
  * @license Copyright(c) 2019 Ishikawa Takayoshi All Rights Reserved.
  */
 
-import {JobData} from "./DatabaseAccessors/JobDataAccessor";
+import {JobData} from "./../DatabaseAccessors/JobDataAccessor";
 
 /**
  * 職業ステータス

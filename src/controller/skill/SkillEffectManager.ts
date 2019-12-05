@@ -6,7 +6,7 @@
  */
 
 import {SkillEffect} from './SkillEffect'
-import {SkillData,SkillDataAccessor} from './DatabaseAccessors/SkillDataAccessor';
+import {SkillData,SkillDataAccessor} from './../DatabaseAccessors/SkillDataAccessor';
 
 export class SkillEffectManager{
     /**

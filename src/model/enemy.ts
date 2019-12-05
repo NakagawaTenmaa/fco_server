@@ -1,5 +1,5 @@
 import { BaseModel } from './modelBase'
-import { EnemyTribeData } from '../ishitaka/DatabaseAccessors/EnemyTribeDataAccessor';
+import { EnemyTribeData } from '../controller/DatabaseAccessors/EnemyTribeDataAccessor';
 
 // 敵のモデル
 export class EnemyModel extends BaseModel{

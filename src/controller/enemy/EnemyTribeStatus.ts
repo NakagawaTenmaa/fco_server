@@ -5,8 +5,8 @@
  * @license Copyright(c) 2019 Ishikawa Takayoshi All Rights Reserved.
  */
 
-import {Status} from './Status'
-import {EnemyTribeData} from './DatabaseAccessors/EnemyTribeDataAccessor'
+import {Status} from './../status/Status'
+import {EnemyTribeData} from './../DatabaseAccessors/EnemyTribeDataAccessor'
 
 /**
  * 敵種族ステータス

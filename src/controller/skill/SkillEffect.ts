@@ -5,9 +5,9 @@
  * @license Copyright(c) 2019 Ishikawa Takayoshi All Rights Reserved.
  */
 
-import {Character} from './Character'
-import {CharacterEffect} from './CharacterEffect'
-import {SkillData} from './DatabaseAccessors/SkillDataAccessor';
+import {Character} from './../character/Character'
+import {CharacterEffect} from './../character/CharacterEffect'
+import {SkillData} from './../DatabaseAccessors/SkillDataAccessor';
 
 /**
  * スキル効果

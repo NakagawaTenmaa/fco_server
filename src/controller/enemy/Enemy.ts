@@ -5,25 +5,24 @@
  * @license Copyright(c) 2019 Ishikawa Takayoshi All Rights Reserved.
  */
 
-import {Character,CharacterType} from './Character'
-import {CharacterStatus} from './CharacterStatus'
-import {EnemyStatus} from './EnemyStatus'
-import {Transform} from './Transform'
-import {EnemyTribeData,EnemyTribeDataAccessor} from './DatabaseAccessors/EnemyTribeDataAccessor'
-import {CharacterManager} from './CharacterManager'
-import {CommunicationData} from './CommunicationData';
-import {EnemyPopAreaData} from './DatabaseAccessors/EnemyPopAreaDataAccessor'
-import {Vector3} from './Vector3'
-import {Matrix4x4} from './Matrix4x4'
-import {SkillData, SkillDataAccessor} from './DatabaseAccessors/SkillDataAccessor'
-import {SkillEffectManager} from './SkillEffectManager'
-import {SkillEffect} from './SkillEffect'
-import {Battlefield} from './Battlefield'
-import {BattlefieldManager} from './BattlefieldManager'
-import {EnemyUpdater} from './EnemyUpdater'
-import {EnemyUpdateMode} from './EnemyUpdate'
-import {EnemyPopArea} from './EnemyPopArea'
-import {EnemyPopAreaManager} from './EnemyPopAreaManager'
+import { EnemyStatus } from './EnemyStatus'
+import { Transform } from './../utility/Transform'
+import { Vector3 } from './../utility/Vector3'
+import { Matrix4x4 } from './../utility/Matrix4x4'
+import { EnemyUpdater } from './EnemyUpdater'
+import { EnemyUpdateMode } from './EnemyUpdate'
+import { EnemyPopArea } from './EnemyPopArea'
+import { EnemyPopAreaManager } from './EnemyPopAreaManager'
+import { Character, CharacterType } from '../character/Character'
+import { CharacterStatus } from '../character/CharacterStatus'
+import { SkillData, SkillDataAccessor } from '../DatabaseAccessors/SkillDataAccessor'
+import { SkillEffect } from '../skill/SkillEffect'
+import { SkillEffectManager } from '../skill/SkillEffectManager'
+import { CharacterManager } from '../character/CharacterManager'
+import { Battlefield } from '../battle/Battlefield'
+import { BattlefieldManager } from '../battle/BattlefieldManager'
+import { EnemyTribeData, EnemyTribeDataAccessor } from '../DatabaseAccessors/EnemyTribeDataAccessor'
+import { CommunicationData } from '../CommunicationData'
 
 /**
  * 敵

@@ -1,5 +1,5 @@
 import { Weapon } from './../controller/object/playerWeapon'
-import { Vector3 } from '../ishitaka/Vector3';
+import { Vector3 } from '../controller/utility/Vector3';
 
 //ログイン失敗
 export class NotUser{

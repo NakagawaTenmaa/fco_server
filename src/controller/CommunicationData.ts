@@ -1,5 +1,5 @@
 import { Weapon } from "../controller/object/playerWeapon";
-import { Vector3 } from "./Vector3";
+import { Vector3 } from "./utility/Vector3";
 
 /**
  * @fileoverview 通信データの実装ファイル

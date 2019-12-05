@@ -1,7 +1,5 @@
-import { createHash, createSalt } from './../controller/utility/hash'
 import { BaseModel } from './modelBase'
-import { format } from 'mysql'
-import { SkillData } from '../ishitaka/DatabaseAccessors/SkillDataAccessor';
+import { SkillData } from '../controller/DatabaseAccessors/SkillDataAccessor';
 
 // ユーザーモデル
 export class UserModel extends BaseModel{
