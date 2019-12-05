@@ -551,7 +551,7 @@ export class CharacterManager{
             const sendUseSkill = new CommunicationData.SendData.OtherPlayerUseSkill();
             sendUseSkill.user_id = _useSkill.user_id;
             sendUseSkill.skill_id = _useSkill.skill_id;
-            this.SendAll(JSON.stringify(sendUseSkill));
+            this.SendOther(_useSkill.user_id ,JSON.stringify(sendUseSkill));
         }
 
         if(useCharacter.UseSkill(_useSkill.skill_id, _useSkill.enemy_id)){      
@@ -575,10 +575,10 @@ export class CharacterManager{
                 // 倒れたときの処理
                 if(receiveCharacter instanceof Enemy){
                     // 敵の時の処理
-                    const dropData: EnemyDrop = await EnemyDropModel.createItems(receiveCharacter.tribeId);
+                    //const dropData: EnemyDrop = await EnemyDropModel.createItems(receiveCharacter.tribeId);
                     
                     data = new CommunicationData.SendData.EnemyDie();
-                    data.drop = dropData.randomItem();
+                    data.drop = 0;//dropData.randomItem();
                     data.unique_id = receiveCharacter.id;
                 } else if(receiveCharacter instanceof Player){
                     // プレイヤーの時の処理
