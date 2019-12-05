@@ -6,7 +6,7 @@
  */
 import {EnemyUpdate,EnemyUpdateMode} from './EnemyUpdate'
 import {Enemy} from './Enemy'
-import {Vector3} from './Vector3'
+import {Vector3} from './../utility/Vector3'
 import {EnemyPopArea} from './EnemyPopArea'
 
 /**

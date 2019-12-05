@@ -6,7 +6,7 @@
  */
 
 import {CharacterStatus} from './CharacterStatus'
-import {Transform} from './Transform'
+import {Transform} from './../utility/Transform'
 import {CharacterEffect} from './CharacterEffect'
 
 /**

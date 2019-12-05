@@ -6,7 +6,7 @@
  */
 
 import {EnemyPopArea} from './EnemyPopArea'
-import {EnemyPopAreaData, EnemyPopAreaDataAccessor} from './DatabaseAccessors/EnemyPopAreaDataAccessor'
+import { EnemyPopAreaDataAccessor, EnemyPopAreaData } from '../DatabaseAccessors/EnemyPopAreaDataAccessor';
 
 export class EnemyPopAreaManager{
     /**

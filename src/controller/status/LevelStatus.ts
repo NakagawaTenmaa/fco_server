@@ -7,7 +7,7 @@
 
 import {Status} from './Status'
 import {JobStatus} from './JobStatus'
-import {JobData} from './DatabaseAccessors/JobDataAccessor'
+import {JobData} from './../DatabaseAccessors/JobDataAccessor'
 
 /**
  * レベルステータス

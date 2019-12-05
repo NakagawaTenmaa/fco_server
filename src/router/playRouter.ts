@@ -1,9 +1,8 @@
 import { Server, } from 'ws';
-import { CharacterManager } from '../ishitaka/CharacterManager';
-import { CommunicationData } from '../ishitaka/CommunicationData';
 import { UserModel } from '../model/userModel';
 import WebSocket = require('ws');
-import { UserMaster } from '../model/userMaster';
+import { CharacterManager } from '../controller/character/CharacterManager';
+import { CommunicationData } from '../controller/CommunicationData';
 
 
 

@@ -5,23 +5,22 @@
  * @license Copyright(c) 2019 Ishikawa Takayoshi All Rights Reserved.
  */
 
-import {Character,CharacterType} from './Character'
-import {CharacterStatus} from './CharacterStatus'
+import {Character,CharacterType} from './../character/Character'
+import {CharacterStatus} from './../character/CharacterStatus'
 import {PlayerStatus} from './PlayerStatus'
-import {Transform} from './Transform'
-import {CharacterManager} from './CharacterManager'
-import {CommunicationData} from './CommunicationData';
-import {JobData,JobDataAccessor} from './DatabaseAccessors/JobDataAccessor'
+import {Transform} from './../utility/Transform'
+import {CharacterManager} from './../character/CharacterManager'
+import {CommunicationData} from './../CommunicationData';
+import {JobData,JobDataAccessor} from './../DatabaseAccessors/JobDataAccessor'
 import WebSocket = require('ws')
-import {  } from '../model/characterDataModel';
-import {Vector3} from './Vector3'
-import {Weapon} from '../controller/object/playerWeapon'
-import {PartyManager} from './PartyManager'
-import {Party} from './Party'
-import {SkillEffectManager} from './SkillEffectManager'
-import {SkillEffect} from './SkillEffect'
-import {Battlefield} from './Battlefield'
-import {BattlefieldManager} from './BattlefieldManager'
+import {Vector3} from './../utility/Vector3'
+import {Weapon} from './../object/playerWeapon'
+import {PartyManager} from './../party//PartyManager'
+import {Party} from './../party/Party'
+import {SkillEffectManager} from './../skill/SkillEffectManager'
+import {SkillEffect} from './../skill/SkillEffect'
+import {Battlefield} from './../battle/Battlefield'
+import {BattlefieldManager} from './../battle/BattlefieldManager'
 
 /**
  * プレイヤー

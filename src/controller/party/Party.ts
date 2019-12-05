@@ -5,10 +5,10 @@
  * @license Copyright(c) 2019 Ishikawa Takayoshi All Rights Reserved.
  */
 
-import {Character} from './Character'
-import {Player} from './Player'
-import {Battlefield} from './Battlefield';
-import {BattlefieldManager} from './BattlefieldManager';
+import {Character} from './../character/Character'
+import {Player} from './../player/Player'
+import {Battlefield} from './../battle/Battlefield';
+import {BattlefieldManager} from './../battle/BattlefieldManager';
 
 /**
  * パーティ

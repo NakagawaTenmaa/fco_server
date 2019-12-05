@@ -6,7 +6,7 @@
  */
 import {EnemyBattleUpdate,EnemyBattleUpdateMode} from './EnemyBattleUpdate'
 import {EnemyUpdateOfBattle} from './EnemyUpdateOfBattle'
-import {Character} from './Character'
+import { Character } from '../character/Character';
 
 /**
  * 敵戦闘移動更新

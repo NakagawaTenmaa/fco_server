@@ -1,18 +1,18 @@
+
 /**
  * @fileoverview 全てのデータベースアクセサーの実装ファイル
  * @file AllDatabaseAccessor.ts
  * @author 石川 貴祥
  * @license Copyright(c) 2019 Ishikawa Takayoshi All Rights Reserved.
  */
-
-import {EnemyTribeDataAccessor} from './DatabaseAccessors/EnemyTribeDataAccessor'
-import {EnemyPopAreaDataAccessor} from './DatabaseAccessors/EnemyPopAreaDataAccessor'
-import {JobDataAccessor} from './DatabaseAccessors/JobDataAccessor'
-import {WeaponDataAccessor} from './DatabaseAccessors/WeaponDataAccessor'
-import {ArmorDataAccessor} from './DatabaseAccessors/ArmorAccessor'
-import {OrnamentDataAccessor} from './DatabaseAccessors/OrnamentAccessor'
-import {ItemDataAccessor} from './DatabaseAccessors/ItemAccessor'
-import {SkillDataAccessor} from './DatabaseAccessors/SkillDataAccessor'
+import { EnemyTribeDataAccessor } from "./DatabaseAccessors/EnemyTribeDataAccessor";
+import { EnemyPopAreaDataAccessor } from "./DatabaseAccessors/EnemyPopAreaDataAccessor";
+import { JobDataAccessor } from "./DatabaseAccessors/JobDataAccessor";
+import { WeaponDataAccessor } from "./DatabaseAccessors/WeaponDataAccessor";
+import { ArmorDataAccessor } from "./DatabaseAccessors/ArmorAccessor";
+import { OrnamentDataAccessor } from "./DatabaseAccessors/OrnamentAccessor";
+import { ItemDataAccessor } from "./DatabaseAccessors/ItemAccessor";
+import { SkillDataAccessor } from "./DatabaseAccessors/SkillDataAccessor";
 
  /**
  * 全てのデータベースアクセサー

@@ -1,3 +1,4 @@
+
 /**
  * @fileoverview 敵ターゲットの実装ファイル
  * @file EnemyTarget.ts
@@ -5,7 +6,7 @@
  * @license Copyright(c) 2019 Ishikawa Takayoshi All Rights Reserved.
  */
 
- import {Character} from './Character'
+import { Character } from "../character/Character";
 
 export class EnemyTarget{
     /**

@@ -5,9 +5,9 @@
  * @license Copyright(c) 2019 Ishikawa Takayoshi All Rights Reserved.
  */
 
-import {Character,CharacterType} from './Character'
-import {Party} from './Party';
-import {Enemy} from './Enemy';
+import { Character } from "../character/Character";
+import { Party } from "../party/Party";
+import { Enemy } from "../enemy/Enemy";
 
 /**
  * 戦場

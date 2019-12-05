@@ -1,3 +1,4 @@
+
 /**
  * @fileoverview キャラクタステータスの実装ファイル
  * @file CharacterSutatus.ts
@@ -5,8 +6,8 @@
  * @license Copyright(c) 2019 Ishikawa Takayoshi All Rights Reserved.
  */
 
-import {Status} from './Status'
-import {AbnormalConditionStatus} from './AbnormalConditionStatus'
+import { Status } from "./../status/Status";
+import { AbnormalConditionStatus } from "../status/AbnormalConditionStatus";
 
 /**
  * キャラクタステータス

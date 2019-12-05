@@ -9,7 +9,7 @@ import {Enemy} from './Enemy'
 import {EnemyBattleUpdater} from './EnemyBattleUpdater'
 import {EnemyBattleUpdateMode} from './EnemyBattleUpdate'
 import {EnemyTarget} from './EnemyTarget'
-import {Character} from './Character';
+import { Character } from './../character/Character';
 
 /**
  * 敵戦闘更新

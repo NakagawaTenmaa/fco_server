@@ -5,11 +5,11 @@
  * @license Copyright(c) 2019 Ishikawa Takayoshi All Rights Reserved.
  */
 
-import {CharacterStatus} from './CharacterStatus'
-import {LevelStatus} from './LevelStatus'
-import {PointStatus} from './PointStatus'
-import {AbnormalConditionStatus} from './AbnormalConditionStatus'
-import {JobData} from './DatabaseAccessors/JobDataAccessor'
+import {CharacterStatus} from './../character/CharacterStatus'
+import {LevelStatus} from './../status/LevelStatus'
+import {PointStatus} from './../status/PointStatus'
+import {AbnormalConditionStatus} from './../status/AbnormalConditionStatus'
+import {JobData} from './../DatabaseAccessors/JobDataAccessor'
 
 /**
  * プレイヤーステータス

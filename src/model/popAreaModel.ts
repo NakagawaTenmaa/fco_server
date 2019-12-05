@@ -1,5 +1,5 @@
 import { BaseModel } from "./modelBase";
-import { EnemyPopAreaData } from "../ishitaka/DatabaseAccessors/EnemyPopAreaDataAccessor";
+import { EnemyPopAreaData } from "../controller/DatabaseAccessors/EnemyPopAreaDataAccessor";
 
 /**
  * 敵のポップモデル

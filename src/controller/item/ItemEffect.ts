@@ -5,7 +5,7 @@
  * @license Copyright(c) 2019 Ishikawa Takayoshi All Rights Reserved.
  */
 
-import {CharacterEffect} from './CharacterEffect'
+import {CharacterEffect} from './../character/CharacterEffect'
 
 /**
  * アイテム効果
