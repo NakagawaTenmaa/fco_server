@@ -30,6 +30,7 @@ async function Root() {
         // 例外発生
         console.error("Has catched exception.");
         console.log("End execution.");
+        console.log(_errorMessage);
     }
 }
 

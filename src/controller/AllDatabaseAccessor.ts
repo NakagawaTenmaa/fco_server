@@ -36,7 +36,7 @@ export namespace AllDatabaseAccessor{
             OrnamentDataAccessor.instance.Load(),
             ItemDataAccessor.instance.Load(),
             SkillDataAccessor.instance.Load(),
-            DropItemDataAccessor.instance.Load()
+            //DropItemDataAccessor.instance.Load()
         ]);
 
         let isSuccess:boolean = true;

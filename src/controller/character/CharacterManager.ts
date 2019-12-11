@@ -15,8 +15,10 @@ import { Vector3 } from './../utility/Vector3';
 import { CommunicationData, SendEnemyData, PacketPlayer } from '../CommunicationData';
 import { Party } from '../party/Party';
 import { UserModel } from '../../model/userModel';
-import { EnemyDrop } from '../object/enemyDrop';
-import { EnemyDropModel } from '../../model/enemyDropModel';
+import { DropItemDataAccessor } from './../DatabaseAccessors/DropItemAccessor';
+// import { EnemyDrop } from '../object/enemyDrop';
+// import { EnemyDropModel } from '../../model/enemyDropModel';
+
 
 /**
  * キャラクタマネージャ
@@ -578,7 +580,7 @@ export class CharacterManager{
                     //const dropData: EnemyDrop = await EnemyDropModel.createItems(receiveCharacter.tribeId);
                     
                     data = new CommunicationData.SendData.EnemyDie();
-                    data.drop = 0;//dropData.randomItem();
+                    data.drop = DropItemDataAccessor.instance.randomDropId(1);
                     data.unique_id = receiveCharacter.id;
                 } else if(receiveCharacter instanceof Player){
                     // プレイヤーの時の処理
