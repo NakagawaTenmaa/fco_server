@@ -378,20 +378,13 @@ export namespace CommunicationData{
 			 * @memberof {SaveLoadStoC}
 			 */
 			public constructor(){
-				this.x = 0;
+				this.x = -210;
 				this.y = 0;
-				this.z = 0;
+				this.z = -210;
 				this.model_id = 0;
 			}
 		}
-/*
-        export class InitCharacter implements Send{
-            public readonly command: number = 212;
-            public static id: number = 212;
-            public user_id: number = 0;
-            public name: string = "";
-            constructor(){}
-        }*/
+
         /**
 		 * プレイシーンにいる他ユーザーの一覧
 		 * @export
@@ -1014,22 +1007,6 @@ export namespace CommunicationData{
             public user_id = 0;
         }
 
-
-        /**
-         * 読み込み完了
-         * @export
-         * @class LoadOK
-         * @implements {Receive}
-         */
-        /*
-        export class LoadOK implements Receive{
-            public readonly command: number = 211;
-            public static id = 211;
-            public user_id: number = 0;
-            constructor(){}
-        }
-        */
-
         /**
 		 * セーブデータの読み込み
 		 * @export
@@ -1369,14 +1346,6 @@ export namespace CommunicationData{
                     data.weapon = parse.weapon;
                     return data;
                 }
-                /*
-                case SendData.InitCharacter.id:
-                {
-                    const data: SendData.InitCharacter = new SendData.InitCharacter();
-                    data.user_id = parse.user_id - 0;
-                    data.name = parse.name;
-                    return data;
-                }*/
                 case SendData.LogoutCharacter.id:
                 {
                     const data: SendData.LogoutCharacter = new SendData.LogoutCharacter();
@@ -1481,13 +1450,7 @@ export namespace CommunicationData{
                     const data: ReceiveData.LogoutCharacter = new ReceiveData.LogoutCharacter();
                     data.user_id = parse.user_id - 0;
                     return data;
-                }/*
-                case ReceiveData.LoadOK.id:
-                {
-                    const data: ReceiveData.LoadOK = new ReceiveData.LoadOK();
-                    data.user_id = parse.user_id - 0;
-                    return data;
-                }*/
+                }
                 case ReceiveData.GetEnemy.id:
                 {
                     const data: ReceiveData.GetEnemy = new ReceiveData.GetEnemy();
