@@ -30,14 +30,17 @@ export class DropItemDataAccessor implements DatabaseAccessor {
     }
 
     public async Load() : Promise<boolean> {
-        //this.dataArray_ = await EnemyDropModel.createItemsTable();
-        this.dataArray_[0] = new DropItemData(
-            0,
-            [0, 0, 0, 0],
-        );
-
+        this.dataArray_ = await EnemyDropModel.createItemsTable();
         console.log('Loaded the drop item data.');
         return true;
     }
 
+    public randomDropId(_dropTable: number): number {
+        const min: number = 0 ;
+        const max: number = this.dataArray_.length;
+        const index: number = Math.floor(Math.random() * (max + 1 - min)) + min;
+        const data: DropItemData | undefined = this.dataArray_.find((_data: DropItemData) => { return _data.id === _dropTable });
+        if(data === undefined) return -1;
+        return data.items[index];
+    }
 }

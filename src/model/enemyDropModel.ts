@@ -24,11 +24,8 @@ export class EnemyDropModel extends BaseModel{
                 _data.id,
                 itemIds.id
             );
-            console.log(item.items);
-            console.log(item.id);
-
             itemTable.push(item);
-        })        
+        })
         return itemTable;
     }
 }
