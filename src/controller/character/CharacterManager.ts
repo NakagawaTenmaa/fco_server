@@ -298,9 +298,10 @@ export class CharacterManager{
      */
     public async LoadCharacter(_ws: WebSocket, _characterId: number): Promise<boolean>{
         const saveData = await UserMaster.findOne(_characterId);
+        console.log(saveData);
         const player: Player | undefined = this.playerArray_.find((_player: Player) => { return _player.id === _characterId; })
         if(typeof player === 'undefined') return false;
-        if(saveData === undefined){
+        if(saveData === undefined || typeof saveData === 'undefined'){
             player.transform.position.x = -210;
             player.transform.position.y = 0;
             player.transform.position.z = -210;
