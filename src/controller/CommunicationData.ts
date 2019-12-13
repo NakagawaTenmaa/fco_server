@@ -1484,6 +1484,7 @@ export namespace CommunicationData{
                 case ReceiveData.FindOfPlayerCtoS.id:{
 					const data:ReceiveData.FindOfPlayerCtoS = new ReceiveData.FindOfPlayerCtoS();
 					data.user_id = parse.user_id - 0;
+					data.target_id = parse.target_id - 0;
 					data.map_id = parse.map_id - 0;
 					return data;
                 }
