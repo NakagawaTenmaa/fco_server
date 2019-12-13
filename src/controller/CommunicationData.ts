@@ -1115,6 +1115,9 @@ export namespace CommunicationData{
 			 * @memberof {FindOfPlayerCtoS}
 			 */
 			public user_id : number;
+
+			public target_id: number;
+
 			/**
 			 * マップID
 			 * @public
@@ -1133,6 +1136,7 @@ export namespace CommunicationData{
 			public constructor(){
 				this.user_id = 0;
 				this.map_id = 0;
+				this.target_id = 0;
 			}
 		}
 

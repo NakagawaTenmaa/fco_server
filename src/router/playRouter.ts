@@ -80,7 +80,7 @@ export class playRouter{
                 // プレイヤーの検索
                 else if(data instanceof CommunicationData.ReceiveData.FindOfPlayerCtoS){
                     let res: CommunicationData.SendData.FindOfPlayerStoC = new CommunicationData.SendData.FindOfPlayerStoC();
-                    const player = this.characterManager.FindPlayer(data.user_id);
+                    const player = this.characterManager.FindPlayer(data.target_id);
                     if(player === undefined) return;
                     
                     res.user_id = player.id;
