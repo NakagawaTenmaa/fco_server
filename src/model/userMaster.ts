@@ -18,8 +18,9 @@ export class UserMaster extends BaseModel{
         let res: any;
         if(typeof check === 'undefined' || check === undefined) res = await this.create({id: id, model_id: modelId });
         else {
-            const sql = format('UPDATE `save_data` SET `x` = ? `y` = ? `z` = ? `model_id` = ? where `id` = ?',[x, y, z, id]);            
-            //const sql = format('INSERT INTO `save_data` (`id`,`x`, `y`, `z`) VALUES (?,?,?,?)ON DUPLICATE KEY UPDATE `x` = VALUES(?), `y` = VALUES(?), `z` = VALUES(?);',[id, x, y, z, x, y, z]);
+            const sql = format(
+                'UPDATE `save_data` SET `x` = ? `y` = ? `z` = ? `model_id` = ? where `id` = ?',
+                [x, y, z, modelId, id]);            
             res = await this.myQuery(sql);
         }
         return res;
