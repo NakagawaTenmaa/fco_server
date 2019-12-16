@@ -302,23 +302,19 @@ export class CharacterManager{
         const player: Player | undefined = this.playerArray_.find((_player: Player) => { return _player.id === _characterId; })
         if(typeof player === 'undefined') return false;
         if(saveData === undefined || typeof saveData === 'undefined'){
-            player.transform.position.x = -210;
-            player.transform.position.y = 0;
-            player.transform.position.z = -210;
+            player.transform.position = new Vector3(-210, 0, -210);
             player.modelId = 0;
         } else {
-            player.transform.position.x = saveData.x;
-            player.transform.position.y = saveData.y;
-            player.transform.position.z = saveData.z;
+            player.transform.position = new Vector3(saveData.x, saveData.y, saveData.z);
             player.modelId = saveData.model_id;
         }
         player.webSocket = _ws;
         
         let res: CommunicationData.SendData.SaveLoadStoC = new CommunicationData.SendData.SaveLoadStoC();
-        res.x = saveData.x;
-        res.y = saveData.y;
-        res.z = saveData.z;
-        res.model_id = saveData.model_id;
+        res.x = player.transform.position.x;
+        res.y = player.transform.position.y;
+        res.z = player.transform.position.z;
+        res.model_id = player.modelId;
         this.SendOne(_characterId, JSON.stringify(res));
         return true;
     }
