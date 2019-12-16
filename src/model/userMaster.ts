@@ -16,10 +16,10 @@ export class UserMaster extends BaseModel{
     public static async updateModel(id: number, x: number, y: number, z: number, modelId: number){
         const check = await this.findOne(id);
         let res: any;
-        if(typeof check === 'undefined' || check === undefined) res = await this.create({id: id, model_id: modelId });
+        if(typeof check === 'undefined' || check === undefined) res = await this.create({id: id, x: x, y: y , z: z, model_id: modelId });
         else {
             const sql = format(
-                'UPDATE `save_data` SET `x` = ? `y` = ? `z` = ? `model_id` = ? where `id` = ?',
+                'UPDATE `save_data` SET `x` = ?,`y` = ?,`z` = ?,`model_id` = ? where `id` = ?',
                 [x, y, z, modelId, id]);            
             res = await this.myQuery(sql);
         }
