@@ -297,10 +297,9 @@ export class CharacterManager{
      * @returns {void}
      */
     public async LoadCharacter(_ws: WebSocket, _characterId: number): Promise<boolean>{
-        const saveData = await UserMaster.findOne(_characterId);
-        console.log(saveData);
         const player: Player | undefined = this.playerArray_.find((_player: Player) => { return _player.id === _characterId; })
         if(typeof player === 'undefined') return false;
+        const saveData = await UserMaster.findOne(player.dbId);
         if(saveData === undefined || typeof saveData === 'undefined'){
             player.transform.position = new Vector3(-210, 0, -210);
             player.modelId = 0;
@@ -393,7 +392,7 @@ export class CharacterManager{
         const player = this.FindPlayer(_characterId);
         if(typeof player === 'undefined') return false;
         UserModel.changeStatus(player.dbId, 0);
-        await UserMaster.updateModel(_characterId, player.transform.position.x, player.transform.position.y, player.transform.position.z, 0);
+        await UserMaster.updateModel(player.dbId, player.transform.position.x, player.transform.position.y, player.transform.position.z, 0);
         this.RemoveCharacter(_characterId);
     }
 
