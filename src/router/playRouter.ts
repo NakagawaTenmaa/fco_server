@@ -3,9 +3,7 @@ import { UserModel } from '../model/userModel';
 import WebSocket = require('ws');
 import { CharacterManager } from '../controller/character/CharacterManager';
 import { CommunicationData } from '../controller/CommunicationData';
-
-
-
+import { Player } from '../controller/player/Player';
 
 export class playRouter{
     wss: Server;
@@ -64,6 +62,13 @@ export class playRouter{
                 // セーブデータの読み込み
                 else if(data instanceof CommunicationData.ReceiveData.SaveLoadCtoS){
                     await this.characterManager.LoadCharacter(ws,data.user_id);
+                }
+                // モデルIDの設定
+                else if(data instanceof CommunicationData.ReceiveData.SaveModelType){
+                    let player: Player | undefined = this.characterManager.FindPlayer(data.user_id);
+                    if(player === undefined) return;
+                    player.modelId = data.model_id;
+                    console.log("model id setting user: " + data.user_id.toString() + "/ modelType: " + data.model_id.toString());
                 }
                 // 読み込み完了
                 else if(data instanceof CommunicationData.ReceiveData.LodingOK){

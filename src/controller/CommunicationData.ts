@@ -1283,6 +1283,59 @@ export namespace CommunicationData{
 			}
 		}
 
+				/**
+		 * モデルの保存
+		 * @export
+		 * @class SaveModelType
+		 * @implements {Receive}
+		 */
+		export class SaveModelType implements Receive{
+			/**
+			 * コマンドID
+			 * @public
+			 * @static 
+			 * @readonly 
+			 * @type {number}
+			 * @memberof {SaveModelType}
+			 */
+			public static readonly id : number = 713;
+
+			/**
+			 * コマンド識別子
+			 * @public
+			 * @readonly 
+			 * @type {number}
+			 * @memberof {SaveModelType}
+			 */
+			public readonly command : number = SaveModelType.id;
+			/**
+			 * ユーザーID
+			 * @public
+			 * @type {number}
+			 * @memberof {SaveModelType}
+			 */
+			public user_id : number;
+			/**
+			 * モデルID
+			 * @public
+			 * @type {number}
+			 * @memberof {SaveModelType}
+			 */
+			public model_id : number;
+
+
+			/**
+			 * デフォルトコンストラクタ
+			 * @public
+			 * @constructor
+			 * @memberof {SaveModelType}
+			 */
+			public constructor(){
+				this.user_id = 0;
+				this.model_id = 0;
+			}
+		}
+
         export type AllTypes = 
         CharacterTransform | 
         PlayerStatus | 
@@ -1293,7 +1346,8 @@ export namespace CommunicationData{
         Attack | 
         UserHit |
         LodingOK |
-        SaveLoadCtoS;
+		SaveLoadCtoS | 
+		SaveModelType;
     }
 
     export type AllTypes = SendData.AllTypes | ReceiveData.AllTypes;
@@ -1487,7 +1541,14 @@ export namespace CommunicationData{
 					data.target_id = parse.target_id - 0;
 					data.map_id = parse.map_id - 0;
 					return data;
-                }
+				}
+				case ReceiveData.SaveModelType.id:
+				{
+					const data:ReceiveData.SaveModelType = new ReceiveData.SaveModelType();
+					data.user_id = parse.user_id - 0;
+					data.model_id = parse.model_id - 0;
+					return data;
+				}
             }
             console.error("Convert Error");
             return undefined;
