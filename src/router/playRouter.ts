@@ -34,7 +34,7 @@ export class playRouter{
         this.wss.on('connection', (ws: WebSocket) => {
             console.log("client_connection");
 
-            ws.on('message', (msg: WebSocket.Data) => {
+            ws.on('message', async (msg: WebSocket.Data) => {
                 //console.log('msg : ' + msg);
                 const data = CommunicationData.Converter.Convert(msg.toString());
   
@@ -59,11 +59,11 @@ export class playRouter{
                 }
                 // セーブデータの読み込み
                 else if(data instanceof CommunicationData.ReceiveData.LoadCharacter){
-                    this.characterManager.LoadCharacter(ws,data.user_id);
+                    await this.characterManager.LoadCharacter(ws,data.user_id);
                 }
                 // セーブデータの読み込み
                 else if(data instanceof CommunicationData.ReceiveData.SaveLoadCtoS){
-                    this.characterManager.LoadCharacter(ws,data.user_id);
+                    await this.characterManager.LoadCharacter(ws,data.user_id);
                 }
                 // 読み込み完了
                 else if(data instanceof CommunicationData.ReceiveData.LodingOK){
@@ -75,7 +75,7 @@ export class playRouter{
                     let sendData: CommunicationData.SendData.LogoutCharacter = new CommunicationData.SendData.LogoutCharacter();
                     sendData.user_id = data.user_id;
                     this.characterManager.SendAll(JSON.stringify(sendData));
-                    this.characterManager.PlayerLogout(data.user_id);
+                    await this.characterManager.PlayerLogout(data.user_id);
                 } 
                 // プレイヤーの検索
                 else if(data instanceof CommunicationData.ReceiveData.FindOfPlayerCtoS){

@@ -21,6 +21,7 @@ import {SkillEffectManager} from './../skill/SkillEffectManager'
 import {SkillEffect} from './../skill/SkillEffect'
 import {Battlefield} from './../battle/Battlefield'
 import {BattlefieldManager} from './../battle/BattlefieldManager'
+import { UserMaster } from '../../model/userMaster'
 
 /**
  * プレイヤー
@@ -590,6 +591,7 @@ export class Player implements Character{
      */
     public LoadSaveData(): boolean{
         // TODO: Modelから取得するように変更 いったんデバッグ用で作作成
+        
         const model: any = { 
             position :{ x: 0,y: 0, z:0 },
             weapon : { head: 0, hand: 0 },

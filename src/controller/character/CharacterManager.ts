@@ -16,6 +16,7 @@ import { CommunicationData, SendEnemyData, PacketPlayer } from '../Communication
 import { Party } from '../party/Party';
 import { UserModel } from '../../model/userModel';
 import { DropItemDataAccessor } from './../DatabaseAccessors/DropItemAccessor';
+import { UserMaster } from '../../model/userMaster';
 // import { EnemyDrop } from '../object/enemyDrop';
 // import { EnemyDropModel } from '../../model/enemyDropModel';
 
@@ -295,13 +296,25 @@ export class CharacterManager{
      * @param {WebSocket} _ws ウェブソケット
      * @returns {void}
      */
-    public LoadCharacter(_ws: WebSocket, _characterId: number): boolean{
-        // ソケットの設定
+    public async LoadCharacter(_ws: WebSocket, _characterId: number): Promise<boolean>{
+        const saveData = await UserMaster.findOne(_characterId);
+        console.log(saveData);
         const player: Player | undefined = this.playerArray_.find((_player: Player) => { return _player.id === _characterId; })
         if(typeof player === 'undefined') return false;
+        if(saveData === undefined || typeof saveData === 'undefined'){
+            player.transform.position = new Vector3(-210, 0, -210);
+            player.modelId = 0;
+        } else {
+            player.transform.position = new Vector3(saveData.x, saveData.y, saveData.z);
+            player.modelId = saveData.model_id;
+        }
         player.webSocket = _ws;
-        //player.LoadSaveData();
+        
         let res: CommunicationData.SendData.SaveLoadStoC = new CommunicationData.SendData.SaveLoadStoC();
+        res.x = player.transform.position.x;
+        res.y = player.transform.position.y;
+        res.z = player.transform.position.z;
+        res.model_id = player.modelId;
         this.SendOne(_characterId, JSON.stringify(res));
         return true;
     }
@@ -376,10 +389,11 @@ export class CharacterManager{
      * @param {number} _characterId
      * @memberof CharacterManager
      */
-    public PlayerLogout(_characterId: number){
+    public async PlayerLogout(_characterId: number){
         const player = this.FindPlayer(_characterId);
         if(typeof player === 'undefined') return false;
         UserModel.changeStatus(player.dbId, 0);
+        await UserMaster.updateModel(_characterId, player.transform.position.x, player.transform.position.y, player.transform.position.z, 0);
         this.RemoveCharacter(_characterId);
     }
 
