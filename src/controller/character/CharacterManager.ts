@@ -302,7 +302,6 @@ export class CharacterManager{
         const saveData = await UserMaster.findOne(player.dbId);
         if(saveData === undefined || typeof saveData === 'undefined'){
             player.transform.position = new Vector3(-210, 0, -210);
-            player.modelId = 0;
         } else {
             player.transform.position = new Vector3(saveData.x, saveData.y, saveData.z);
             player.modelId = saveData.model_id;
