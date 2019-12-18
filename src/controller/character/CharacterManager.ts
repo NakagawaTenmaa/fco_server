@@ -392,7 +392,7 @@ export class CharacterManager{
         const player = this.FindPlayer(_characterId);
         if(typeof player === 'undefined') return false;
         UserModel.changeStatus(player.dbId, 0);
-        await UserMaster.updateModel(player.dbId, player.transform.position.x, player.transform.position.y, player.transform.position.z, 0);
+        await UserMaster.updateModel(player.dbId, player.transform.position.x, player.transform.position.y, player.transform.position.z, player.modelId);
         this.RemoveCharacter(_characterId);
     }
 
