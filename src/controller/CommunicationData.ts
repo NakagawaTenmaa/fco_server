@@ -160,10 +160,10 @@ export namespace CommunicationData{
 
             /**
              * キャラクターのデータ
-             * @type {StatusData}
+             * @type {CharctorSatusData}
              * @memberof SimpleDisplayOfCharacter
              */
-            public status: Array<StatusData> = [];
+            public status: Array<CharctorSatusData> = [];
 
             /**
              * デフォルトコンストラクタ
@@ -178,9 +178,9 @@ export namespace CommunicationData{
 
         /**
          * 状態共有用のデータ
-         * @class StatusData
+         * @class CharctorSatusData
          */
-        export class StatusData{
+        export class CharctorSatusData{
             // キャラのID
             public charcter_id: number;
             // ヒットポイント

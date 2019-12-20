@@ -509,7 +509,7 @@ export class CharacterManager{
         
         let data: CommunicationData.SendData.SimpleDisplayOfCharacter = new CommunicationData.SendData.SimpleDisplayOfCharacter();
         if(_data.type === 0){
-            const status: CommunicationData.SendData.StatusData = new CommunicationData.SendData.StatusData(); 
+            const status: CommunicationData.SendData.CharctorSatusData = new CommunicationData.SendData.CharctorSatusData(); 
             status.charcter_id = _data.user_id;
             status.hp = player.status.hitPoint;
             status.mp = player.status.magicPoint;
