@@ -182,16 +182,22 @@ export namespace CommunicationData{
          */
         export class CharctorSatusData{
             // キャラのID
-            public charcter_id: number;
+			public charcter_id: number;
+			// 最大ヒットポイント
+			public max_hp: number;
             // ヒットポイント
-            public hp: number;
+			public hp: number;
+			// 最大マジックポイント
+			public max_mp: number;
             // マジックポイント
             public mp: number;
             // 状態異常
             public status: number;
             constructor(){
-                this.charcter_id = 0;
-                this.hp = 0;
+				this.charcter_id = 0;
+				this.max_hp = 0;
+				this.hp = 0;
+				this.max_mp = 0;
                 this.mp = 0;
                 this.status = 0;
             }

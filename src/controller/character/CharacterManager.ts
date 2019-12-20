@@ -511,7 +511,9 @@ export class CharacterManager{
         if(_data.type === 0){
             const status: CommunicationData.SendData.CharctorSatusData = new CommunicationData.SendData.CharctorSatusData(); 
             status.charcter_id = _data.user_id;
+            status.max_hp = player.status.maxHitPoint;
             status.hp = player.status.hitPoint;
+            status.max_mp = player.status.maxMagicPoint;
             status.mp = player.status.magicPoint;
             status.status = 0;
             data.status.push(status);
