@@ -296,6 +296,7 @@ export class Player implements Character{
         this.playerStatus_ = new PlayerStatus();
         this.name_ = "";
         this.modelId_ = 0;
+        this.playerStatus_.levelStatus.ChangeLevel(1);
     }
 
 
