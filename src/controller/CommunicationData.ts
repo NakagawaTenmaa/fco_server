@@ -160,10 +160,10 @@ export namespace CommunicationData{
 
             /**
              * キャラクターのデータ
-             * @type {StatusData}
+             * @type {CharctorSatusData}
              * @memberof SimpleDisplayOfCharacter
              */
-            public status: Array<StatusData> = [];
+            public status: Array<CharctorSatusData> = [];
 
             /**
              * デフォルトコンストラクタ
@@ -178,9 +178,9 @@ export namespace CommunicationData{
 
         /**
          * 状態共有用のデータ
-         * @class StatusData
+         * @class CharctorSatusData
          */
-        export class StatusData{
+        export class CharctorSatusData{
             // キャラのID
             public charcter_id: number;
             // ヒットポイント
@@ -935,6 +935,12 @@ export namespace CommunicationData{
 			}
 		}
 
+		export class LoadingSkillMaster {
+			public skills: Array<SkillMasterData>;
+			constructor(){
+				this.skills = [];
+			}
+		}
 
         export type AllTypes = 
         CharacterTransform |
@@ -1590,3 +1596,24 @@ export class PacketPlayer{
 		this.name = _name;
 	}
 }
+
+class SkillMasterData{
+	public id: number;
+	public icon: number;
+	public animation: number;
+	public effect: number;
+	public comment: string;
+	public parent: number;
+	public max_level: number;
+
+	constructor(_id: number, _icon: number, _animation: number, _effect: number,
+		_comment: string, _parent: number, _max_level: number){
+			this.id = _id;
+			this.icon = _id;
+			this.animation = _animation;
+			this.effect = _effect;
+			this.comment = _comment;
+			this.parent = _parent;
+			this.max_level = _max_level;
+		}
+}	
