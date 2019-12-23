@@ -367,21 +367,6 @@ export class EnemyPopAreaDataAccessor implements DatabaseAccessor{
      * @memberof EnemyPopAreaDataAccessor
      */
     public async Load() : Promise<boolean> {
-        /*
-        // テスト用データ
-        const testArea:EnemyPopAreaData = new EnemyPopAreaData(
-            0,
-            -75.0, 0.1, -130.0,
-            7.0,
-            10.0,
-            5,
-            0, 5,
-            -1, 0,
-            -1, 0
-        );
-
-        this.dataArray_[0] = testArea;
-        */
         this.dataArray_ = await PopAreaModel.getPopArea();
         // TODO:データベースから情報を読み取る
         console.log('Loaded the enemy pop area data.');

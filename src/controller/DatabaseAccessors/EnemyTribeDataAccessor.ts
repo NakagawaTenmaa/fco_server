@@ -370,22 +370,6 @@ export class EnemyTribeDataAccessor implements DatabaseAccessor{
      * @memberof EnemyTribeDataAccessor
      */
     public async Load() : Promise<boolean> {
-  /*
-        // テスト用データ
-        const testTribe:EnemyTribeData = new EnemyTribeData(
-            'test',
-            1,
-            0,
-            0,
-            30, 50,
-            50, 70,
-            20, 30,
-            50,
-            50
-        );
-
-        this.dataArray_[0] = testTribe;
-*/
         this.dataArray_ = await EnemyModel.getEnemyList();
         // TODO:データベースから情報を読み取る
         console.log('Loaded the enemy tribe data.');
