@@ -941,7 +941,7 @@ export namespace CommunicationData{
 			}
 		}
 
-		export class LoadingSkillMaster {
+		export class LoadingSkillMaster implements Send {
 			public static readonly id : number = 705;
 			public readonly command : number = LoadingSkillMaster.id;
 			public version: number;
@@ -949,6 +949,18 @@ export namespace CommunicationData{
 			constructor(){
 				this.version = 0;
 				this.skills = [];
+			}
+		}
+
+		export class LoadingAccessoryMaster implements Send {
+			public static readonly id : number = 709;
+			public readonly command : number = LoadingAccessoryMaster.id;
+			public version : number;
+            public accessorys : Array<AccessoryMasterData>;
+
+			constructor(){
+				this.version = 0;
+				this.accessorys = [];
 			}
 		}
 
@@ -970,7 +982,8 @@ export namespace CommunicationData{
         OtherPlayerList |
 		FindOfPlayerStoC | 
 		NewOtherUser | 
-		LoadingSkillMaster;
+		LoadingSkillMaster | 
+		LoadingAccessoryMaster;
     }
     /**
      * 受信データ
@@ -1355,7 +1368,12 @@ export namespace CommunicationData{
 
 		export class LoadingSkillMaster implements Receive{
 			public static readonly id : number = 703;
-			public readonly command : number = SaveModelType.id;
+			public readonly command : number = LoadingSkillMaster.id;
+		}
+
+		export class LoadingAccessoryMaster implements Receive {
+			public static readonly id : number = 708;
+			public readonly command : number = LoadingAccessoryMaster.id;
 		}
 
         export type AllTypes = 
@@ -1370,7 +1388,8 @@ export namespace CommunicationData{
         LodingOK |
 		SaveLoadCtoS | 
 		SaveModelType | 
-		LoadingSkillMaster;
+		LoadingSkillMaster |
+		LoadingAccessoryMaster;
     }
 
     export type AllTypes = SendData.AllTypes | ReceiveData.AllTypes;
@@ -1499,7 +1518,12 @@ export namespace CommunicationData{
 					data.version = parse.version;
 					return data;
 				}
-
+				case SendData.LoadingAccessoryMaster.id:{
+					const data : SendData.LoadingAccessoryMaster = new SendData.LoadingAccessoryMaster();
+					data.accessorys = parse.accessorys;
+					data.version = parse.version;
+					return data;
+				}
 
 
                 case ReceiveData.CharacterTransform.id:
@@ -1583,6 +1607,11 @@ export namespace CommunicationData{
 					const data : ReceiveData.LoadingSkillMaster = new ReceiveData.LoadingSkillMaster();
 					return data;
 				}
+				case ReceiveData.LoadingAccessoryMaster.id:
+				{
+					const data : ReceiveData.LoadingAccessoryMaster = new ReceiveData.LoadingAccessoryMaster();
+					return data;
+				}
             }
             console.error("Convert Error");
             return undefined;
@@ -1625,7 +1654,7 @@ export class PacketPlayer{
 	}
 }
 
-class SkillMasterData{
+export class SkillMasterData{
 	public id						: number; //スキルID
 	public icon_id					: number; //アイコンID
 	public animation_id				: number; //アニメーションID
@@ -1662,3 +1691,45 @@ class SkillMasterData{
 			this.range = _range;
 		}
 }	
+
+export class AccessoryMasterData {
+	public id : number;	
+	public category : number;
+	public name : string;
+	public level : number;
+	public comment : string;
+
+	public str : number;
+	public vit : number;
+	public mmd : number;
+	public dex : number;
+	public agi : number;
+
+	public image : string;
+
+	constructor(
+		_id : number, 
+		_category : number, 
+		_name : string,
+		_level : number,
+		_comment : string,
+		_str : number,
+		_vit : number,
+		_mmd : number,
+		_dex : number,
+		_agi : number,
+		_image : string
+		){
+			this.id = _id;
+			this.category = _category;
+			this.name = _name;
+			this.level = _level;
+			this.comment = _comment;
+			this.str = _str;
+			this.vit = _vit;
+			this.mmd = _mmd;
+			this.dex = _dex;
+			this.agi = _agi;
+			this.image = _image;
+	}
+}
