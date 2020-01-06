@@ -1374,6 +1374,12 @@ export namespace CommunicationData{
 		export class LoadingAccessoryMaster implements Receive {
 			public static readonly id : number = 708;
 			public readonly command : number = LoadingAccessoryMaster.id;
+
+			public user_id : number;
+
+			constructor(){
+				this.user_id = 0;
+			}
 		}
 
         export type AllTypes = 

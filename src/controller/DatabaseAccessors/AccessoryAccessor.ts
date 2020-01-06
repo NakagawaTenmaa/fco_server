@@ -1,4 +1,5 @@
 import {DatabaseAccessor} from './DatabaseAccessor'
+import { AccessoryModel } from '../../model/accessoryModel';
 
 export class AccessoryData{
     public id : number;	
@@ -134,6 +135,10 @@ export class AccessoryDataAccessor implements DatabaseAccessor{
         ).shift();
     }
 
+    public getAll() : AccessoryData[]{
+        return this.dataArray_;
+    }
+
     /**
      * データを読み込む [非同期]
      * @public
@@ -141,6 +146,7 @@ export class AccessoryDataAccessor implements DatabaseAccessor{
      * @memberof ArmorDataAccessor
      */
     public async Load() : Promise<boolean> {
+        /*
         // テスト用データ
         this.dataArray_[0] = new AccessoryData(
             0,
@@ -150,10 +156,11 @@ export class AccessoryDataAccessor implements DatabaseAccessor{
             '',
             0,0,0,0,0,0,
             'image'
-        );
+        );*/
 
         // TODO:データベースから情報を読み取る
-        
+        this.dataArray_ = await AccessoryModel.getAccessoryList();
+
         console.log('Loaded the accessory data.');
         return true;
     }
