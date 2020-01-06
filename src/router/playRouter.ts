@@ -100,6 +100,10 @@ export class playRouter{
 
 
                 // マスターデータの送信
+                else if(data instanceof CommunicationData.ReceiveData.LoadingAccessoryMaster){
+                    let res : CommunicationData.SendData.LoadingAccessoryMaster = new CommunicationData.SendData.LoadingAccessoryMaster();
+
+                }
             })
         })
     }
