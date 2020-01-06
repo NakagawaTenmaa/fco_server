@@ -1374,6 +1374,12 @@ export namespace CommunicationData{
 		export class LoadingAccessoryMaster implements Receive {
 			public static readonly id : number = 708;
 			public readonly command : number = LoadingAccessoryMaster.id;
+
+			public user_id : number;
+
+			constructor(){
+				this.user_id = 0;
+			}
 		}
 
         export type AllTypes = 
@@ -1701,6 +1707,7 @@ export class AccessoryMasterData {
 
 	public str : number;
 	public vit : number;
+	public int : number;
 	public mmd : number;
 	public dex : number;
 	public agi : number;
@@ -1715,6 +1722,7 @@ export class AccessoryMasterData {
 		_comment : string,
 		_str : number,
 		_vit : number,
+		_int : number,
 		_mmd : number,
 		_dex : number,
 		_agi : number,
@@ -1727,6 +1735,7 @@ export class AccessoryMasterData {
 			this.comment = _comment;
 			this.str = _str;
 			this.vit = _vit;
+			this.int = _int;
 			this.mmd = _mmd;
 			this.dex = _dex;
 			this.agi = _agi;

@@ -4,6 +4,7 @@ import WebSocket = require('ws');
 import { CharacterManager } from '../controller/character/CharacterManager';
 import { CommunicationData } from '../controller/CommunicationData';
 import { Player } from '../controller/player/Player';
+import { AccessoryDataAccessor } from '../controller/DatabaseAccessors/AccessoryAccessor';
 
 export class playRouter{
     wss: Server;
@@ -100,6 +101,12 @@ export class playRouter{
 
 
                 // マスターデータの送信
+                else if(data instanceof CommunicationData.ReceiveData.LoadingAccessoryMaster){
+                    let res : CommunicationData.SendData.LoadingAccessoryMaster = new CommunicationData.SendData.LoadingAccessoryMaster();
+                    res.accessorys = AccessoryDataAccessor.instance.getAll();
+                    res.version = 1;
+                    this.characterManager.SendOne(data.user_id, JSON.stringify(res));
+                }
             })
         })
     }
