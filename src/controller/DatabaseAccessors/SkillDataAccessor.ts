@@ -30,6 +30,10 @@ export class SkillData{
     public get name() : string {
         return this.name_;
     }
+
+    private id_ : number;
+    public get id() : number { return this.id_; }
+
     /**
      * スキルタイプ
      * @private
@@ -274,6 +278,7 @@ export class SkillData{
      * @memberof SkillData
      */
     public constructor(
+        _id: number,
         _name : string,
         _type : number,
         _castTime : number,
@@ -289,6 +294,7 @@ export class SkillData{
         _effectRangeType : number,
         _effectRangeScale : number
     ){
+        this.id_ = _id;
         this.name_ = _name;
         this.type_ = _type;
         this.castTime_ = _castTime;
@@ -397,10 +403,20 @@ export class SkillDataAccessor implements DatabaseAccessor{
      * @memberof SkillDataAccessor
      */
     public Find(_key:number|string) : SkillData|undefined {
+        // number型
         if(typeof(_key) === 'number'){
-            return this.dataArray_[_key];
+            return this.dataArray_.filter(
+                function(
+                    _data : SkillData,
+                    _id : number,
+                    _array : SkillData[]
+                ) : boolean {
+                    return (_key === _data.id);
+                }
+            ).shift();
         }
 
+        // string型
         return this.dataArray_.filter(
             function(
                 _data : SkillData,
@@ -421,6 +437,7 @@ export class SkillDataAccessor implements DatabaseAccessor{
     public async Load() : Promise<boolean> {
         // テスト用データ
         this.dataArray_[0] = new SkillData(
+            0,
             '通常攻撃',
             0,
             500.0,

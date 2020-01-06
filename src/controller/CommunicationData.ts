@@ -941,10 +941,26 @@ export namespace CommunicationData{
 			}
 		}
 
-		export class LoadingSkillMaster {
+		export class LoadingSkillMaster implements Send {
+			public static readonly id : number = 705;
+			public readonly command : number = LoadingSkillMaster.id;
+			public version: number;
 			public skills: Array<SkillMasterData>;
 			constructor(){
+				this.version = 0;
 				this.skills = [];
+			}
+		}
+
+		export class LoadingAccessoryMaster implements Send {
+			public static readonly id : number = 709;
+			public readonly command : number = LoadingAccessoryMaster.id;
+			public version : number;
+            public accessorys : Array<AccessoryMasterData>;
+
+			constructor(){
+				this.version = 0;
+				this.accessorys = [];
 			}
 		}
 
@@ -965,7 +981,9 @@ export namespace CommunicationData{
         OtherPlayerUseSkill |
         OtherPlayerList |
 		FindOfPlayerStoC | 
-		NewOtherUser;
+		NewOtherUser | 
+		LoadingSkillMaster | 
+		LoadingAccessoryMaster;
     }
     /**
      * 受信データ
@@ -1348,6 +1366,16 @@ export namespace CommunicationData{
 			}
 		}
 
+		export class LoadingSkillMaster implements Receive{
+			public static readonly id : number = 703;
+			public readonly command : number = LoadingSkillMaster.id;
+		}
+
+		export class LoadingAccessoryMaster implements Receive {
+			public static readonly id : number = 708;
+			public readonly command : number = LoadingAccessoryMaster.id;
+		}
+
         export type AllTypes = 
         CharacterTransform | 
         PlayerStatus | 
@@ -1359,7 +1387,9 @@ export namespace CommunicationData{
         UserHit |
         LodingOK |
 		SaveLoadCtoS | 
-		SaveModelType;
+		SaveModelType | 
+		LoadingSkillMaster |
+		LoadingAccessoryMaster;
     }
 
     export type AllTypes = SendData.AllTypes | ReceiveData.AllTypes;
@@ -1481,8 +1511,19 @@ export namespace CommunicationData{
 					data.z = parse.z - 0;
 					data.name = parse.name;
 					return data;
-                }
-
+				}
+				case SendData.LoadingSkillMaster.id:{
+					const data : SendData.LoadingSkillMaster = new SendData.LoadingSkillMaster();
+					data.skills = parse.skills;
+					data.version = parse.version;
+					return data;
+				}
+				case SendData.LoadingAccessoryMaster.id:{
+					const data : SendData.LoadingAccessoryMaster = new SendData.LoadingAccessoryMaster();
+					data.accessorys = parse.accessorys;
+					data.version = parse.version;
+					return data;
+				}
 
 
                 case ReceiveData.CharacterTransform.id:
@@ -1561,6 +1602,16 @@ export namespace CommunicationData{
 					data.model_id = parse.model_id - 0;
 					return data;
 				}
+				case ReceiveData.LoadingSkillMaster.id:
+				{
+					const data : ReceiveData.LoadingSkillMaster = new ReceiveData.LoadingSkillMaster();
+					return data;
+				}
+				case ReceiveData.LoadingAccessoryMaster.id:
+				{
+					const data : ReceiveData.LoadingAccessoryMaster = new ReceiveData.LoadingAccessoryMaster();
+					return data;
+				}
             }
             console.error("Convert Error");
             return undefined;
@@ -1603,23 +1654,82 @@ export class PacketPlayer{
 	}
 }
 
-class SkillMasterData{
-	public id: number;
-	public icon: number;
-	public animation: number;
-	public effect: number;
-	public comment: string;
-	public parent: number;
-	public max_level: number;
+export class SkillMasterData{
+	public id						: number; //スキルID
+	public icon_id					: number; //アイコンID
+	public animation_id				: number; //アニメーションID
+	public effect_id				: number; //エフェクトID
+	public comment					: string; //効果説明文
+	public parent_id				: number; //親スキルID
+	public max_level				: number; //最大レベル
+	public recast_time				: number; //リキャスト
+	public consumption_hit_point	: number; //消費HP
+	public consumption_magic_point	: number; //消費MP
+	public power					: number; //威力
+	public target					: number; //効果ターゲット
+	public range					: number; //効果範囲
+	public target_type				: number; //効果範囲のタイプ
 
-	constructor(_id: number, _icon: number, _animation: number, _effect: number,
-		_comment: string, _parent: number, _max_level: number){
+
+	constructor(_id: number, _cast_time: number, _recast_time: number, _icon_id: number, _animation_id: number, 
+		_consumption_hit_point: number, _consumption_magic_point: number, 
+		_power: number, _effect_id: number, _target: number, _range: number, _target_type: number,
+		_comment: string, _parent_id: number, _max_level: number){
 			this.id = _id;
-			this.icon = _id;
-			this.animation = _animation;
-			this.effect = _effect;
+			this.icon_id = _icon_id;
+			this.animation_id = _animation_id;
+			this.effect_id = _effect_id;
 			this.comment = _comment;
-			this.parent = _parent;
+			this.parent_id = _parent_id;
 			this.max_level = _max_level;
+			this.recast_time = _recast_time;
+			this.consumption_hit_point = _consumption_hit_point;
+			this.consumption_magic_point = _consumption_magic_point;
+			this.power = _power;
+			this.target = _target;
+			this.target_type = _target_type;
+			this.range = _range;
 		}
 }	
+
+export class AccessoryMasterData {
+	public id : number;	
+	public category : number;
+	public name : string;
+	public level : number;
+	public comment : string;
+
+	public str : number;
+	public vit : number;
+	public mmd : number;
+	public dex : number;
+	public agi : number;
+
+	public image : string;
+
+	constructor(
+		_id : number, 
+		_category : number, 
+		_name : string,
+		_level : number,
+		_comment : string,
+		_str : number,
+		_vit : number,
+		_mmd : number,
+		_dex : number,
+		_agi : number,
+		_image : string
+		){
+			this.id = _id;
+			this.category = _category;
+			this.name = _name;
+			this.level = _level;
+			this.comment = _comment;
+			this.str = _str;
+			this.vit = _vit;
+			this.mmd = _mmd;
+			this.dex = _dex;
+			this.agi = _agi;
+			this.image = _image;
+	}
+}

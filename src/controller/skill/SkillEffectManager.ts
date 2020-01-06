@@ -78,7 +78,7 @@ export class SkillEffectManager{
             _id : number,
             _array : SkillData[]
         ) : void {
-            effectArray[_id] = new SkillEffect(_data);
+            effectArray[_data.id] = new SkillEffect(_data);
         });
 
         this.effectArray_ = effectArray;

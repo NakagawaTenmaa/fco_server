@@ -10,6 +10,7 @@ export class UserModel extends BaseModel{
         let skills: Array<SkillData> = []
         data.forEach((_skill: any) => {
             skills.push(new SkillData(
+                _skill.id,
                 _skill.name,
                 _skill.type,
                 _skill.castTime,
