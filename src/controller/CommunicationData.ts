@@ -942,7 +942,7 @@ export namespace CommunicationData{
 		}
 
 		export class LoadingSkillMaster {
-			public static readonly id : number = 703;
+			public static readonly id : number = 705;
 			public readonly command : number = LoadingSkillMaster.id;
 			public version: number;
 			public skills: Array<SkillMasterData>;
@@ -1353,6 +1353,11 @@ export namespace CommunicationData{
 			}
 		}
 
+		export class LoadingSkillMaster implements Receive{
+			public static readonly id : number = 703;
+			public readonly command : number = SaveModelType.id;
+		}
+
         export type AllTypes = 
         CharacterTransform | 
         PlayerStatus | 
@@ -1364,7 +1369,8 @@ export namespace CommunicationData{
         UserHit |
         LodingOK |
 		SaveLoadCtoS | 
-		SaveModelType;
+		SaveModelType | 
+		LoadingSkillMaster;
     }
 
     export type AllTypes = SendData.AllTypes | ReceiveData.AllTypes;
@@ -1570,6 +1576,11 @@ export namespace CommunicationData{
 					const data:ReceiveData.SaveModelType = new ReceiveData.SaveModelType();
 					data.user_id = parse.user_id - 0;
 					data.model_id = parse.model_id - 0;
+					return data;
+				}
+				case ReceiveData.LoadingSkillMaster.id:
+				{
+					const data : ReceiveData.LoadingSkillMaster = new ReceiveData.LoadingSkillMaster();
 					return data;
 				}
             }
