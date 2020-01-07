@@ -97,15 +97,39 @@ export class playRouter{
                     res.name = player.name;
                     this.characterManager.SendOne(data.user_id, JSON.stringify(res));
                 }
+                // TODO:アクセサリーの変更
+                else if(data instanceof CommunicationData.ReceiveData.AccessoryChange){
 
+                }
+                // TODO:マップの移動
+                else if(data instanceof CommunicationData.ReceiveData.MoveingMap){
+                    let res : CommunicationData.SendData.MoveingMapOk = new CommunicationData.SendData.MoveingMapOk();
+                }
+                // TODO:報酬選択
+                else if(data instanceof CommunicationData.ReceiveData.SelectReward){
+                    let res : CommunicationData.SendData.SelectRewardOk = new CommunicationData.SendData.SelectRewardOk();
+                }
+                // TODO:永久インベ取得
+                else if(data instanceof CommunicationData.ReceiveData.GetInventory){
+                    let res : CommunicationData.SendData.InventoryList = new CommunicationData.SendData.InventoryList();
+                }
+                // TODO:ドロップインベの取得
+                else if(data instanceof CommunicationData.ReceiveData.GetDropInventory){
+                    let res : CommunicationData.SendData.DropInventoryList = new CommunicationData.SendData.DropInventoryList();
+                }
 
 
                 // マスターデータの送信
+                // アクセサリー
                 else if(data instanceof CommunicationData.ReceiveData.LoadingAccessoryMaster){
                     let res : CommunicationData.SendData.LoadingAccessoryMaster = new CommunicationData.SendData.LoadingAccessoryMaster();
                     res.accessorys = AccessoryDataAccessor.instance.getAll();
                     res.version = 1;
                     this.characterManager.SendOne(data.user_id, JSON.stringify(res));
+                }
+                // TODO: クエスト
+                else if(data instanceof CommunicationData.ReceiveData.QuestMasterData){
+                    let res : CommunicationData.SendData.QuestMasterDataList = new CommunicationData.SendData.QuestMasterDataList();
                 }
             })
         })
