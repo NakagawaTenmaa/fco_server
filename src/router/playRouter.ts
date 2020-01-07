@@ -109,7 +109,7 @@ export class playRouter{
                 else if(data instanceof CommunicationData.ReceiveData.SelectReward){
                     this.characterManager.addInventory(data);
                 }
-                // TODO:永久インベ取得
+                // 永久インベ取得
                 else if(data instanceof CommunicationData.ReceiveData.GetInventory){
                     this.characterManager.getInventory(data);
                 }
