@@ -16,6 +16,8 @@ export class AccessoryModel extends BaseModel{
                 _accessory.name,
                 _accessory.level,
                 _accessory.comment,
+                _accessory.hp,
+                _accessory.mp,
                 _accessory.str,
                 _accessory.vit,
                 _accessory.int,
