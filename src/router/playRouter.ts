@@ -101,13 +101,13 @@ export class playRouter{
                 else if(data instanceof CommunicationData.ReceiveData.AccessoryChange){
                     this.characterManager.ChangeAccessory(data);
                 }
-                // TODO:マップの移動
+                // マップの移動
                 else if(data instanceof CommunicationData.ReceiveData.MoveingMap){
                     this.characterManager.changeMap(data);
                 }
                 // TODO:報酬選択
                 else if(data instanceof CommunicationData.ReceiveData.SelectReward){
-                    let res : CommunicationData.SendData.SelectRewardOk = new CommunicationData.SendData.SelectRewardOk();
+                    this.characterManager.addInventory(data);
                 }
                 // TODO:永久インベ取得
                 else if(data instanceof CommunicationData.ReceiveData.GetInventory){
