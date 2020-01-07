@@ -97,9 +97,9 @@ export class playRouter{
                     res.name = player.name;
                     this.characterManager.SendOne(data.user_id, JSON.stringify(res));
                 }
-                // TODO:アクセサリーの変更
+                // アクセサリーの変更
                 else if(data instanceof CommunicationData.ReceiveData.AccessoryChange){
-
+                    this.characterManager.ChangeAccessory(data);
                 }
                 // TODO:マップの移動
                 else if(data instanceof CommunicationData.ReceiveData.MoveingMap){

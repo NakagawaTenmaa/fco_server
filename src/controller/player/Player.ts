@@ -21,7 +21,8 @@ import {SkillEffectManager} from './../skill/SkillEffectManager'
 import {SkillEffect} from './../skill/SkillEffect'
 import {Battlefield} from './../battle/Battlefield'
 import {BattlefieldManager} from './../battle/BattlefieldManager'
-import { UserMaster } from '../../model/userMaster'
+import { AccessoryStatus } from '../status/accessoryStatus'
+import { AccessoryData, AccessoryDataAccessor } from '../DatabaseAccessors/AccessoryAccessor'
 
 /**
  * プレイヤー
@@ -48,19 +49,6 @@ export class Player implements Character{
     public get dbId(): number { return this.dbId_; }
     public set dbId(_id: number) { this.dbId_ = _id; }
     
-
-    /**
-     * 装備しているアクセサリー
-     * @private
-     * @type {Array<number>}
-     * @memberof Player
-     */
-    private accessoryIds_ : Array<number>;
-    public get accessoryIds() : Array<number> { return this.accessoryIds_; }
-    public set accessoryIds(_ids : Array<number>) { this.accessoryIds_ = _ids; }
-
-    private readonly MAX_ACCESSORY : number = 4;
-
     /**
      * キャラクタ種類
      * @public
@@ -311,7 +299,6 @@ export class Player implements Character{
         this.name_ = "";
         this.modelId_ = 0;
         this.playerStatus_.levelStatus.ChangeLevel(1);
-        this.accessoryIds_ = [0,0,0,0];
     }
 
 
@@ -605,8 +592,10 @@ export class Player implements Character{
      * @memberof Player
      */
     public changeAccessory(_pointId: number, _accessoryId: number){
-        if(_pointId >= this.MAX_ACCESSORY) return;
-        this.accessoryIds_[_pointId] = _accessoryId;
+        const accessoryData : AccessoryData | undefined = AccessoryDataAccessor.instance.Find(0);
+        if(accessoryData === undefined) return;
+
+        this.playerStatus_.ChangeAccessory(accessoryData ,_pointId);
     }
 
     
