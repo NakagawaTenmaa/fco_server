@@ -550,11 +550,26 @@ export class CharacterManager{
         player.changeMap(_data.map_id);
     }
 
+    /**
+     * インベントリにアイテム追加
+     * @param {CommunicationData.ReceiveData.SelectReward} _data
+     * @returns
+     * @memberof CharacterManager
+     */
     public addInventory(_data: CommunicationData.ReceiveData.SelectReward){
         const player: Player | undefined = this.FindPlayer(_data.user_id);
         if(player === undefined) return;
 
         player.addInventory(_data.accessory_id);
+    }
+
+    public getInventory(_data: CommunicationData.ReceiveData.GetInventory){
+        const player: Player | undefined = this.FindPlayer(_data.user_id);
+        if(player === undefined) return;
+
+        let res : CommunicationData.SendData.InventoryList = new CommunicationData.SendData.InventoryList();
+        res.accessory_ids =  player.getInventory();
+        player.SendToClient(JSON.stringify(res));
     }
 
     /**
