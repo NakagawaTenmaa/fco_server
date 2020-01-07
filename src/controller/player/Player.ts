@@ -86,6 +86,7 @@ export class Player implements Character{
 
     // インベントリ
     private inventory_ : Inventory;
+    private dropInventory_ : Inventory;
 
     /**
      * パーティID
@@ -304,6 +305,7 @@ export class Player implements Character{
         this.modelId_ = 0;
         this.playerStatus_.levelStatus.ChangeLevel(1);
         this.inventory_ = new Inventory();
+        this.dropInventory_ = new Inventory();
     }
 
 
@@ -613,6 +615,34 @@ export class Player implements Character{
         if(accessoryData === undefined) return;
 
         this.playerStatus_.ChangeAccessory(accessoryData ,_pointId);
+    }
+
+    /**
+     * 一時インベへの追加
+     * @param {number} _accessoryId
+     * @param {number} _index
+     * @memberof Player
+     */
+    public addDropInventory(_accessoryId: number, _index: number) {
+        if(_index === -1) this.inventory_.addLast(_accessoryId);
+        else this.inventory_.add(_accessoryId, _index);
+    }
+
+    /**
+     * 一時インベの一つ破棄
+     * @param {number} _index
+     * @memberof Player
+     */
+    public releaseDropInventory(_index: number){
+        this.dropInventory_.releaseItem(_index);
+    }
+
+    /**
+     * 一時インベントリ全破棄
+     * @memberof Player
+     */
+    public allReleaseDropInventory(){
+        this.dropInventory_.allReleaseItem();
     }
 
     /**
