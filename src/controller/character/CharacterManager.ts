@@ -548,6 +548,7 @@ export class CharacterManager{
         if(player === undefined) return;
 
         player.changeMap(_data.map_id);
+        player.allReleaseDropInventory();
     }
 
     /**
