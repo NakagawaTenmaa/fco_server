@@ -679,6 +679,15 @@ export class Player implements Character{
     }
 
     /**
+     * 一時インベ一覧を取得
+     * @returns {Array<number>}
+     * @memberof Player
+     */
+    public getDropInventory(): Array<number>{
+        return this.dropInventory_.getItemList();
+    }
+
+    /**
      * セーブデータの読み込み
      * @public
      * @param {}
