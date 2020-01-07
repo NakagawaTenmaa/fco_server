@@ -21,7 +21,8 @@ import {SkillEffectManager} from './../skill/SkillEffectManager'
 import {SkillEffect} from './../skill/SkillEffect'
 import {Battlefield} from './../battle/Battlefield'
 import {BattlefieldManager} from './../battle/BattlefieldManager'
-import { UserMaster } from '../../model/userMaster'
+import { AccessoryStatus } from '../status/accessoryStatus'
+import { AccessoryData, AccessoryDataAccessor } from '../DatabaseAccessors/AccessoryAccessor'
 
 /**
  * プレイヤー
@@ -47,6 +48,7 @@ export class Player implements Character{
     private dbId_: number;
     public get dbId(): number { return this.dbId_; }
     public set dbId(_id: number) { this.dbId_ = _id; }
+    
     /**
      * キャラクタ種類
      * @public
@@ -580,6 +582,20 @@ export class Player implements Character{
         }
 
         return isSuccess;
+    }
+
+    /**
+     * アクセサリーの変更
+     * @param {number} _pointId
+     * @param {number} _accessoryId
+     * @returns
+     * @memberof Player
+     */
+    public changeAccessory(_pointId: number, _accessoryId: number){
+        const accessoryData : AccessoryData | undefined = AccessoryDataAccessor.instance.Find(0);
+        if(accessoryData === undefined) return;
+
+        this.playerStatus_.ChangeAccessory(accessoryData ,_pointId);
     }
 
     

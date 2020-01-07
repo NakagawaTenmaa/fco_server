@@ -8,6 +8,9 @@ export class AccessoryData{
 	public level : number;
 	public comment : string;
 
+
+    public hp  : number;
+    public mp  : number;
 	public str : number;
     public vit : number;
     public int : number;
@@ -21,7 +24,9 @@ export class AccessoryData{
 		_category : number, 
 		_name : string,
 		_level : number,
-		_comment : string,
+        _comment : string,
+        _hp  : number,
+        _mp  : number,
 		_str : number,
         _vit : number,
         _int : number,
@@ -34,7 +39,9 @@ export class AccessoryData{
 			this.category = _category;
 			this.name = _name;
 			this.level = _level;
-			this.comment = _comment;
+            this.comment = _comment;
+            this.hp = _hp;
+            this.mp = _mp;
 			this.str = _str;
             this.vit = _vit;
             this.int = _int;

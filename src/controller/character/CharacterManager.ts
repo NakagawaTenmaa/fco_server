@@ -539,6 +539,19 @@ export class CharacterManager{
 
 
     /**
+     * アクセサリー変更
+     * @param {CommunicationData.ReceiveData.AccessoryChange} _data
+     * @returns
+     * @memberof CharacterManager
+     */
+    public ChangeAccessory(_data: CommunicationData.ReceiveData.AccessoryChange){
+        const player: Player | undefined = this.FindPlayer(_data.user_id);
+        if(player === undefined) return;
+
+        player.changeAccessory(_data.part_id, _data.accessory_id);
+    }
+
+    /**
      * IDから敵の検索
      * @private
      * @param {number} _enemyId
