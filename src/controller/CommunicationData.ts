@@ -963,7 +963,242 @@ export namespace CommunicationData{
 				this.accessorys = [];
 			}
 		}
+/**
+		 * マップ移動完了(クエスト受注やリタイアに紐づく)
+		 * @export
+		 * @class MoveingMapOk
+		 * @implements {Send}
+		 */
+		export class MoveingMapOk implements Send{
+			/**
+			 * コマンドID
+			 * @public
+			 * @static 
+			 * @readonly 
+			 * @type {number}
+			 * @memberof {MoveingMapOk}
+			 */
+			public static readonly id : number = 252;
 
+			/**
+			 * コマンド識別子
+			 * @public
+			 * @readonly 
+			 * @type {number}
+			 * @memberof {MoveingMapOk}
+			 */
+			public readonly command : number = MoveingMapOk.id;
+
+
+			/**
+			 * デフォルトコンストラクタ
+			 * @public
+			 * @constructor
+			 * @memberof {MoveingMapOk}
+			 */
+			public constructor(){
+			}
+		}
+		/**
+		 * 報酬選択完了
+		 * @export
+		 * @class SelectRewardOk
+		 * @implements {Send}
+		 */
+		export class SelectRewardOk implements Send{
+			/**
+			 * コマンドID
+			 * @public
+			 * @static 
+			 * @readonly 
+			 * @type {number}
+			 * @memberof {SelectRewardOk}
+			 */
+			public static readonly id : number = 254;
+
+			/**
+			 * コマンド識別子
+			 * @public
+			 * @readonly 
+			 * @type {number}
+			 * @memberof {SelectRewardOk}
+			 */
+			public readonly command : number = SelectRewardOk.id;
+
+
+			/**
+			 * デフォルトコンストラクタ
+			 * @public
+			 * @constructor
+			 * @memberof {SelectRewardOk}
+			 */
+			public constructor(){
+			}
+		}
+		/**
+		 * 永久インべの取得
+		 * @export
+		 * @class InventoryList
+		 * @implements {Send}
+		 */
+		export class InventoryList implements Send{
+			/**
+			 * コマンドID
+			 * @public
+			 * @static 
+			 * @readonly 
+			 * @type {number}
+			 * @memberof {InventoryList}
+			 */
+			public static readonly id : number = 256;
+
+			/**
+			 * コマンド識別子
+			 * @public
+			 * @readonly 
+			 * @type {number}
+			 * @memberof {InventoryList}
+			 */
+			public readonly command : number = InventoryList.id;
+			/**
+			 * アクセサリーID
+			 * @public
+			 * @type {Array<number>}
+			 * @memberof {InventoryList}
+			 */
+			public accessory_ids : Array<number>;
+
+
+			/**
+			 * デフォルトコンストラクタ
+			 * @public
+			 * @constructor
+			 * @memberof {InventoryList}
+			 */
+			public constructor(){
+				this.accessory_ids = new Array<number>();
+			}
+		}
+		/**
+		 * ドロップインベの取得
+		 * @export
+		 * @class DropInventoryList
+		 * @implements {Send}
+		 */
+		export class DropInventoryList implements Send{
+			/**
+			 * コマンドID
+			 * @public
+			 * @static 
+			 * @readonly 
+			 * @type {number}
+			 * @memberof {DropInventoryList}
+			 */
+			public static readonly id : number = 292;
+
+			/**
+			 * コマンド識別子
+			 * @public
+			 * @readonly 
+			 * @type {number}
+			 * @memberof {DropInventoryList}
+			 */
+			public readonly command : number = DropInventoryList.id;
+			/**
+			 * アクセサリーID
+			 * @public
+			 * @type {Array<number>}
+			 * @memberof {DropInventoryList}
+			 */
+			public accessory_ids : Array<number>;
+
+
+			/**
+			 * デフォルトコンストラクタ
+			 * @public
+			 * @constructor
+			 * @memberof {DropInventoryList}
+			 */
+			public constructor(){
+				this.accessory_ids = new Array<number>();
+			}
+		}
+		/**
+		 * クエストマスター取得
+		 * @export
+		 * @class QuestMasterDataList
+		 * @implements {Send}
+		 */
+		export class QuestMasterDataList implements Send{
+			/**
+			 * コマンドID
+			 * @public
+			 * @static 
+			 * @readonly 
+			 * @type {number}
+			 * @memberof {QuestMasterDataList}
+			 */
+			public static readonly id : number = 714;
+
+			/**
+			 * コマンド識別子
+			 * @public
+			 * @readonly 
+			 * @type {number}
+			 * @memberof {QuestMasterDataList}
+			 */
+			public readonly command : number = QuestMasterDataList.id;
+			/**
+			 * クエストID
+			 * @public
+			 * @type {number}
+			 * @memberof {QuestMasterDataList}
+			 */
+			public id : number;
+			/**
+			 * 難易度
+			 * @public
+			 * @type {number}
+			 * @memberof {QuestMasterDataList}
+			 */
+			public difficulty : number;
+			/**
+			 * アイコンID
+			 * @public
+			 * @type {number}
+			 * @memberof {QuestMasterDataList}
+			 */
+			public icon_id : number;
+			/**
+			 * マップID
+			 * @public
+			 * @type {number}
+			 * @memberof {QuestMasterDataList}
+			 */
+			public map_id : number;
+			/**
+			 * ドロップ品一覧
+			 * @public
+			 * @type {Array<number>}
+			 * @memberof {QuestMasterDataList}
+			 */
+			public drop_ids : Array<number>;
+
+
+			/**
+			 * デフォルトコンストラクタ
+			 * @public
+			 * @constructor
+			 * @memberof {QuestMasterDataList}
+			 */
+			public constructor(){
+				this.id = 0;
+				this.difficulty = 0;
+				this.icon_id = 0;
+				this.map_id = 0;
+				this.drop_ids = new Array<number>();
+			}
+		}
         export type AllTypes = 
         CharacterTransform |
         SimpleDisplayOfCharacter |
@@ -983,7 +1218,12 @@ export namespace CommunicationData{
 		FindOfPlayerStoC | 
 		NewOtherUser | 
 		LoadingSkillMaster | 
-		LoadingAccessoryMaster;
+		LoadingAccessoryMaster |
+		MoveingMapOk |
+		SelectRewardOk |
+		InventoryList |
+		DropInventoryList |
+		QuestMasterDataList;
     }
     /**
      * 受信データ
@@ -1381,7 +1621,302 @@ export namespace CommunicationData{
 				this.user_id = 0;
 			}
 		}
+/**
+		 * アクセサリー装備変更
+		 * @export
+		 * @class AccessoryChange
+		 * @implements {Receive}
+		 */
+		export class AccessoryChange implements Receive{
+			/**
+			 * コマンドID
+			 * @public
+			 * @static 
+			 * @readonly 
+			 * @type {number}
+			 * @memberof {AccessoryChange}
+			 */
+			public static readonly id : number = 207;
 
+			/**
+			 * コマンド識別子
+			 * @public
+			 * @readonly 
+			 * @type {number}
+			 * @memberof {AccessoryChange}
+			 */
+			public readonly command : number = AccessoryChange.id;
+			/**
+			 * ユーザーID
+			 * @public
+			 * @type {number}
+			 * @memberof {AccessoryChange}
+			 */
+			public user_id : number;
+			/**
+			 * アクセサリーID
+			 * @public
+			 * @type {number}
+			 * @memberof {AccessoryChange}
+			 */
+			public accessory_id : number;
+			/**
+			 * 装備部位ID
+			 * @public
+			 * @type {number}
+			 * @memberof {AccessoryChange}
+			 */
+			public part_id : number;
+
+
+			/**
+			 * デフォルトコンストラクタ
+			 * @public
+			 * @constructor
+			 * @memberof {AccessoryChange}
+			 */
+			public constructor(){
+				this.user_id = 0;
+				this.accessory_id = 0;
+				this.part_id = 0;
+			}
+		}
+		/**
+		 * マップ移動コール(クエスト受注やリタイアに紐づく)
+		 * @export
+		 * @class MoveingMap
+		 * @implements {Receive}
+		 */
+		export class MoveingMap implements Receive{
+			/**
+			 * コマンドID
+			 * @public
+			 * @static 
+			 * @readonly 
+			 * @type {number}
+			 * @memberof {MoveingMap}
+			 */
+			public static readonly id : number = 251;
+
+			/**
+			 * コマンド識別子
+			 * @public
+			 * @readonly 
+			 * @type {number}
+			 * @memberof {MoveingMap}
+			 */
+			public readonly command : number = MoveingMap.id;
+			/**
+			 * ユーザーID
+			 * @public
+			 * @type {number}
+			 * @memberof {MoveingMap}
+			 */
+			public user_id : number;
+			/**
+			 * マップID
+			 * @public
+			 * @type {number}
+			 * @memberof {MoveingMap}
+			 */
+			public map_id : number;
+
+
+			/**
+			 * デフォルトコンストラクタ
+			 * @public
+			 * @constructor
+			 * @memberof {MoveingMap}
+			 */
+			public constructor(){
+				this.user_id = 0;
+				this.map_id = 0;
+			}
+		}
+		/**
+		 * 報酬選択
+		 * @export
+		 * @class SelectReward
+		 * @implements {Receive}
+		 */
+		export class SelectReward implements Receive{
+			/**
+			 * コマンドID
+			 * @public
+			 * @static 
+			 * @readonly 
+			 * @type {number}
+			 * @memberof {SelectReward}
+			 */
+			public static readonly id : number = 253;
+
+			/**
+			 * コマンド識別子
+			 * @public
+			 * @readonly 
+			 * @type {number}
+			 * @memberof {SelectReward}
+			 */
+			public readonly command : number = SelectReward.id;
+			/**
+			 * ユーザーID
+			 * @public
+			 * @type {number}
+			 * @memberof {SelectReward}
+			 */
+			public user_id : number;
+			/**
+			 * アクセサリーID
+			 * @public
+			 * @type {number}
+			 * @memberof {SelectReward}
+			 */
+			public accessory_id : number;
+
+
+			/**
+			 * デフォルトコンストラクタ
+			 * @public
+			 * @constructor
+			 * @memberof {SelectReward}
+			 */
+			public constructor(){
+				this.user_id = 0;
+				this.accessory_id = 0;
+			}
+		}
+		/**
+		 * 永久インべの取得コール
+		 * @export
+		 * @class GetInventory
+		 * @implements {Receive}
+		 */
+		export class GetInventory implements Receive{
+			/**
+			 * コマンドID
+			 * @public
+			 * @static 
+			 * @readonly 
+			 * @type {number}
+			 * @memberof {GetInventory}
+			 */
+			public static readonly id : number = 255;
+
+			/**
+			 * コマンド識別子
+			 * @public
+			 * @readonly 
+			 * @type {number}
+			 * @memberof {GetInventory}
+			 */
+			public readonly command : number = GetInventory.id;
+			/**
+			 * ユーザーID
+			 * @public
+			 * @type {number}
+			 * @memberof {GetInventory}
+			 */
+			public user_id : number;
+
+
+			/**
+			 * デフォルトコンストラクタ
+			 * @public
+			 * @constructor
+			 * @memberof {GetInventory}
+			 */
+			public constructor(){
+				this.user_id = 0;
+			}
+		}
+		/**
+		 * ドロップインベの取得コール
+		 * @export
+		 * @class GetDropInventory
+		 * @implements {Receive}
+		 */
+		export class GetDropInventory implements Receive{
+			/**
+			 * コマンドID
+			 * @public
+			 * @static 
+			 * @readonly 
+			 * @type {number}
+			 * @memberof {GetDropInventory}
+			 */
+			public static readonly id : number = 291;
+
+			/**
+			 * コマンド識別子
+			 * @public
+			 * @readonly 
+			 * @type {number}
+			 * @memberof {GetDropInventory}
+			 */
+			public readonly command : number = GetDropInventory.id;
+			/**
+			 * ユーザーID
+			 * @public
+			 * @type {number}
+			 * @memberof {GetDropInventory}
+			 */
+			public user_id : number;
+
+
+			/**
+			 * デフォルトコンストラクタ
+			 * @public
+			 * @constructor
+			 * @memberof {GetDropInventory}
+			 */
+			public constructor(){
+				this.user_id = 0;
+			}
+		}
+		/**
+		 * クエストマスターコール
+		 * @export
+		 * @class QuestMasterData
+		 * @implements {Receive}
+		 */
+		export class QuestMasterData implements Receive{
+			/**
+			 * コマンドID
+			 * @public
+			 * @static 
+			 * @readonly 
+			 * @type {number}
+			 * @memberof {QuestMasterData}
+			 */
+			public static readonly id : number = 713;
+
+			/**
+			 * コマンド識別子
+			 * @public
+			 * @readonly 
+			 * @type {number}
+			 * @memberof {QuestMasterData}
+			 */
+			public readonly command : number = QuestMasterData.id;
+			/**
+			 * ユーザーID
+			 * @public
+			 * @type {number}
+			 * @memberof {QuestMasterData}
+			 */
+			public user_id : number;
+
+
+			/**
+			 * デフォルトコンストラクタ
+			 * @public
+			 * @constructor
+			 * @memberof {QuestMasterData}
+			 */
+			public constructor(){
+				this.user_id = 0;
+			}
+		}
         export type AllTypes = 
         CharacterTransform | 
         PlayerStatus | 
@@ -1395,7 +1930,13 @@ export namespace CommunicationData{
 		SaveLoadCtoS | 
 		SaveModelType | 
 		LoadingSkillMaster |
-		LoadingAccessoryMaster;
+		LoadingAccessoryMaster |
+		AccessoryChange |
+		MoveingMap |
+		SelectReward |
+		GetInventory |
+		GetDropInventory |
+		QuestMasterData;
     }
 
     export type AllTypes = SendData.AllTypes | ReceiveData.AllTypes;
@@ -1407,127 +1948,199 @@ export namespace CommunicationData{
      */
     export class Converter{
         public static Convert(_data:string) : AllTypes|undefined {
-            const parse:any = JSON.parse(_data);
-            const communicationData:Communication = parse as Communication;
+            const parseData:any = JSON.parse(_data);
+            const communicationData:Communication = parseData as Communication;
             switch(communicationData.command){
                 case SendData.CharacterTransform.id:
                 {
                     const data:SendData.CharacterTransform = new SendData.CharacterTransform();
-                    data.user_id = parse.user_id - 0;
-                    data.map_id = parse.map_id - 0;
-                    data.x = parse.x - 0;
-                    data.y = parse.y - 0;
-                    data.z = parse.z - 0;
-                    data.dir = parse.dir - 0;
-                    data.name = parse.name;
+                    data.user_id = parseData.user_id - 0;
+                    data.map_id = parseData.map_id - 0;
+                    data.x = parseData.x - 0;
+                    data.y = parseData.y - 0;
+                    data.z = parseData.z - 0;
+                    data.dir = parseData.dir - 0;
+                    data.name = parseData.name;
                     return data;
                 }
                 case SendData.SimpleDisplayOfCharacter.id:
                 {
                     const data:SendData.SimpleDisplayOfCharacter = new SendData.SimpleDisplayOfCharacter();
-                    data.status = parse.status;
+                    data.status = parseData.status;
                     return data;
                 }
                 case SendData.ModelSetting.id:
                 {
                     const data:SendData.ModelSetting = new SendData.ModelSetting();
-                    data.user_id = parse.user_id - 0;
-                    data.model_id = parse.model_id - 0;
-                    data.color_id = parse.color_id - 0;
+                    data.user_id = parseData.user_id - 0;
+                    data.model_id = parseData.model_id - 0;
+                    data.color_id = parseData.color_id - 0;
                     return data;
                 }
                 case SendData.SkillUse.id:
                 {
                     const data:SendData.SkillUse = new SendData.SkillUse();
-                    data.user_id = parse.user_id - 0;
-                    data.skill_id = parse.skill_id - 0;
+                    data.user_id = parseData.user_id - 0;
+                    data.skill_id = parseData.skill_id - 0;
                     return data;
                 }
                 case SendData.LoadCharacter.id:
                 {
                     const data: SendData.LoadCharacter = new SendData.LoadCharacter();
-                    data.exp = parse.exp - 0;
-                    data.lv = parse.lv - 0;
-                    data.position = parse.position;
-                    data.weapon = parse.weapon;
+                    data.exp = parseData.exp - 0;
+                    data.lv = parseData.lv - 0;
+                    data.position = parseData.position;
+                    data.weapon = parseData.weapon;
                     return data;
                 }
                 case SendData.LogoutCharacter.id:
                 {
                     const data: SendData.LogoutCharacter = new SendData.LogoutCharacter();
-                    data.user_id = parse.user_id - 0;
+                    data.user_id = parseData.user_id - 0;
                     return data;
                 }
                 case SendData.EnemysData.id:
                 {
                     const data: SendData.EnemysData = new SendData.EnemysData();
-                    data.enemys = parse.enemys;
+                    data.enemys = parseData.enemys;
                     return data;
                 }
 				case SendData.EnemyAlive.id:
 				{
 					const data:SendData.EnemyAlive = new SendData.EnemyAlive();
-					data.unique_id = parse.unique_id - 0;
-					data.hp = parse.hp - 0;
-					data.status = parse.status;
+					data.unique_id = parseData.unique_id - 0;
+					data.hp = parseData.hp - 0;
+					data.status = parseData.status;
 					return data;
 				}
 				case SendData.EnemyDie.id:
 				{
 					const data:SendData.EnemyDie = new SendData.EnemyDie();
-					data.drop = parse.drop - 0;
-					data.unique_id = parse.unique_id - 0;
+					data.drop = parseData.drop - 0;
+					data.unique_id = parseData.unique_id - 0;
 					return data;
                 }
                 case SendData.OtherPlayerUseSkill.id:
 				{
 					const data:SendData.OtherPlayerUseSkill = new SendData.OtherPlayerUseSkill();
-					data.user_id = parse.user_id - 0;
-					data.skill_id = parse.skill_id - 0;
+					data.user_id = parseData.user_id - 0;
+					data.skill_id = parseData.skill_id - 0;
 					return data;
                 }
                 case SendData.SaveLoadStoC.id:{
 					const data:SendData.SaveLoadStoC = new SendData.SaveLoadStoC();
-					data.x = parse.x - 0;
-					data.y = parse.y - 0;
-					data.z = parse.z - 0;
-					data.model_id = parse.model_id - 0;
+					data.x = parseData.x - 0;
+					data.y = parseData.y - 0;
+					data.z = parseData.z - 0;
+					data.model_id = parseData.model_id - 0;
 					return data;
                 }
                 case SendData.OtherPlayerList.id:{
                     const data:SendData.OtherPlayerList = new SendData.OtherPlayerList();
-                    data.players = parse.players;
+                    data.players = parseData.players;
                     return data;
-                }
+				}
+				case ReceiveData.AccessoryChange.id:
+				{
+					const data:ReceiveData.AccessoryChange = new ReceiveData.AccessoryChange();
+					data.user_id = parseData.user_id - 0;
+					data.accessory_id = parseData.accessory_id - 0;
+					data.part_id = parseData.part_id - 0;
+					return data;
+				}
+				case ReceiveData.MoveingMap.id:
+				{
+					const data:ReceiveData.MoveingMap = new ReceiveData.MoveingMap();
+					data.user_id = parseData.user_id - 0;
+					data.map_id = parseData.map_id - 0;
+					return data;
+				}
+				case SendData.MoveingMapOk.id:
+				{
+					const data:SendData.MoveingMapOk = new SendData.MoveingMapOk();
+					return data;
+				}
+				case ReceiveData.SelectReward.id:
+				{
+					const data:ReceiveData.SelectReward = new ReceiveData.SelectReward();
+					data.user_id = parseData.user_id - 0;
+					data.accessory_id = parseData.accessory_id - 0;
+					return data;
+				}
+				case SendData.SelectRewardOk.id:
+				{
+					const data:SendData.SelectRewardOk = new SendData.SelectRewardOk();
+					return data;
+				}
+				case ReceiveData.GetInventory.id:
+				{
+					const data:ReceiveData.GetInventory = new ReceiveData.GetInventory();
+					data.user_id = parseData.user_id - 0;
+					return data;
+				}
+				case SendData.InventoryList.id:
+				{
+					const data:SendData.InventoryList = new SendData.InventoryList();
+					data.accessory_ids = parseData.accessory_ids;
+					return data;
+				}
+				case ReceiveData.GetDropInventory.id:
+				{
+					const data:ReceiveData.GetDropInventory = new ReceiveData.GetDropInventory();
+					data.user_id = parseData.user_id - 0;
+					return data;
+				}
+				case SendData.DropInventoryList.id:
+				{
+					const data:SendData.DropInventoryList = new SendData.DropInventoryList();
+					data.accessory_ids = parseData.accessory_ids;
+					return data;
+				}
+				case ReceiveData.QuestMasterData.id:
+				{
+					const data:ReceiveData.QuestMasterData = new ReceiveData.QuestMasterData();
+					data.user_id = parseData.user_id - 0;
+					return data;
+				}
+				case SendData.QuestMasterDataList.id:
+				{
+					const data:SendData.QuestMasterDataList = new SendData.QuestMasterDataList();
+					data.id = parseData.id - 0;
+					data.difficulty = parseData.difficulty - 0;
+					data.icon_id = parseData.icon_id - 0;
+					data.map_id = parseData.map_id - 0;
+					data.drop_ids = parseData.drop_ids;
+					return data;
+				}
                 case SendData.FindOfPlayerStoC.id:{
 					const data:SendData.FindOfPlayerStoC = new SendData.FindOfPlayerStoC();
-					data.user_id = parse.user_id - 0;
-					data.x = parse.x - 0;
-					data.y = parse.y - 0;
-					data.z = parse.z - 0;
-					data.model_id = parse.model_id - 0;
-					data.name = parse.name;
+					data.user_id = parseData.user_id - 0;
+					data.x = parseData.x - 0;
+					data.y = parseData.y - 0;
+					data.z = parseData.z - 0;
+					data.model_id = parseData.model_id - 0;
+					data.name = parseData.name;
 					return data;
 				}                
 				case SendData.NewOtherUser.id:{
 					const data:SendData.NewOtherUser = new SendData.NewOtherUser();
-					data.user_id = parse.user_id - 0;
-					data.x = parse.x - 0;
-					data.y = parse.y - 0;
-					data.z = parse.z - 0;
-					data.name = parse.name;
+					data.user_id = parseData.user_id - 0;
+					data.x = parseData.x - 0;
+					data.y = parseData.y - 0;
+					data.z = parseData.z - 0;
+					data.name = parseData.name;
 					return data;
 				}
 				case SendData.LoadingSkillMaster.id:{
 					const data : SendData.LoadingSkillMaster = new SendData.LoadingSkillMaster();
-					data.skills = parse.skills;
-					data.version = parse.version;
+					data.skills = parseData.skills;
+					data.version = parseData.version;
 					return data;
 				}
 				case SendData.LoadingAccessoryMaster.id:{
 					const data : SendData.LoadingAccessoryMaster = new SendData.LoadingAccessoryMaster();
-					data.accessorys = parse.accessorys;
-					data.version = parse.version;
+					data.accessorys = parseData.accessorys;
+					data.version = parseData.version;
 					return data;
 				}
 
@@ -1535,77 +2148,77 @@ export namespace CommunicationData{
                 case ReceiveData.CharacterTransform.id:
                 {
                     const data: ReceiveData.CharacterTransform = new ReceiveData.CharacterTransform();
-                    data.x = parse.x - 0;
-                    data.y = parse.y - 0;
-                    data.z = parse.z - 0;
-                    data.dir = parse.dir - 0;
-                    data.user_id = parse.user_id - 0;
+                    data.x = parseData.x - 0;
+                    data.y = parseData.y - 0;
+                    data.z = parseData.z - 0;
+                    data.dir = parseData.dir - 0;
+                    data.user_id = parseData.user_id - 0;
                     return data;
                 }
                 case ReceiveData.LoadCharacter.id:
                 {
                     const data: ReceiveData.LoadCharacter = new ReceiveData.LoadCharacter();
-                    data.user_id = parse.user_id - 0;
+                    data.user_id = parseData.user_id - 0;
                     return data;
                 }
                 case ReceiveData.PlayerStatus.id:
                 {
                     const data: ReceiveData.PlayerStatus = new ReceiveData.PlayerStatus();
-                    data.user_id = parse.user_id - 0;
-                    data.target_id = parse.target_id - 0;
-                    data.type = parse.type - 0;
+                    data.user_id = parseData.user_id - 0;
+                    data.target_id = parseData.target_id - 0;
+                    data.type = parseData.type - 0;
                     return data;
                 }
                 case ReceiveData.LoadCharacter.id:
                 {
                     const data: ReceiveData.LoadCharacter = new ReceiveData.LoadCharacter();
-                    data.user_id = parse.user_id - 0;
+                    data.user_id = parseData.user_id - 0;
                     return data;
                 }
                 case ReceiveData.LogoutCharacter.id:
                 {
                     const data: ReceiveData.LogoutCharacter = new ReceiveData.LogoutCharacter();
-                    data.user_id = parse.user_id - 0;
+                    data.user_id = parseData.user_id - 0;
                     return data;
                 }
                 case ReceiveData.GetEnemy.id:
                 {
                     const data: ReceiveData.GetEnemy = new ReceiveData.GetEnemy();
-                    data.map_id = parse.map_id - 0;
-                    data.user_id = parse.user_id - 0;
+                    data.map_id = parseData.map_id - 0;
+                    data.user_id = parseData.user_id - 0;
                     return data;
                 }
                 case ReceiveData.Attack.id:
                 {
                     const data:ReceiveData.Attack = new ReceiveData.Attack();
-                    data.enemy_id = parse.enemy_id - 0;
-                    data.user_id = parse.user_id - 0;
-                    data.skill_id = parse.skill_id - 0;
-                    data.map_id = parse.map_id - 0;
+                    data.enemy_id = parseData.enemy_id - 0;
+                    data.user_id = parseData.user_id - 0;
+                    data.skill_id = parseData.skill_id - 0;
+                    data.map_id = parseData.map_id - 0;
                     return data;
                 }
                 case ReceiveData.SaveLoadCtoS.id:{
 					const data:ReceiveData.SaveLoadCtoS = new ReceiveData.SaveLoadCtoS();
-                    data.user_id = parse.user_id;
+                    data.user_id = parseData.user_id;
                     return data;
                 }
                 case ReceiveData.LodingOK.id:{
 					const data:ReceiveData.LodingOK = new ReceiveData.LodingOK();
-                    data.user_id = parse.user_id;
+                    data.user_id = parseData.user_id;
                     return data;
                 }
                 case ReceiveData.FindOfPlayerCtoS.id:{
 					const data:ReceiveData.FindOfPlayerCtoS = new ReceiveData.FindOfPlayerCtoS();
-					data.user_id = parse.user_id - 0;
-					data.target_id = parse.target_id - 0;
-					data.map_id = parse.map_id - 0;
+					data.user_id = parseData.user_id - 0;
+					data.target_id = parseData.target_id - 0;
+					data.map_id = parseData.map_id - 0;
 					return data;
 				}
 				case ReceiveData.SaveModelType.id:
 				{
 					const data:ReceiveData.SaveModelType = new ReceiveData.SaveModelType();
-					data.user_id = parse.user_id - 0;
-					data.model_id = parse.model_id - 0;
+					data.user_id = parseData.user_id - 0;
+					data.model_id = parseData.model_id - 0;
 					return data;
 				}
 				case ReceiveData.LoadingSkillMaster.id:
