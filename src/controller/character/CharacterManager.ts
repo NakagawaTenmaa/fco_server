@@ -548,6 +548,7 @@ export class CharacterManager{
         if(player === undefined) return;
 
         player.changeMap(_data.map_id);
+        player.allReleaseDropInventory();
     }
 
     /**
@@ -563,6 +564,12 @@ export class CharacterManager{
         player.addInventory(_data.accessory_id);
     }
 
+    /**
+     * 永久インベの取得
+     * @param {CommunicationData.ReceiveData.GetInventory} _data
+     * @returns
+     * @memberof CharacterManager
+     */
     public getInventory(_data: CommunicationData.ReceiveData.GetInventory){
         const player: Player | undefined = this.FindPlayer(_data.user_id);
         if(player === undefined) return;
@@ -571,6 +578,21 @@ export class CharacterManager{
         res.accessory_ids =  player.getInventory();
         player.SendToClient(JSON.stringify(res));
     }
+
+    /**
+     * 一時インベの取得
+     * @param {CommunicationData.ReceiveData.GetInventory} _data
+     * @returns
+     * @memberof CharacterManager
+     */
+    public getDropInventory(_data: CommunicationData.ReceiveData.GetInventory){
+        const player: Player | undefined = this.FindPlayer(_data.user_id);
+        if(player === undefined) return;
+
+        let res : CommunicationData.SendData.DropInventoryList = new CommunicationData.SendData.DropInventoryList();        res.accessory_ids =  player.getDropInventory();
+        player.SendToClient(JSON.stringify(res));
+    }
+
 
     /**
      * アクセサリー変更
@@ -641,6 +663,11 @@ export class CharacterManager{
                     data = new CommunicationData.SendData.EnemyDie();
                     data.drop = DropItemDataAccessor.instance.randomDropId(1);
                     data.unique_id = receiveCharacter.id;
+
+                    const player: Player | undefined = this.FindPlayer(_useSkill.user_id);
+                    if(player === undefined) return;
+                    player.addDropInventory(data.drop);
+
                 } else if(receiveCharacter instanceof Player){
                     // プレイヤーの時の処理
                 } else console.error("not player and enemy");

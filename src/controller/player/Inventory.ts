@@ -43,4 +43,11 @@ export class Inventory{
         if(_index >= this.MAX_ITEM) return;
         this.items[_index] = 0;
     }
+
+    // アイテムの全破棄
+    public allReleaseItem() {
+        this.items.forEach((_item: number) => {
+            _item = 0;
+        })
+    }
 }

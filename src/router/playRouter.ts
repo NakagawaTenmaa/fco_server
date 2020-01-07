@@ -113,9 +113,9 @@ export class playRouter{
                 else if(data instanceof CommunicationData.ReceiveData.GetInventory){
                     this.characterManager.getInventory(data);
                 }
-                // TODO:ドロップインベの取得
+                // ドロップインベの取得
                 else if(data instanceof CommunicationData.ReceiveData.GetDropInventory){
-                    let res : CommunicationData.SendData.DropInventoryList = new CommunicationData.SendData.DropInventoryList();
+                    this.characterManager.getDropInventory(data);
                 }
 
 
