@@ -640,6 +640,15 @@ export class Player implements Character{
     }
     
     /**
+     * 永久インベ一覧を取得
+     * @returns {Array<number>}
+     * @memberof Player
+     */
+    public getInventory(): Array<number>{
+        return this.inventory_.getItemList();
+    }
+
+    /**
      * セーブデータの読み込み
      * @public
      * @param {}
