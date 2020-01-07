@@ -663,6 +663,11 @@ export class CharacterManager{
                     data = new CommunicationData.SendData.EnemyDie();
                     data.drop = DropItemDataAccessor.instance.randomDropId(1);
                     data.unique_id = receiveCharacter.id;
+
+                    const player: Player | undefined = this.FindPlayer(_useSkill.user_id);
+                    if(player === undefined) return;
+                    player.addDropInventory(data.drop);
+
                 } else if(receiveCharacter instanceof Player){
                     // プレイヤーの時の処理
                 } else console.error("not player and enemy");
