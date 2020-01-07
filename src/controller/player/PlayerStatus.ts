@@ -10,6 +10,8 @@ import {LevelStatus} from './../status/LevelStatus'
 import {PointStatus} from './../status/PointStatus'
 import {AbnormalConditionStatus} from './../status/AbnormalConditionStatus'
 import {JobData} from './../DatabaseAccessors/JobDataAccessor'
+import { AccessoryStatus } from './../status/accessoryStatus';
+import { AccessoryData } from '../DatabaseAccessors/AccessoryAccessor'
 
 /**
  * プレイヤーステータス
@@ -18,6 +20,8 @@ import {JobData} from './../DatabaseAccessors/JobDataAccessor'
  * @implements {CharacterStatus}
  */
 export class PlayerStatus implements CharacterStatus {
+    private readonly MAX_ACCESSORY = 4;
+
     /**
      * レベルステータス
      * @private
@@ -25,6 +29,15 @@ export class PlayerStatus implements CharacterStatus {
      * @memberof PlayerStatus
      */
     private levelStatus_ : LevelStatus;
+    
+    /**
+     * アクセサリーのステータス
+     * @private
+     * @type {number}
+     * @memberof PlayerStatus
+     */
+    private accessoryStatus_ : Array<AccessoryStatus>;
+
     /**
      * ポイントステータス
      * @private
@@ -160,7 +173,11 @@ export class PlayerStatus implements CharacterStatus {
         return (
             this.levelStatus_.strength +
             this.pointStatus_.strength +
-            this.abnormalConditionStatus_.strength
+            this.abnormalConditionStatus_.strength +
+            this.accessoryStatus_.reduce((totle : AccessoryStatus,data : AccessoryStatus) => { 
+                totle.strength + data.strength; 
+                return totle;
+            }).strength
         );
     }
     /**
@@ -174,7 +191,11 @@ export class PlayerStatus implements CharacterStatus {
         return (
             this.levelStatus_.vitality +
             this.pointStatus_.vitality +
-            this.abnormalConditionStatus_.vitality
+            this.abnormalConditionStatus_.vitality +
+            this.accessoryStatus_.reduce((totle : AccessoryStatus,data : AccessoryStatus) => { 
+                totle.vitality + data.vitality; 
+                return totle;
+            }).vitality
         );
     }
     /**
@@ -188,7 +209,11 @@ export class PlayerStatus implements CharacterStatus {
         return (
             this.levelStatus_.intelligence +
             this.pointStatus_.intelligence +
-            this.abnormalConditionStatus_.intelligence
+            this.abnormalConditionStatus_.intelligence +
+            this.accessoryStatus_.reduce((totle : AccessoryStatus,data : AccessoryStatus) => { 
+                totle.intelligence + data.intelligence; 
+                return totle;
+            }).intelligence
         );
     }
     /**
@@ -202,7 +227,11 @@ export class PlayerStatus implements CharacterStatus {
         return (
             this.levelStatus_.mind +
             this.pointStatus_.mind +
-            this.abnormalConditionStatus_.mind
+            this.abnormalConditionStatus_.mind +
+            this.accessoryStatus_.reduce((totle : AccessoryStatus,data : AccessoryStatus) => { 
+                totle.mind + data.mind; 
+                return totle;
+            }).mind
         );
     }
     /**
@@ -216,7 +245,11 @@ export class PlayerStatus implements CharacterStatus {
         return (
             this.levelStatus_.dexterity +
             this.pointStatus_.dexterity +
-            this.abnormalConditionStatus_.dexterity
+            this.abnormalConditionStatus_.dexterity +
+            this.accessoryStatus_.reduce((totle : AccessoryStatus,data : AccessoryStatus) => { 
+                totle.dexterity + data.dexterity; 
+                return totle;
+            }).dexterity
         );
     }
     /**
@@ -230,8 +263,13 @@ export class PlayerStatus implements CharacterStatus {
         return (
             this.levelStatus_.agility +
             this.pointStatus_.agility +
-            this.abnormalConditionStatus_.agility
+            this.abnormalConditionStatus_.agility +
+            this.accessoryStatus_.reduce((totle : AccessoryStatus,data : AccessoryStatus) => { 
+                totle.agility + data.agility; 
+                return totle;
+            }).agility
         );
+    
     }
 
     
@@ -259,6 +297,11 @@ export class PlayerStatus implements CharacterStatus {
         this.abnormalConditionStatus_ = new AbnormalConditionStatus();
         this.hitPoint_ = 0;
         this.magicPoint_ = 0;
+
+        this.accessoryStatus_ = [];
+        for(let i = 0; i < this.MAX_ACCESSORY; i++){
+            this.accessoryStatus_.push(new AccessoryStatus());
+        }
     }
 
 
@@ -281,5 +324,10 @@ export class PlayerStatus implements CharacterStatus {
      */
     public ChangeJob(_jobData:JobData) : void {
         this.levelStatus_.ChangeJob(_jobData);
+    }
+
+    public ChangeAccessory(_accessoryData: AccessoryData, _index: number) : void{
+        if(_index >= this.MAX_ACCESSORY) return;
+        this.accessoryStatus_[_index].ChangeAccessory(_accessoryData);
     }
 }

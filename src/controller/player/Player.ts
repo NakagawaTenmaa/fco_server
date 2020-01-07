@@ -47,6 +47,20 @@ export class Player implements Character{
     private dbId_: number;
     public get dbId(): number { return this.dbId_; }
     public set dbId(_id: number) { this.dbId_ = _id; }
+    
+
+    /**
+     * 装備しているアクセサリー
+     * @private
+     * @type {Array<number>}
+     * @memberof Player
+     */
+    private accessoryIds_ : Array<number>;
+    public get accessoryIds() : Array<number> { return this.accessoryIds_; }
+    public set accessoryIds(_ids : Array<number>) { this.accessoryIds_ = _ids; }
+
+    private readonly MAX_ACCESSORY : number = 4;
+
     /**
      * キャラクタ種類
      * @public
@@ -297,6 +311,7 @@ export class Player implements Character{
         this.name_ = "";
         this.modelId_ = 0;
         this.playerStatus_.levelStatus.ChangeLevel(1);
+        this.accessoryIds_ = [0,0,0,0];
     }
 
 
@@ -580,6 +595,18 @@ export class Player implements Character{
         }
 
         return isSuccess;
+    }
+
+    /**
+     * アクセサリーの変更
+     * @param {number} _pointId
+     * @param {number} _accessoryId
+     * @returns
+     * @memberof Player
+     */
+    public changeAccessory(_pointId: number, _accessoryId: number){
+        if(_pointId >= this.MAX_ACCESSORY) return;
+        this.accessoryIds_[_pointId] = _accessoryId;
     }
 
     
