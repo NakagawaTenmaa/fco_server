@@ -104,6 +104,7 @@ export class playRouter{
                 // TODO:マップの移動
                 else if(data instanceof CommunicationData.ReceiveData.MoveingMap){
                     let res : CommunicationData.SendData.MoveingMapOk = new CommunicationData.SendData.MoveingMapOk();
+                    this.characterManager.changeMap(data);
                 }
                 // TODO:報酬選択
                 else if(data instanceof CommunicationData.ReceiveData.SelectReward){

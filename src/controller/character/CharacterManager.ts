@@ -537,6 +537,18 @@ export class CharacterManager{
         return this.playerArray_.find((player: Player) => player.id === _characterId);
     }
 
+    /**
+     * マップの移動
+     * @param {CommunicationData.ReceiveData.MoveingMap} _data
+     * @returns
+     * @memberof CharacterManager
+     */
+    public changeMap(_data: CommunicationData.ReceiveData.MoveingMap){
+        const player: Player | undefined = this.FindPlayer(_data.user_id);
+        if(player === undefined) return;
+
+        player.changeMap(_data.map_id);
+    }
 
     /**
      * アクセサリー変更
