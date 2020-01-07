@@ -33,6 +33,14 @@ export class AccessoryStatus {
         return this.accessryData_.agi;
     }
 
+    public get hitpoint() : number {
+        return this.accessryData_.hp;
+    }
+
+    public get magicpoint() : number {
+        return this.accessryData_.mp;
+    }
+
     public ChangeAccessory(_accessryData: AccessoryData){
         this.accessryData_ = _accessryData;
     }

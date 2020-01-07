@@ -117,7 +117,11 @@ export class PlayerStatus implements CharacterStatus {
         return (
             this.levelStatus_.maxHitPoint +
             this.pointStatus_.maxHitPoint +
-            this.abnormalConditionStatus_.maxHitPoint
+            this.abnormalConditionStatus_.maxHitPoint +
+            this.accessoryStatus_.reduce((totle : AccessoryStatus,data : AccessoryStatus) => { 
+                totle.hitpoint + data.hitpoint; 
+                return totle;
+            }).hitpoint
         );
     }
     /**
@@ -145,7 +149,11 @@ export class PlayerStatus implements CharacterStatus {
         return (
             this.levelStatus_.maxMagicPoint +
             this.pointStatus_.maxMagicPoint +
-            this.abnormalConditionStatus_.maxMagicPoint
+            this.abnormalConditionStatus_.maxMagicPoint + 
+            this.accessoryStatus_.reduce((totle : AccessoryStatus,data : AccessoryStatus) => { 
+                totle.magicpoint + data.magicpoint; 
+                return totle;
+            }).magicpoint
         );
     }
     /**
