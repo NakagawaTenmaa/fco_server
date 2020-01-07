@@ -585,6 +585,18 @@ export class Player implements Character{
     }
 
     /**
+     * マップの移動
+     * @param {number} _mapId
+     * @memberof Player
+     */
+    public changeMap(_mapId: number){
+        if(this.ws_ === null) return;
+        this.mapId_ = _mapId;
+
+        this.ws_.send(JSON.stringify(new CommunicationData.SendData.MoveingMapOk()));
+    }
+
+    /**
      * アクセサリーの変更
      * @param {number} _pointId
      * @param {number} _accessoryId
