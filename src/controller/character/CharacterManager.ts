@@ -550,6 +550,13 @@ export class CharacterManager{
         player.changeMap(_data.map_id);
     }
 
+    public addInventory(_data: CommunicationData.ReceiveData.SelectReward){
+        const player: Player | undefined = this.FindPlayer(_data.user_id);
+        if(player === undefined) return;
+
+        player.addInventory(_data.accessory_id);
+    }
+
     /**
      * アクセサリー変更
      * @param {CommunicationData.ReceiveData.AccessoryChange} _data

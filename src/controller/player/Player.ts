@@ -21,8 +21,8 @@ import {SkillEffectManager} from './../skill/SkillEffectManager'
 import {SkillEffect} from './../skill/SkillEffect'
 import {Battlefield} from './../battle/Battlefield'
 import {BattlefieldManager} from './../battle/BattlefieldManager'
-import { AccessoryStatus } from '../status/accessoryStatus'
 import { AccessoryData, AccessoryDataAccessor } from '../DatabaseAccessors/AccessoryAccessor'
+import { Inventory } from './Inventory'
 
 /**
  * プレイヤー
@@ -83,6 +83,10 @@ export class Player implements Character{
     private name_: string;
     public get name(): string{ return this.name_; }
     public set name(_name: string){ this.name_ = _name; }
+
+    // インベントリ
+    private inventory_ : Inventory;
+
     /**
      * パーティID
      * @private
@@ -299,6 +303,7 @@ export class Player implements Character{
         this.name_ = "";
         this.modelId_ = 0;
         this.playerStatus_.levelStatus.ChangeLevel(1);
+        this.inventory_ = new Inventory();
     }
 
 
@@ -610,6 +615,29 @@ export class Player implements Character{
         this.playerStatus_.ChangeAccessory(accessoryData ,_pointId);
     }
 
+    /**
+     * アクセサリーの取得
+     * @param {number} _accessoryId
+     * @param {number} _index
+     * @memberof Player
+     */
+    public addInventory(_accessoryId: number, _index: number = -1){
+        let result = false;
+        if(this.ws_ === null) return;
+        if(_index === -1) result = this.inventory_.addLast(_accessoryId);
+        else result = this.inventory_.add(_accessoryId, _index);
+        
+        if(result) this.ws_.send(new CommunicationData.SendData.SelectRewardOk()); 
+    }
+     
+    /**
+     * アクセサリーを破棄
+     * @param {number} _index
+     * @memberof Player
+     */
+    public releaseItem(_index: number){
+        this.inventory_.releaseItem(_index);
+    }
     
     /**
      * セーブデータの読み込み
