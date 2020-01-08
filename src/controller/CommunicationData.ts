@@ -2229,6 +2229,7 @@ export namespace CommunicationData{
 				case ReceiveData.LoadingAccessoryMaster.id:
 				{
 					const data : ReceiveData.LoadingAccessoryMaster = new ReceiveData.LoadingAccessoryMaster();
+					data.user_id = parseData.user_id - 0;
 					return data;
 				}
             }

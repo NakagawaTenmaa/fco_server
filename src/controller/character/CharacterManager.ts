@@ -215,8 +215,11 @@ export class CharacterManager{
      * @memberof CharacterManager
      */
     public SendOne(_characterId: number, _sendData: string): boolean{
-        const player = this.FindPlayer(_characterId);
-        if(typeof player === 'undefined') return false;
+        const player : Player | undefined = this.FindPlayer(_characterId);
+
+        if(player === undefined) return false;
+
+
         return player.SendToClient(_sendData);
     }
 
