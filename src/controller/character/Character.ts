@@ -143,10 +143,10 @@ export interface Character{
      * @public
      * @param {number} _skillId 使うスキルのID
      * @param {number} _receiverId スキルを受けるキャラクタのID
-     * @returns {boolean} true:成功 false:失敗
+     * @returns {number} 成功:ダメージ量 失敗:-1
      * @memberof Character
      */
-    UseSkill(_skillId:number, _receiverId:number) : boolean;
+    UseSkill(_skillId:number, _receiverId:number) : number;
 
     /**
      * ダメージを受ける

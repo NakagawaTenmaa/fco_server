@@ -18,8 +18,8 @@ export interface CharacterEffect{
      * @public
      * @param {Character} _user 効果使用キャラクタ
      * @param {Character} _receiver 対象キャラクタ
-     * @returns {boolean} true:成功 false:失敗
+     *  @returns {number} 成功:ダメージ量 失敗:-1
      * @memberof CharacterEffect
      */
-    Show(_user:Character, _receiver:Character) : boolean;
+    Show(_user:Character, _receiver:Character) : number;
 }

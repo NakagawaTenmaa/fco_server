@@ -580,7 +580,7 @@ export namespace CommunicationData{
 			 * @memberof {EnemyAlive}
 			 */
 			public status : number;
-
+			public damage_value : number;
 
 			/**
 			 * デフォルトコンストラクタ
@@ -592,6 +592,7 @@ export namespace CommunicationData{
 				this.unique_id = 0;
 				this.hp = 0;
 				this.status = 0;
+				this.damage_value = 0;
 			}
 		}
 		/**
@@ -634,6 +635,7 @@ export namespace CommunicationData{
 			 */
 			public unique_id : number;
 
+			public damage_value : number;
 
 			/**
 			 * デフォルトコンストラクタ
@@ -643,7 +645,8 @@ export namespace CommunicationData{
 			 */
 			public constructor(){
                 this.drop = 0;
-                this.unique_id = 0;
+				this.unique_id = 0;
+				this.damage_value = 0;
 			}
         }
         
@@ -2011,6 +2014,7 @@ export namespace CommunicationData{
 					data.unique_id = parseData.unique_id - 0;
 					data.hp = parseData.hp - 0;
 					data.status = parseData.status;
+					data.damage_value = parseData.damage_value;
 					return data;
 				}
 				case SendData.EnemyDie.id:
@@ -2018,6 +2022,7 @@ export namespace CommunicationData{
 					const data:SendData.EnemyDie = new SendData.EnemyDie();
 					data.drop = parseData.drop - 0;
 					data.unique_id = parseData.unique_id - 0;
+					data.damage_value = parseData.damage_value;
 					return data;
                 }
                 case SendData.OtherPlayerUseSkill.id:
