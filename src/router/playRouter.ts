@@ -131,6 +131,11 @@ export class playRouter{
                 else if(data instanceof CommunicationData.ReceiveData.QuestMasterData){
                     let res : CommunicationData.SendData.QuestMasterDataList = new CommunicationData.SendData.QuestMasterDataList();
                 }
+
+
+                else {
+                    console.log("none packet data " + data.command.toString());
+                }
             })
         })
     }
