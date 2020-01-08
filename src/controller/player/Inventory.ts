@@ -50,4 +50,9 @@ export class Inventory{
             _item = 0;
         })
     }
+
+    // アイテム一括設定
+    public setItems(_items: Array<number>){
+        this.items = _items;
+    }
 }
