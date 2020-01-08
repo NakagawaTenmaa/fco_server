@@ -399,6 +399,7 @@ export class CharacterManager{
         if(typeof player === 'undefined') return false;
         UserModel.changeStatus(player.dbId, 0);
         await UserMaster.updateModel(player.dbId, player.transform.position.x, player.transform.position.y, player.transform.position.z, player.modelId);
+        await InventoryModel.updateModel(player.dbId, JSON.stringify(player.getInventory()));
         this.RemoveCharacter(_characterId);
     }
 
