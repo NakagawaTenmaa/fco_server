@@ -17,6 +17,7 @@ import { Party } from '../party/Party';
 import { UserModel } from '../../model/userModel';
 import { DropItemDataAccessor } from './../DatabaseAccessors/DropItemAccessor';
 import { UserMaster } from '../../model/userMaster';
+import { InventoryModel } from '../../model/inventoryModel';
 // import { EnemyDrop } from '../object/enemyDrop';
 // import { EnemyDropModel } from '../../model/enemyDropModel';
 
@@ -303,11 +304,13 @@ export class CharacterManager{
         const player: Player | undefined = this.playerArray_.find((_player: Player) => { return _player.id === _characterId; })
         if(typeof player === 'undefined') return false;
         const saveData = await UserMaster.findOne(player.dbId);
-        if(saveData === undefined || typeof saveData === 'undefined'){
+        const accessorys = await InventoryModel.findOne(player.dbId);
+        if(saveData === undefined && accessorys === undefined){
             player.transform.position = new Vector3(-210, 0, -210);
         } else {
             player.transform.position = new Vector3(saveData.x, saveData.y, saveData.z);
             player.modelId = saveData.model_id;
+            player.setInventoryItems(JSON.parse(saveData.accessorys));
         }
         player.webSocket = _ws;
         
@@ -315,6 +318,7 @@ export class CharacterManager{
         res.x = player.transform.position.x;
         res.y = player.transform.position.y;
         res.z = player.transform.position.z;
+        res.accessorys = player.getInventory();
         res.model_id = player.modelId;
         this.SendOne(_characterId, JSON.stringify(res));
         return true;
@@ -395,6 +399,7 @@ export class CharacterManager{
         if(typeof player === 'undefined') return false;
         UserModel.changeStatus(player.dbId, 0);
         await UserMaster.updateModel(player.dbId, player.transform.position.x, player.transform.position.y, player.transform.position.z, player.modelId);
+        await InventoryModel.updateModel(player.dbId, JSON.stringify(player.getInventory()));
         this.RemoveCharacter(_characterId);
     }
 

@@ -688,6 +688,15 @@ export class Player implements Character{
     }
 
     /**
+     * 永久インベの一括設定
+     * @param {Array<number>} _items
+     * @memberof Player
+     */
+    public setInventoryItems(_items: Array<number>) {
+        this.inventory_.setItems(_items);
+    }
+
+    /**
      * セーブデータの読み込み
      * @public
      * @param {}
