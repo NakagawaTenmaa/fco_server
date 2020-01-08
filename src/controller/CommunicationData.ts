@@ -376,6 +376,12 @@ export namespace CommunicationData{
 			 */
 			public model_id : number;
 
+			/**
+			 * アクセサリーID
+			 * @type {Array<number>}
+			 * @memberof SaveLoadStoC
+			 */
+			public accessorys: Array<number>;
 
 			/**
 			 * デフォルトコンストラクタ
@@ -388,6 +394,7 @@ export namespace CommunicationData{
 				this.y = 0;
 				this.z = -210;
 				this.model_id = 0;
+				this.accessorys = [];
 			}
 		}
 
