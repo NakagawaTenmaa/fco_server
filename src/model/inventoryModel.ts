@@ -18,7 +18,7 @@ export class InventoryModel extends BaseModel{
         if(check === undefined) res = await this.create({id: id, accessorys: _accessorys});
         else {
             const sql = format(
-                'UPDATE `save_data` SET `accessorys` = ? where `id` = ?',
+                'UPDATE `inventory_accessorys` SET `accessorys` = ? where `id` = ?',
                 [_accessorys, id]);            
             res = await this.myQuery(sql);
         }

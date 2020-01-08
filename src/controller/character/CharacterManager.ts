@@ -310,7 +310,7 @@ export class CharacterManager{
         } else {
             player.transform.position = new Vector3(saveData.x, saveData.y, saveData.z);
             player.modelId = saveData.model_id;
-            if(accessorys !== undefined) player.setInventoryItems(JSON.parse(saveData.accessorys));
+            if(accessorys !== undefined) player.setInventoryItems(JSON.parse(accessorys.accessorys));
         }
         player.webSocket = _ws;
         
