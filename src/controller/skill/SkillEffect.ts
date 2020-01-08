@@ -66,10 +66,10 @@ export class SkillEffect implements CharacterEffect{
      * @public
      * @param {Character} _user 効果使用キャラクタ
      * @param {Character} _receiver 対象となるキャラクタ
-     * @returns {boolean} true:成功 false:失敗
+     * @returns {number} 成功:ダメージ量 失敗:-1
      * @memberof CharacterEffect
      */
-    public Show(_user:Character, _receiver:Character) : boolean {
+    public Show(_user:Character, _receiver:Character) : number {
         // 物理と魔法の攻撃値計算
         const physicalAttack:number = this.skillData_.strengthPhysicalDamageRate*_user.status.strength;
         const magicalAttack:number = this.skillData_.intelligenceMagicalDamageRate*_user.status.intelligence;
@@ -94,6 +94,6 @@ export class SkillEffect implements CharacterEffect{
         // ヘイト変更
         _receiver.ChangeHate(_user, hitPointDamage);
 
-        return true;
+        return hitPointDamage;
     }
 }

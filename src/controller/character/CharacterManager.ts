@@ -642,7 +642,8 @@ export class CharacterManager{
             this.SendOther(_useSkill.user_id ,JSON.stringify(sendUseSkill));
         }
 
-        if(useCharacter.UseSkill(_useSkill.skill_id, _useSkill.enemy_id)){      
+        const damageValue=useCharacter.UseSkill(_useSkill.skill_id, _useSkill.enemy_id);
+        if(damageValue !== -1){      
 //            console.log(
 //                "Character can use skill. [" +
 //                _useSkill.user_id.toString() + "->" + _useSkill.enemy_id.toString() +
@@ -659,6 +660,7 @@ export class CharacterManager{
                 data.hp = Math.ceil(receiveCharacter.status.hitPoint);
                 data.unique_id = receiveCharacter.id;
                 data.status = 0;
+                data.damage_value = damageValue;
             } else {
                 // 倒れたときの処理
                 if(receiveCharacter instanceof Enemy){
@@ -666,6 +668,7 @@ export class CharacterManager{
                     data = new CommunicationData.SendData.EnemyDie();
                     data.drop = DropItemDataAccessor.instance.randomDropId(1);
                     data.unique_id = receiveCharacter.id;
+                    data.damage_value = damageValue;
 
                     const player: Player | undefined = this.FindPlayer(_useSkill.user_id);
                     if(player === undefined) return;

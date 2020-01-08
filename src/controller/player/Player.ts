@@ -400,32 +400,32 @@ export class Player implements Character{
      * @public
      * @param {number} _skillId 使うスキルのID
      * @param {number} _receiverId スキルを受けるキャラクタのID
-     * @returns {boolean} true:成功 false:失敗
+     * @returns {number} 成功:ダメージ量 失敗:-1
      * @memberof Player
      */
-    public UseSkill(_skillId:number, _receiverId:number) : boolean {
+    public UseSkill(_skillId:number, _receiverId:number) : number {
         _skillId = _skillId - 0;
         _receiverId = _receiverId - 0;
 
         if(!(this.IsUsableSkill(_skillId))){
             console.error("Couldn't use a skill. [skill id : " + _skillId.toString() + "]");
-            return false;
+            return -1;
         }
         const skillEffect:SkillEffect|undefined = SkillEffectManager.instance.FindSkillEffect(_skillId);
         if(skillEffect === undefined){
             console.error("Couldn't find a skill effect. [skill id : " + _skillId.toString() + "]");
-            return false;
+            return -1;
         }
         const receiver:Character|undefined = CharacterManager.instance.FindCharacter(_receiverId);
         if(receiver === undefined){
             console.error("Couldn't find a receiver. [id : " + _receiverId.toString() + "]");
-            return false;
+            return -1;
         }
         
         if(skillEffect.Consume(this)){
             return skillEffect.Show(this, receiver);
         }
-        return false;
+        return -1;
     }
 
     /**
