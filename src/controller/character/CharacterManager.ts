@@ -305,12 +305,12 @@ export class CharacterManager{
         if(typeof player === 'undefined') return false;
         const saveData = await UserMaster.findOne(player.dbId);
         const accessorys = await InventoryModel.findOne(player.dbId);
-        if(saveData === undefined && accessorys === undefined){
+        if(saveData === undefined){
             player.transform.position = new Vector3(-210, 0, -210);
         } else {
             player.transform.position = new Vector3(saveData.x, saveData.y, saveData.z);
             player.modelId = saveData.model_id;
-            player.setInventoryItems(JSON.parse(saveData.accessorys));
+            if(accessorys !== undefined) player.setInventoryItems(JSON.parse(saveData.accessorys));
         }
         player.webSocket = _ws;
         
