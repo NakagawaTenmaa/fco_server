@@ -114,14 +114,15 @@ export class PlayerStatus implements CharacterStatus {
      * @memberof PlayerStatus
      */
     public get maxHitPoint() : number {
+        let accessoryHitPoint = 0;
+        this.accessoryStatus_.forEach((_accessory: AccessoryStatus) =>{
+            accessoryHitPoint += _accessory.hitpoint;
+        })
         return (
             this.levelStatus_.maxHitPoint +
             this.pointStatus_.maxHitPoint +
             this.abnormalConditionStatus_.maxHitPoint +
-            this.accessoryStatus_.reduce((totle : AccessoryStatus,data : AccessoryStatus) => { 
-                totle.hitpoint + data.hitpoint; 
-                return totle;
-            }).hitpoint
+            accessoryHitPoint
         );
     }
     /**
@@ -146,14 +147,15 @@ export class PlayerStatus implements CharacterStatus {
      * @memberof PlayerStatus
      */
     public get maxMagicPoint() : number {
+        let accessoryMagicPoint = 0;
+        this.accessoryStatus_.forEach((_accessory: AccessoryStatus) =>{
+            accessoryMagicPoint += _accessory.magicpoint;
+        })
         return (
             this.levelStatus_.maxMagicPoint +
             this.pointStatus_.maxMagicPoint +
             this.abnormalConditionStatus_.maxMagicPoint + 
-            this.accessoryStatus_.reduce((totle : AccessoryStatus,data : AccessoryStatus) => { 
-                totle.magicpoint + data.magicpoint; 
-                return totle;
-            }).magicpoint
+            accessoryMagicPoint
         );
     }
     /**
@@ -178,14 +180,15 @@ export class PlayerStatus implements CharacterStatus {
      * @memberof PlayerStatus
      */
     public get strength() : number {
+        let accessoryStrength = 0;
+        this.accessoryStatus_.forEach((_accessory: AccessoryStatus) =>{
+            accessoryStrength += _accessory.strength;
+        })
         return (
             this.levelStatus_.strength +
             this.pointStatus_.strength +
             this.abnormalConditionStatus_.strength +
-            this.accessoryStatus_.reduce((totle : AccessoryStatus,data : AccessoryStatus) => { 
-                totle.strength + data.strength; 
-                return totle;
-            }).strength
+            accessoryStrength
         );
     }
     /**
@@ -196,14 +199,15 @@ export class PlayerStatus implements CharacterStatus {
      * @memberof PlayerStatus
      */
     public get vitality() : number {
+        let accessoryVitality = 0;
+        this.accessoryStatus_.forEach((_accessory: AccessoryStatus) =>{
+            accessoryVitality += _accessory.vitality;
+        })
         return (
             this.levelStatus_.vitality +
             this.pointStatus_.vitality +
             this.abnormalConditionStatus_.vitality +
-            this.accessoryStatus_.reduce((totle : AccessoryStatus,data : AccessoryStatus) => { 
-                totle.vitality + data.vitality; 
-                return totle;
-            }).vitality
+            accessoryVitality
         );
     }
     /**
@@ -214,14 +218,15 @@ export class PlayerStatus implements CharacterStatus {
      * @memberof PlayerStatus
      */
     public get intelligence() : number {
+        let accessoryIntelligence = 0;
+        this.accessoryStatus_.forEach((_accessory: AccessoryStatus) =>{
+            accessoryIntelligence += _accessory.intelligence;
+        })
         return (
             this.levelStatus_.intelligence +
             this.pointStatus_.intelligence +
             this.abnormalConditionStatus_.intelligence +
-            this.accessoryStatus_.reduce((totle : AccessoryStatus,data : AccessoryStatus) => { 
-                totle.intelligence + data.intelligence; 
-                return totle;
-            }).intelligence
+            accessoryIntelligence
         );
     }
     /**
@@ -232,14 +237,15 @@ export class PlayerStatus implements CharacterStatus {
      * @memberof PlayerStatus
      */
     public get mind() : number {
+        let accessoryMind = 0;
+        this.accessoryStatus_.forEach((_accessory: AccessoryStatus) =>{
+            accessoryMind += _accessory.mind;
+        })
         return (
             this.levelStatus_.mind +
             this.pointStatus_.mind +
             this.abnormalConditionStatus_.mind +
-            this.accessoryStatus_.reduce((totle : AccessoryStatus,data : AccessoryStatus) => { 
-                totle.mind + data.mind; 
-                return totle;
-            }).mind
+            accessoryMind
         );
     }
     /**
@@ -250,14 +256,15 @@ export class PlayerStatus implements CharacterStatus {
      * @memberof PlayerStatus
      */
     public get dexterity() : number {
+        let accessoryDexterity = 0;
+        this.accessoryStatus_.forEach((_accessory: AccessoryStatus) =>{
+            accessoryDexterity += _accessory.dexterity;
+        })
         return (
             this.levelStatus_.dexterity +
             this.pointStatus_.dexterity +
             this.abnormalConditionStatus_.dexterity +
-            this.accessoryStatus_.reduce((totle : AccessoryStatus,data : AccessoryStatus) => { 
-                totle.dexterity + data.dexterity; 
-                return totle;
-            }).dexterity
+            accessoryDexterity
         );
     }
     /**
@@ -268,14 +275,15 @@ export class PlayerStatus implements CharacterStatus {
      * @memberof PlayerStatus
      */
     public get agility() : number {
+        let accessoryAgility = 0;
+        this.accessoryStatus_.forEach((_accessory: AccessoryStatus) =>{
+            accessoryAgility += _accessory.agility;
+        })
         return (
             this.levelStatus_.agility +
             this.pointStatus_.agility +
             this.abnormalConditionStatus_.agility +
-            this.accessoryStatus_.reduce((totle : AccessoryStatus,data : AccessoryStatus) => { 
-                totle.agility + data.agility; 
-                return totle;
-            }).agility
+            accessoryAgility
         );
     
     }
@@ -337,5 +345,6 @@ export class PlayerStatus implements CharacterStatus {
     public ChangeAccessory(_accessoryData: AccessoryData, _index: number) : void{
         if(_index >= this.MAX_ACCESSORY) return;
         this.accessoryStatus_[_index].ChangeAccessory(_accessoryData);
+        JSON.stringify
     }
 }
