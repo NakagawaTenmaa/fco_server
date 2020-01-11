@@ -41,6 +41,10 @@ export class AccessoryStatus {
         return this.accessryData_.mp;
     }
 
+    public get id() : number{
+        return this.accessryData_.id;
+    }
+
     public ChangeAccessory(_accessryData: AccessoryData){
         this.accessryData_ = _accessryData;
     }

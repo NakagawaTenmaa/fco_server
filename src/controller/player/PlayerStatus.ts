@@ -345,6 +345,19 @@ export class PlayerStatus implements CharacterStatus {
     public ChangeAccessory(_accessoryData: AccessoryData, _index: number) : void{
         if(_index >= this.MAX_ACCESSORY) return;
         this.accessoryStatus_[_index].ChangeAccessory(_accessoryData);
-        JSON.stringify
+    }
+
+    public ChangeAllAccessory(_accessorys: Array<AccessoryData>){
+        _accessorys.forEach((_data: AccessoryData, _index: number) => {
+            this.accessoryStatus_[_index].ChangeAccessory(_data);
+        });
+    }
+
+    public getAccessoryId(): Array<number>{
+        let datas: Array<number> = [];
+        this.accessoryStatus_.forEach((_data: AccessoryStatus) =>{
+            datas.push(_data.id);
+        })
+        return datas;
     }
 }
