@@ -618,6 +618,33 @@ export class Player implements Character{
     }
 
     /**
+     * アクセサリーの一括装着
+     * @param {Array<number>} _accessoryId
+     * @returns
+     * @memberof Player
+     */
+    public changeAllAccessory(_accessoryId: Array<number>){
+        const accessoryData : Array<AccessoryData> | undefined = [];
+        _accessoryId.forEach((_id: number) =>{
+            const data : AccessoryData | undefined = AccessoryDataAccessor.instance.Find(0);
+            if(data === undefined){
+            } else {
+                accessoryData.push(data);
+            }
+        })
+        this.playerStatus_.ChangeAllAccessory(accessoryData);
+    }
+
+    /**
+     * 装着アクセ一覧ID
+     * @returns {Array<number>}
+     * @memberof Player
+     */
+    public getWearingAccessory() : Array<number>{
+        return this.playerStatus_.getAccessoryId();
+    }
+
+    /**
      * 一時インベへの追加
      * @param {number} _accessoryId
      * @param {number} _index
@@ -646,7 +673,7 @@ export class Player implements Character{
     }
 
     /**
-     * アクセサリーの取得
+     * アクセサリーの入手
      * @param {number} _accessoryId
      * @param {number} _index
      * @memberof Player

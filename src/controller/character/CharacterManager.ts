@@ -18,6 +18,7 @@ import { UserModel } from '../../model/userModel';
 import { DropItemDataAccessor } from './../DatabaseAccessors/DropItemAccessor';
 import { UserMaster } from '../../model/userMaster';
 import { InventoryModel } from '../../model/inventoryModel';
+import { AccessoryWearing } from '../../model/accessoryWearingModel';
 // import { EnemyDrop } from '../object/enemyDrop';
 // import { EnemyDropModel } from '../../model/enemyDropModel';
 
@@ -305,12 +306,14 @@ export class CharacterManager{
         if(typeof player === 'undefined') return false;
         const saveData = await UserMaster.findOne(player.dbId);
         const accessorys = await InventoryModel.findOne(player.dbId);
+        const wearing = await AccessoryWearing.findOne(player.dbId);
         if(saveData === undefined){
             player.transform.position = new Vector3(-210, 0, -210);
         } else {
             player.transform.position = new Vector3(saveData.x, saveData.y, saveData.z);
             player.modelId = saveData.model_id;
             if(accessorys !== undefined) player.setInventoryItems(JSON.parse(accessorys.accessorys));
+            if(wearing    !== undefined) player.changeAllAccessory(JSON.parse(wearing.accessorys));
         }
         player.webSocket = _ws;
         
@@ -319,6 +322,7 @@ export class CharacterManager{
         res.y = player.transform.position.y;
         res.z = player.transform.position.z;
         res.accessorys = player.getInventory();
+        res.wearing_accessory = player.getWearingAccessory();
         res.model_id = player.modelId;
         this.SendOne(_characterId, JSON.stringify(res));
         return true;
@@ -400,6 +404,7 @@ export class CharacterManager{
         UserModel.changeStatus(player.dbId, 0);
         await UserMaster.updateModel(player.dbId, player.transform.position.x, player.transform.position.y, player.transform.position.z, player.modelId);
         await InventoryModel.updateModel(player.dbId, JSON.stringify(player.getInventory()));
+        await AccessoryWearing.updateModel(player.dbId, JSON.stringify(player.getWearingAccessory()));
         this.RemoveCharacter(_characterId);
     }
 
