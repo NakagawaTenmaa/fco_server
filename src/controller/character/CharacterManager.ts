@@ -322,6 +322,7 @@ export class CharacterManager{
         res.y = player.transform.position.y;
         res.z = player.transform.position.z;
         res.accessorys = player.getInventory();
+        res.wearing_accessory = player.getWearingAccessory();
         res.model_id = player.modelId;
         this.SendOne(_characterId, JSON.stringify(res));
         return true;

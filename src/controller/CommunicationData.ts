@@ -383,6 +383,8 @@ export namespace CommunicationData{
 			 */
 			public accessorys: Array<number>;
 
+			public wearing_accessory: Array<number>;
+
 			/**
 			 * デフォルトコンストラクタ
 			 * @public
@@ -395,6 +397,7 @@ export namespace CommunicationData{
 				this.z = -210;
 				this.model_id = 0;
 				this.accessorys = [];
+				this.wearing_accessory = [];
 			}
 		}
 
