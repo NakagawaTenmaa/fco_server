@@ -358,6 +358,7 @@ export class PlayerStatus implements CharacterStatus {
         this.accessoryStatus_.forEach((_data: AccessoryStatus) =>{
             datas.push(_data.id);
         })
+        console.log("accessory saveing : " + JSON.stringify(datas));
         return datas;
     }
 }
