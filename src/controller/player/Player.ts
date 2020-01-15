@@ -628,7 +628,7 @@ export class Player implements Character{
         _accessoryId.forEach((_id: number) =>{
             const data : AccessoryData | undefined = AccessoryDataAccessor.instance.findOneById(_id);
             if(data === undefined){
-                accessoryData.push(new AccessoryData(0,0,'',0,'',0,0,0,0,0,0,0,0,''));
+                accessoryData.push(new AccessoryData(0,'',0,'',0,0,0,0,0,0,0,0,''));
             } else {
                 accessoryData.push(data);
             }
