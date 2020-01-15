@@ -352,6 +352,7 @@ export class PlayerStatus implements CharacterStatus {
         _accessorys.forEach((_data: AccessoryData, _index: number) => {
             this.accessoryStatus_[_index].ChangeAccessory(_data);
         });
+        console.log("player status : " + JSON.stringify(this.accessoryStatus_));
     }
 
     public getAccessoryId(): Array<number>{

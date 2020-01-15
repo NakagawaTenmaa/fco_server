@@ -313,7 +313,10 @@ export class CharacterManager{
             player.transform.position = new Vector3(saveData.x, saveData.y, saveData.z);
             player.modelId = saveData.model_id;
             if(accessorys !== undefined) player.setInventoryItems(JSON.parse(accessorys.accessorys));
-            if(wearing    !== undefined) player.changeAllAccessory(JSON.parse(wearing.accessorys));
+            if(wearing    !== undefined) {
+                console.log("loading db" + JSON.stringify(wearing));
+                player.changeAllAccessory(JSON.parse(wearing.accessorys));
+            }
         }
         player.webSocket = _ws;
         

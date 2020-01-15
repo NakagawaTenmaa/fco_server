@@ -632,6 +632,7 @@ export class Player implements Character{
                 accessoryData.push(data);
             }
         })
+        console.log("player : " + JSON.stringify(accessoryData));
         this.playerStatus_.ChangeAllAccessory(accessoryData);
     }
 
