@@ -701,7 +701,7 @@ export class CharacterManager{
                     // プレイヤーの時の処理
                 } else console.error("not player and enemy");
             }
-            this.SendAll(JSON.stringify(data));
+            this.SendMapAll(JSON.stringify(data), receiveCharacter.mapId);
         }
         else{
             console.error("Attack miss");
