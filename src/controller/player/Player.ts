@@ -611,7 +611,7 @@ export class Player implements Character{
      * @memberof Player
      */
     public changeAccessory(_pointId: number, _accessoryId: number){
-        const accessoryData : AccessoryData | undefined = AccessoryDataAccessor.instance.Find(_accessoryId);
+        const accessoryData : AccessoryData | undefined = AccessoryDataAccessor.instance.findOneById(_accessoryId);
         if(accessoryData === undefined) return;
 
         this.playerStatus_.ChangeAccessory(accessoryData ,_pointId);
@@ -628,14 +628,11 @@ export class Player implements Character{
         _accessoryId.forEach((_id: number) =>{
             const data : AccessoryData | undefined = AccessoryDataAccessor.instance.findOneById(_id);
             if(data === undefined){
-                console.log("none : " + _id.toString());
                 accessoryData.push(new AccessoryData(0,0,'',0,'',0,0,0,0,0,0,0,0,''));
             } else {
-                console.log("hit data" + JSON.stringify(data) + 'id : ' + _id.toString());
                 accessoryData.push(data);
             }
         })
-        console.log("player : " + JSON.stringify(accessoryData));
         this.playerStatus_.ChangeAllAccessory(accessoryData);
     }
 

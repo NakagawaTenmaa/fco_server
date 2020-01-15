@@ -344,7 +344,6 @@ export class PlayerStatus implements CharacterStatus {
 
     public ChangeAccessory(_accessoryData: AccessoryData, _index: number) : void{
         if(_index >= this.MAX_ACCESSORY) return;
-        console.log(JSON.stringify(this.accessoryStatus_));
         this.accessoryStatus_[_index].ChangeAccessory(_accessoryData);
     }
 
@@ -352,7 +351,6 @@ export class PlayerStatus implements CharacterStatus {
         _accessorys.forEach((_data: AccessoryData, _index: number) => {
             this.accessoryStatus_[_index].ChangeAccessory(_data);
         });
-        console.log("player status : " + JSON.stringify(this.accessoryStatus_));
     }
 
     public getAccessoryId(): Array<number>{
