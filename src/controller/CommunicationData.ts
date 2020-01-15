@@ -2328,8 +2328,7 @@ export class SkillMasterData{
 }	
 
 export class AccessoryMasterData {
-	public id : number;	
-	public category : number;
+	public id : number;
 	public name : string;
 	public level : number;
 	public comment : string;
@@ -2362,7 +2361,6 @@ export class AccessoryMasterData {
 		_image : string
 		){
 			this.id = _id;
-			this.category = _category;
 			this.name = _name;
 			this.level = _level;
 			this.comment = _comment;

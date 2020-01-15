@@ -12,7 +12,6 @@ export class AccessoryModel extends BaseModel{
         accessorysModel.forEach((_accessory: any) => {
             accessorys.push(new AccessoryData(
                 _accessory.id,
-                _accessory.category,
                 _accessory.name,
                 _accessory.level,
                 _accessory.comment,

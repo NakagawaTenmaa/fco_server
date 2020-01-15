@@ -2,8 +2,7 @@ import {DatabaseAccessor} from './DatabaseAccessor'
 import { AccessoryModel } from '../../model/accessoryModel';
 
 export class AccessoryData{
-    public id : number;	
-	public category : number;
+    public id : number;
 	public name : string;
 	public level : number;
 	public comment : string;
@@ -21,7 +20,6 @@ export class AccessoryData{
     public image : string;
     constructor(
 		_id : number, 
-		_category : number, 
 		_name : string,
 		_level : number,
         _comment : string,
@@ -36,7 +34,6 @@ export class AccessoryData{
 		_image : string
 		){
 			this.id = _id;
-			this.category = _category;
 			this.name = _name;
 			this.level = _level;
             this.comment = _comment;

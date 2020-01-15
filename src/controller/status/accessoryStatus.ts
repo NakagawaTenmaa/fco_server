@@ -5,7 +5,7 @@ export class AccessoryStatus {
 
     constructor(){
         this.accessryData_ = new AccessoryData(
-            0,0,'',0,'',0,0,0,0,0,0,0,0,''
+            0,'',0,'',0,0,0,0,0,0,0,0,''
         );
     }
 
