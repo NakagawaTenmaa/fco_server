@@ -611,7 +611,7 @@ export class Player implements Character{
      * @memberof Player
      */
     public changeAccessory(_pointId: number, _accessoryId: number){
-        const accessoryData : AccessoryData | undefined = AccessoryDataAccessor.instance.Find(0);
+        const accessoryData : AccessoryData | undefined = AccessoryDataAccessor.instance.Find(_accessoryId);
         if(accessoryData === undefined) return;
 
         this.playerStatus_.ChangeAccessory(accessoryData ,_pointId);
