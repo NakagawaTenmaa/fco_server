@@ -600,7 +600,7 @@ export class Enemy implements Character{
         data.skill_id = this.enemyStatus_.tribeStatus.useSkillId;
 
         //console.log("enemy skill use request. [id:" + this.id.toString() + "]");
-        return CharacterManager.instance.SendAll(JSON.stringify(data));
+        return CharacterManager.instance.SendMapAll(JSON.stringify(data),this.mapId);
     }
     /**
      * スキル使用情報送信
@@ -619,6 +619,6 @@ export class Enemy implements Character{
         data.target_id = (target === undefined) ? (0) : (target.id);
 
         //console.log("enemy skill use. [id:" + this.id.toString() + "]");
-        return CharacterManager.instance.SendAll(JSON.stringify(data));
+        return CharacterManager.instance.SendMapAll(JSON.stringify(data), this.mapId);
     }
 }

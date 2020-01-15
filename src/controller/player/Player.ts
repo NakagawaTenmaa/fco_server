@@ -298,7 +298,7 @@ export class Player implements Character{
         this.party_ = undefined;
         this.partyPriority_ = -1;
         this.targetId_ = -1;
-        this.mapId_ = 0;
+        this.mapId_ = 1;
         this.transform_ = new Transform();
         this.playerStatus_ = new PlayerStatus();
         this.name_ = "";
