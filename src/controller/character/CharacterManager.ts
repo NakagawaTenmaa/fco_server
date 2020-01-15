@@ -445,18 +445,11 @@ export class CharacterManager{
      * @memberof CharacterManager
      */
     private RemovePlayer(_characterId:number) : boolean{
-        let isNotDeleted:boolean = false;
-        this.playerArray_ = this.playerArray_.filter(
-            (_player:Player)=>{
-                const isNotDelete:boolean = (_player.id !== _characterId);
-                isNotDeleted = isNotDeleted && isNotDelete;
-                return isNotDelete;
-            }
-        );
+        const playerIndex: number = this.playerArray_.findIndex((_player: Player) =>{ return _player.id === _characterId; })
+        if(playerIndex === -1) return false;
+        const release = this.playerArray_.splice(playerIndex,1);
+        if(release.length === 0) return false;
 
-        if(isNotDeleted){
-            return false;
-        }
         console.log("delete player.");
         return true;
     }
