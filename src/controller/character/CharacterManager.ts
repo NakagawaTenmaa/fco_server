@@ -447,6 +447,7 @@ export class CharacterManager{
     private RemovePlayer(_characterId:number) : boolean{
         const playerIndex: number = this.playerArray_.findIndex((_player: Player) =>{ return _player.id === _characterId; })
         if(playerIndex === -1) return false;
+        delete this.playerArray_[playerIndex];
         const release = this.playerArray_.splice(playerIndex,1);
         if(release.length === 0) return false;
 
