@@ -626,7 +626,7 @@ export class Player implements Character{
     public changeAllAccessory(_accessoryId: Array<number>){
         const accessoryData : Array<AccessoryData> | undefined = [];
         _accessoryId.forEach((_id: number) =>{
-            const data : AccessoryData | undefined = AccessoryDataAccessor.instance.Find(0);
+            const data : AccessoryData | undefined = AccessoryDataAccessor.instance.Find(_id);
             if(data === undefined){
             } else {
                 accessoryData.push(data);
