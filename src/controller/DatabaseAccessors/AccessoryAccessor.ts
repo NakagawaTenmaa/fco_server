@@ -97,6 +97,10 @@ export class AccessoryDataAccessor implements DatabaseAccessor{
         this.dataArray_ = new Array<AccessoryData>();
     }
 
+    public findOneById(_id: number) : AccessoryData | undefined{
+        return this.dataArray_.find((_data: AccessoryData) => { return _data.id === _id; });
+    }
+
     /**
      * IDで検索
      * @public

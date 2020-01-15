@@ -626,12 +626,12 @@ export class Player implements Character{
     public changeAllAccessory(_accessoryId: Array<number>){
         const accessoryData : Array<AccessoryData> | undefined = [];
         _accessoryId.forEach((_id: number) =>{
-            const data : AccessoryData | undefined = AccessoryDataAccessor.instance.Find(_id);
+            const data : AccessoryData | undefined = AccessoryDataAccessor.instance.findOneById(_id);
             if(data === undefined){
-                console.log("none")
+                console.log("none : " + _id.toString());
                 accessoryData.push(new AccessoryData(0,0,'',0,'',0,0,0,0,0,0,0,0,''));
             } else {
-                console.log("hit data" + JSON.stringify(data));
+                console.log("hit data" + JSON.stringify(data) + 'id : ' + _id.toString());
                 accessoryData.push(data);
             }
         })
