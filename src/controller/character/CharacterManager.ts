@@ -244,6 +244,25 @@ export class CharacterManager{
     }
 
     /**
+     * 同じマップの人に送信
+     * @param {string} _sendData
+     * @param {number} _mapId
+     * @returns
+     * @memberof CharacterManager
+     */
+    public SendMapAll(_sendData: string, _mapId: number){
+        let isSuccess: boolean = true;
+        this.playerArray_.forEach((player: Player) => {
+            if(player.mapId === _mapId){
+                if(!player.SendToClient(_sendData)) {
+                    isSuccess = false;
+                }
+            }
+        });
+        return isSuccess;
+    }
+
+    /**
      * 一人以外に送信
      * @param {number} _userId
      * @param {string} _sendData
@@ -290,7 +309,7 @@ export class CharacterManager{
             sendData.dir = data.dir;
             sendData.user_id = data.user_id;
             sendData.name = user.name;
-            isSuccess = this.SendAll(JSON.stringify(sendData));
+            isSuccess = this.SendMapAll(JSON.stringify(sendData), user.mapId);
         }
         return isSuccess;
     }
