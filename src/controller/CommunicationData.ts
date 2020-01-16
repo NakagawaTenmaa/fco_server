@@ -1946,7 +1946,7 @@ export namespace CommunicationData{
 		}
 
 		export class LoadingMapMaster implements Receive{
-			public static readonly id : number = 0;
+			public static readonly id : number = 716;
 			public readonly command : number = LoadingMapMaster.id;
 			public user_id : number ;
 
