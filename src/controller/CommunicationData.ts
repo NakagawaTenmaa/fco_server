@@ -979,7 +979,7 @@ export namespace CommunicationData{
 		}
 
 		export class LoadingMapMaster implements Send {
-			public static readonly id : number = 0;
+			public static readonly id : number = 717;
 			public readonly command : number = LoadingMapMaster.id;
 			public version : number;
 			public maps : Array<MapMasterData>;
