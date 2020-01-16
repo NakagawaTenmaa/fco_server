@@ -1,5 +1,6 @@
 import { Weapon } from "../controller/object/playerWeapon";
 import { Vector3 } from "./utility/Vector3";
+import { version } from "bluebird";
 
 /**
  * @fileoverview 通信データの実装ファイル
@@ -976,6 +977,18 @@ export namespace CommunicationData{
 				this.accessorys = [];
 			}
 		}
+
+		export class LoadingMapMaster implements Send {
+			public static readonly id : number = 0;
+			public readonly command : number = LoadingMapMaster.id;
+			public version : number;
+			public maps : Array<MapMasterData>;
+
+			constructor(){
+				this.version = 0;
+				this.maps = [];
+			}
+		}
 /**
 		 * マップ移動完了(クエスト受注やリタイアに紐づく)
 		 * @export
@@ -1236,7 +1249,8 @@ export namespace CommunicationData{
 		SelectRewardOk |
 		InventoryList |
 		DropInventoryList |
-		QuestMasterDataList;
+		QuestMasterDataList | 
+		LoadingMapMaster;
     }
     /**
      * 受信データ
@@ -1930,6 +1944,17 @@ export namespace CommunicationData{
 				this.user_id = 0;
 			}
 		}
+
+		export class LoadingMapMaster implements Receive{
+			public static readonly id : number = 0;
+			public readonly command : number = LoadingMapMaster.id;
+			public user_id : number ;
+
+			constructor(){
+				this.user_id = 0;
+			}
+		}
+
         export type AllTypes = 
         CharacterTransform | 
         PlayerStatus | 
@@ -1949,7 +1974,8 @@ export namespace CommunicationData{
 		SelectReward |
 		GetInventory |
 		GetDropInventory |
-		QuestMasterData;
+		QuestMasterData | 
+		LoadingMapMaster;
     }
 
     export type AllTypes = SendData.AllTypes | ReceiveData.AllTypes;
@@ -2247,6 +2273,19 @@ export namespace CommunicationData{
 					data.user_id = parseData.user_id - 0;
 					return data;
 				}
+				case ReceiveData.LoadingMapMaster.id:
+				{
+					const data : ReceiveData.LoadingMapMaster = new ReceiveData.LoadingMapMaster;
+					data.user_id = parseData.user_id;
+					return data;
+				}
+				case SendData.LoadingMapMaster.id:
+				{
+					const data : SendData.LoadingMapMaster = new SendData.LoadingMapMaster;
+					data.maps = parseData.maps;
+					data.version = parseData.version;
+					return data;
+				}
             }
             console.error("Convert Error");
             return undefined;
@@ -2373,5 +2412,27 @@ export class AccessoryMasterData {
 			this.dex = _dex;
 			this.agi = _agi;
 			this.image = _image;
+	}
+}
+
+export class MapMasterData{
+	public id: number;
+	public x : number;
+	public y : number;
+	public z : number;
+	public dir : number;
+
+	constructor(
+		_id : number,
+		_x  : number,
+		_y  : number,
+		_z  : number,
+		_dir: number
+	){
+		this.id = _id;
+		this.x  = _x;
+		this.y  = _y;
+		this.z  = _z;
+		this.dir= _dir;
 	}
 }
