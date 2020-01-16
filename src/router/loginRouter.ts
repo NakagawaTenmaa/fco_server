@@ -3,6 +3,9 @@ import { IsThere, MakeOk, DuplicateLogin, NotUser, LoginOK } from '../model/pack
 import { loginController } from './../controller/loginController';
 import { CharacterManager } from '../controller/character/CharacterManager';
 import { Player } from '../controller/player/Player';
+import { CommunicationData } from '../controller/CommunicationData';
+import { AccessoryDataAccessor } from '../controller/DatabaseAccessors/AccessoryAccessor';
+import { MapDataAccessor } from '../controller/DatabaseAccessors/MapAccessory';
 
 
 // ログインルーター
@@ -29,6 +32,26 @@ export class loginRouter{
                     case 101: this.resultCreateUser(json, ws); break;
                     // ユーザーのログイン
                     case 102: this.resultLoginUser(json, ws); break;
+
+                    // マスターデータの送信
+                    case CommunicationData.ReceiveData.LoadingAccessoryMaster.id:{
+                            let res : CommunicationData.SendData.LoadingAccessoryMaster = new CommunicationData.SendData.LoadingAccessoryMaster();
+                            res.accessorys = AccessoryDataAccessor.instance.getAll();
+                            res.version = 1;
+                            ws.send(JSON.stringify(res));
+                        }
+                        break;
+
+                    case CommunicationData.ReceiveData.LoadingMapMaster.id:{
+                        let res : CommunicationData.SendData.LoadingMapMaster = new CommunicationData.SendData.LoadingMapMaster();
+                        res.maps = MapDataAccessor.instance.getAll();
+                        res.version = 1;
+                        ws.send(JSON.stringify(res));
+                        break;
+                    }
+                    default:
+                        console.log('not command : ' + json.command);
+                        break;
                 }
             })  
         })
