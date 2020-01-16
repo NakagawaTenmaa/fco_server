@@ -18,7 +18,7 @@ export class AccessoryWearing extends BaseModel{
         else {
             const sql = format(
                 'UPDATE `accessory_wearing` SET `accessorys` = ? where `id` = ?',
-                [accessorys, id]);            
+                [accessorys, id]);
             res = await this.myQuery(sql);
         }
         return res;
