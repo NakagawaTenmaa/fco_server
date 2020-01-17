@@ -344,7 +344,15 @@ export class PlayerStatus implements CharacterStatus {
 
     public ChangeAccessory(_accessoryData: AccessoryData, _index: number) : void{
         if(_index >= this.MAX_ACCESSORY) return;
+        
+        
+        const lastHitPoint : number = (this.maxHitPoint - this.hitPoint_) / this.maxHitPoint;
+        const lastMagicPoint:number = (this.maxMagicPoint - this.magicPoint_) / this.maxMagicPoint;
+        
         this.accessoryStatus_[_index].ChangeAccessory(_accessoryData);
+
+        this.hitPoint = this.maxHitPoint - (this.maxHitPoint * lastHitPoint);
+        this.magicPoint = this.maxMagicPoint - (this.maxMagicPoint * lastMagicPoint);
     }
 
     public ChangeAllAccessory(_accessorys: Array<AccessoryData>){

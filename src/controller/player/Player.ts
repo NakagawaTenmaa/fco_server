@@ -634,6 +634,7 @@ export class Player implements Character{
             }
         })
         this.playerStatus_.ChangeAllAccessory(accessoryData);
+        this.playerStatus_.Initialize();
     }
 
     /**
