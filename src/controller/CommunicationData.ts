@@ -1015,6 +1015,7 @@ export namespace CommunicationData{
 			 */
 			public readonly command : number = MoveingMapOk.id;
 
+			public mapId : number;
 
 			/**
 			 * デフォルトコンストラクタ
@@ -1023,6 +1024,7 @@ export namespace CommunicationData{
 			 * @memberof {MoveingMapOk}
 			 */
 			public constructor(){
+				this.mapId = 0;
 			}
 		}
 		/**
