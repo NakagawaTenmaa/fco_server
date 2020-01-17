@@ -506,7 +506,8 @@ export class CharacterManager{
      */
     public SendEnemy(_characterid: number, _mapid: number){
         let data: CommunicationData.SendData.EnemysData = new CommunicationData.SendData.EnemysData();
-        this.enemyArray_.forEach((_enemy: Enemy) => {
+        const enemys : Array<Enemy> = this.enemyLisyByMapId(_mapid);
+        enemys.forEach((_enemy: Enemy) => {
             if(!_enemy.isDead){ 
                 let enemyData = new SendEnemyData(); 
                 enemyData.master_id = _enemy.tribeId;
@@ -575,6 +576,22 @@ export class CharacterManager{
 
         player.changeMap(_data.map_id);
         player.allReleaseDropInventory();
+    }
+
+    /**
+     * マップごとの敵リスト取得
+     * @param {number} _mapId
+     * @returns {Array<Enemy>}
+     * @memberof CharacterManager
+     */
+    public enemyLisyByMapId(_mapId: number) : Array<Enemy> {
+        let enemys : Array<Enemy> = [];
+        this.enemyArray_.find((_data: Enemy) => {
+            if(_data.mapId === _mapId) {
+                enemys.push(_data);
+            }
+        })
+        return enemys;        
     }
 
     /**
