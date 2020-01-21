@@ -989,6 +989,18 @@ export namespace CommunicationData{
 				this.maps = [];
 			}
 		}
+
+		export class LoadingQuestMaster implements Send {
+			public static readonly id : number = 0;
+			public readonly command : number = LoadingQuestMaster.id;
+			public version : number;
+			public quests : Array<QuestMasterData>;
+			
+			constructor(){
+				this.version = 0;
+				this.quests = [];
+			}
+		}
 /**
 		 * マップ移動完了(クエスト受注やリタイアに紐づく)
 		 * @export
@@ -1252,7 +1264,8 @@ export namespace CommunicationData{
 		InventoryList |
 		DropInventoryList |
 		QuestMasterDataList | 
-		LoadingMapMaster;
+		LoadingMapMaster |
+		LoadingQuestMaster;
     }
     /**
      * 受信データ
@@ -1957,6 +1970,16 @@ export namespace CommunicationData{
 			}
 		}
 
+		export class LoadingQuestMaster implements Receive {
+			public static readonly id : number = 0;
+			public readonly command : number = LoadingMapMaster.id;
+			public user_id : number ;
+
+			constructor(){
+				this.user_id = 0;
+			}
+		}
+
         export type AllTypes = 
         CharacterTransform | 
         PlayerStatus | 
@@ -1977,7 +2000,8 @@ export namespace CommunicationData{
 		GetInventory |
 		GetDropInventory |
 		QuestMasterData | 
-		LoadingMapMaster;
+		LoadingMapMaster |
+		LoadingQuestMaster;
     }
 
     export type AllTypes = SendData.AllTypes | ReceiveData.AllTypes;
@@ -2288,6 +2312,19 @@ export namespace CommunicationData{
 					data.version = parseData.version;
 					return data;
 				}
+				case SendData.LoadingQuestMaster.id:
+				{
+					const data : SendData.LoadingQuestMaster = new SendData.LoadingQuestMaster;
+					data.version = parseData.version;
+					data.quests  = parseData.quests;
+					return data;
+				}
+				case ReceiveData.LoadingQuestMaster.id:
+				{
+					const data : ReceiveData.LoadingQuestMaster = new ReceiveData.LoadingQuestMaster;
+					data.user_id = parseData.user_id;
+					return data;
+				}
             }
             console.error("Convert Error");
             return undefined;
@@ -2436,5 +2473,27 @@ export class MapMasterData{
 		this.y  = _y;
 		this.z  = _z;
 		this.dir= _dir;
+	}
+}
+
+export class QuestMasterData {
+	public id : number;
+	public name : string;
+	public targetId : number;
+	public comment : string;
+	public mapId : number;
+
+	constructor(
+		_id : number,
+		_name : string,
+		_targetId : number,
+		_comment : string,
+		_mapId : number
+	){
+		this.id = _id;
+		this.name = _name;
+		this.comment = _comment;
+		this.targetId = _targetId;
+		this.mapId = _mapId;
 	}
 }
