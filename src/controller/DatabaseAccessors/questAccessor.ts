@@ -17,7 +17,7 @@ export class QuestData{
     
     public id             : number;
     public name           : string;
-    public difficulty_     : number;
+    public difficulty     : number;
     public targetId       : number;
     public comment        : string;
     public mapId          : number;
@@ -37,7 +37,7 @@ export class QuestData{
     ){
         this.id = _id;
         this.name = _name;
-        this.difficulty_ = _difficulty;
+        this.difficulty = _difficulty;
         this.targetId = _targetId;
         this.comment = _comment;
         this.mapId = _mapId;
