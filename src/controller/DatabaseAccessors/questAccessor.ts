@@ -19,25 +19,38 @@ export class QuestData{
     public get  id()        : number { return this.id_; }
     private name_           : string;
     public get name()       : string { return this.name_; }
+    private difficulty_     : number;
+    public get difficulty() : number { return this.difficulty_; }
     private targetId_       : number;
     public get targetId()   : number { return this.targetId_; }
     private comment_        : string;
     public get comment()    : string { return this.comment_; }
     private mapId_          : number;
     public get mapId()      : number { return this.mapId_; }
+    private time_           : number;
+    public get time()       : number { return this.time_; }
+    private items_          : Array<number>;
+    public get items()      : Array<number> { return this.items_; }
+
 
     public constructor(
         _id: number,
         _name : string,
+        _difficulty: number,
         _targetId : number,
         _comment : string,
-        _mapId : number
+        _mapId : number,
+        _time  : number,
+        _items : Array<number>
     ){
         this.id_ = _id;
         this.name_ = _name;
+        this.difficulty_ = _difficulty;
         this.targetId_ = _targetId;
         this.comment_ = _comment;
         this.mapId_ = _mapId;
+        this.time_  = _time;
+        this.items_ = _items;
     }
 }
 

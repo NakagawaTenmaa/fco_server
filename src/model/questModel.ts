@@ -13,9 +13,12 @@ export class QuestModel extends BaseModel{
             quests.push(new QuestData(
                 _quest.id,
                 _quest.name,
+                _quest.difficulty,
                 _quest.targetId,
                 _quest.comment,
-                _quest.mapId
+                _quest.mapId,
+                _quest.time,
+                [0,0]
             ));
         })
         

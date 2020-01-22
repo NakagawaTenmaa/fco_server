@@ -2479,21 +2479,30 @@ export class MapMasterData{
 export class QuestMasterData {
 	public id : number;
 	public name : string;
+	public difficulty : number;
 	public targetId : number;
 	public comment : string;
 	public mapId : number;
+	public time  : number;
+	public items : Array<number>;
 
 	constructor(
 		_id : number,
 		_name : string,
+		_difficulty : number,
 		_targetId : number,
 		_comment : string,
-		_mapId : number
+		_mapId : number,
+		_time : number,
+		items_: Array<number>
 	){
 		this.id = _id;
 		this.name = _name;
+		this.difficulty = _difficulty;
 		this.comment = _comment;
 		this.targetId = _targetId;
 		this.mapId = _mapId;
+        this.time  = _time;
+        this.items = _items;
 	}
 }
