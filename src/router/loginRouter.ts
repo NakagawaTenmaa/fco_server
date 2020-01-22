@@ -26,7 +26,6 @@ export class loginRouter{
         this.wss.on('connection', (ws) => {
             console.log('connection client');
             ws.on('message', (msg: any) => {
-                console.log(msg);
                 let json = JSON.parse(msg);
                 switch(json.command){
                     // ユーザーの作成
@@ -71,13 +70,10 @@ export class loginRouter{
         if(result === 0) {
             const res = new MakeOk();
             res.user_id = 0;
-
-            console.log('send makeok : ' + JSON.stringify(res));
             ws.send(JSON.stringify(res));
         }
         else if(result === -1) {
             const res = new IsThere();
-            console.log(res);
             ws.send(JSON.stringify(res));
         }
     }
@@ -101,8 +97,6 @@ export class loginRouter{
             res.user_id = player.id;
             res.name = player.name;
 
-
-            console.log('send loginok : ' + JSON.stringify(res));
             ws.send(JSON.stringify(res));
         }
     }
