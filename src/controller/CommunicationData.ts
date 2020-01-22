@@ -1896,7 +1896,7 @@ export namespace CommunicationData{
 
 		export class LoadingQuestMaster implements Receive {
 			public static readonly id : number = 714;
-			public readonly command : number = LoadingMapMaster.id;
+			public readonly command : number = LoadingQuestMaster.id;
 			public user_id : number ;
 
 			constructor(){
