@@ -648,6 +648,8 @@ export namespace CommunicationData{
 
 			public damage_value : number;
 
+			public last_attack_id : number;
+
 			/**
 			 * デフォルトコンストラクタ
 			 * @public
@@ -658,6 +660,7 @@ export namespace CommunicationData{
                 this.drop = 0;
 				this.unique_id = 0;
 				this.damage_value = 0;
+				this.last_attack_id = 0;
 			}
         }
         

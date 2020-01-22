@@ -713,6 +713,7 @@ export class CharacterManager{
                     data.drop = DropItemDataAccessor.instance.randomDropId(1);
                     data.unique_id = receiveCharacter.id;
                     data.damage_value = damageValue;
+                    data.last_attack_id = _useSkill.user_id;
 
                     const player: Player | undefined = this.FindPlayer(_useSkill.user_id);
                     if(player === undefined) return;
