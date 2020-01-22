@@ -15,22 +15,14 @@ import { QuestModel } from '../../model/questModel';
  */
 export class QuestData{
     
-    private id_             : number;
-    public get  id()        : number { return this.id_; }
-    private name_           : string;
-    public get name()       : string { return this.name_; }
-    private difficulty_     : number;
-    public get difficulty() : number { return this.difficulty_; }
-    private targetId_       : number;
-    public get targetId()   : number { return this.targetId_; }
-    private comment_        : string;
-    public get comment()    : string { return this.comment_; }
-    private mapId_          : number;
-    public get mapId()      : number { return this.mapId_; }
-    private time_           : number;
-    public get time()       : number { return this.time_; }
-    private items_          : Array<number>;
-    public get items()      : Array<number> { return this.items_; }
+    public id             : number;
+    public name           : string;
+    public difficulty_     : number;
+    public targetId       : number;
+    public comment        : string;
+    public mapId          : number;
+    public time           : number;
+    public items          : Array<number>;
 
 
     public constructor(
@@ -43,14 +35,14 @@ export class QuestData{
         _time  : number,
         _items : Array<number>
     ){
-        this.id_ = _id;
-        this.name_ = _name;
+        this.id = _id;
+        this.name = _name;
         this.difficulty_ = _difficulty;
-        this.targetId_ = _targetId;
-        this.comment_ = _comment;
-        this.mapId_ = _mapId;
-        this.time_  = _time;
-        this.items_ = _items;
+        this.targetId = _targetId;
+        this.comment = _comment;
+        this.mapId = _mapId;
+        this.time  = _time;
+        this.items = _items;
     }
 }
 
