@@ -119,20 +119,6 @@ export class playRouter{
                 }
 
 
-                // マスターデータの送信
-                // アクセサリー
-                else if(data instanceof CommunicationData.ReceiveData.LoadingAccessoryMaster){
-                    let res : CommunicationData.SendData.LoadingAccessoryMaster = new CommunicationData.SendData.LoadingAccessoryMaster();
-                    res.accessorys = AccessoryDataAccessor.instance.getAll();
-                    res.version = 1;
-                    this.characterManager.SendOne(data.user_id, JSON.stringify(res));
-                }
-                // TODO: クエスト
-                else if(data instanceof CommunicationData.ReceiveData.QuestMasterData){
-                    let res : CommunicationData.SendData.QuestMasterDataList = new CommunicationData.SendData.QuestMasterDataList();
-                }
-
-
                 else {
                     console.log("none packet data " + data.command.toString());
                 }
