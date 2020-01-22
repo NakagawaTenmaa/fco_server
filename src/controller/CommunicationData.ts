@@ -989,6 +989,18 @@ export namespace CommunicationData{
 				this.maps = [];
 			}
 		}
+
+		export class LoadingQuestMaster implements Send {
+			public static readonly id : number = 715;
+			public readonly command : number = LoadingQuestMaster.id;
+			public version : number;
+			public quests : Array<QuestMasterData>;
+			
+			constructor(){
+				this.version = 0;
+				this.quests = [];
+			}
+		}
 /**
 		 * マップ移動完了(クエスト受注やリタイアに紐づく)
 		 * @export
@@ -1151,82 +1163,7 @@ export namespace CommunicationData{
 				this.accessory_ids = new Array<number>();
 			}
 		}
-		/**
-		 * クエストマスター取得
-		 * @export
-		 * @class QuestMasterDataList
-		 * @implements {Send}
-		 */
-		export class QuestMasterDataList implements Send{
-			/**
-			 * コマンドID
-			 * @public
-			 * @static 
-			 * @readonly 
-			 * @type {number}
-			 * @memberof {QuestMasterDataList}
-			 */
-			public static readonly id : number = 714;
-
-			/**
-			 * コマンド識別子
-			 * @public
-			 * @readonly 
-			 * @type {number}
-			 * @memberof {QuestMasterDataList}
-			 */
-			public readonly command : number = QuestMasterDataList.id;
-			/**
-			 * クエストID
-			 * @public
-			 * @type {number}
-			 * @memberof {QuestMasterDataList}
-			 */
-			public id : number;
-			/**
-			 * 難易度
-			 * @public
-			 * @type {number}
-			 * @memberof {QuestMasterDataList}
-			 */
-			public difficulty : number;
-			/**
-			 * アイコンID
-			 * @public
-			 * @type {number}
-			 * @memberof {QuestMasterDataList}
-			 */
-			public icon_id : number;
-			/**
-			 * マップID
-			 * @public
-			 * @type {number}
-			 * @memberof {QuestMasterDataList}
-			 */
-			public map_id : number;
-			/**
-			 * ドロップ品一覧
-			 * @public
-			 * @type {Array<number>}
-			 * @memberof {QuestMasterDataList}
-			 */
-			public drop_ids : Array<number>;
-
-
-			/**
-			 * デフォルトコンストラクタ
-			 * @public
-			 * @constructor
-			 * @memberof {QuestMasterDataList}
-			 */
-			public constructor(){
-				this.id = 0;
-				this.difficulty = 0;
-				this.icon_id = 0;
-				this.map_id = 0;
-				this.drop_ids = new Array<number>();
-			}
-		}
+	
         export type AllTypes = 
         CharacterTransform |
         SimpleDisplayOfCharacter |
@@ -1251,8 +1188,8 @@ export namespace CommunicationData{
 		SelectRewardOk |
 		InventoryList |
 		DropInventoryList |
-		QuestMasterDataList | 
-		LoadingMapMaster;
+		LoadingMapMaster |
+		LoadingQuestMaster;
     }
     /**
      * 受信データ
@@ -1957,6 +1894,16 @@ export namespace CommunicationData{
 			}
 		}
 
+		export class LoadingQuestMaster implements Receive {
+			public static readonly id : number = 714;
+			public readonly command : number = LoadingMapMaster.id;
+			public user_id : number ;
+
+			constructor(){
+				this.user_id = 0;
+			}
+		}
+
         export type AllTypes = 
         CharacterTransform | 
         PlayerStatus | 
@@ -1977,7 +1924,8 @@ export namespace CommunicationData{
 		GetInventory |
 		GetDropInventory |
 		QuestMasterData | 
-		LoadingMapMaster;
+		LoadingMapMaster |
+		LoadingQuestMaster;
     }
 
     export type AllTypes = SendData.AllTypes | ReceiveData.AllTypes;
@@ -2145,16 +2093,6 @@ export namespace CommunicationData{
 					data.user_id = parseData.user_id - 0;
 					return data;
 				}
-				case SendData.QuestMasterDataList.id:
-				{
-					const data:SendData.QuestMasterDataList = new SendData.QuestMasterDataList();
-					data.id = parseData.id - 0;
-					data.difficulty = parseData.difficulty - 0;
-					data.icon_id = parseData.icon_id - 0;
-					data.map_id = parseData.map_id - 0;
-					data.drop_ids = parseData.drop_ids;
-					return data;
-				}
                 case SendData.FindOfPlayerStoC.id:{
 					const data:SendData.FindOfPlayerStoC = new SendData.FindOfPlayerStoC();
 					data.user_id = parseData.user_id - 0;
@@ -2286,6 +2224,19 @@ export namespace CommunicationData{
 					const data : SendData.LoadingMapMaster = new SendData.LoadingMapMaster;
 					data.maps = parseData.maps;
 					data.version = parseData.version;
+					return data;
+				}
+				case SendData.LoadingQuestMaster.id:
+				{
+					const data : SendData.LoadingQuestMaster = new SendData.LoadingQuestMaster;
+					data.version = parseData.version;
+					data.quests  = parseData.quests;
+					return data;
+				}
+				case ReceiveData.LoadingQuestMaster.id:
+				{
+					const data : ReceiveData.LoadingQuestMaster = new ReceiveData.LoadingQuestMaster;
+					data.user_id = parseData.user_id;
 					return data;
 				}
             }
@@ -2436,5 +2387,36 @@ export class MapMasterData{
 		this.y  = _y;
 		this.z  = _z;
 		this.dir= _dir;
+	}
+}
+
+export class QuestMasterData {
+	public id : number;
+	public name : string;
+	public difficulty : number;
+	public targetId : number;
+	public comment : string;
+	public mapId : number;
+	public time  : number;
+	public items : Array<number>;
+
+	constructor(
+		_id : number,
+		_name : string,
+		_difficulty : number,
+		_targetId : number,
+		_comment : string,
+		_mapId : number,
+		_time : number,
+		_items: Array<number>
+	){
+		this.id = _id;
+		this.name = _name;
+		this.difficulty = _difficulty;
+		this.comment = _comment;
+		this.targetId = _targetId;
+		this.mapId = _mapId;
+        this.time  = _time;
+        this.items = _items;
 	}
 }

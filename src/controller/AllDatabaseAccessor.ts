@@ -16,6 +16,7 @@ import { SkillDataAccessor } from "./DatabaseAccessors/SkillDataAccessor";
 import { DropItemDataAccessor } from "./DatabaseAccessors/DropItemAccessor";
 import { AccessoryDataAccessor } from './DatabaseAccessors/AccessoryAccessor';
 import { MapDataAccessor } from "./DatabaseAccessors/MapAccessory";
+import { QuestDataAccessor } from "./DatabaseAccessors/questAccessor";
 
  /**
  * 全てのデータベースアクセサー
@@ -40,7 +41,8 @@ export namespace AllDatabaseAccessor{
             SkillDataAccessor.instance.Load(),
             DropItemDataAccessor.instance.Load(),
             AccessoryDataAccessor.instance.Load(),
-            MapDataAccessor.instance.Load()
+            MapDataAccessor.instance.Load(),
+            QuestDataAccessor.instance.Load()
         ]);
 
         let isSuccess:boolean = true;
