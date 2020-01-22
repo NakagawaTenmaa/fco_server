@@ -6,6 +6,7 @@ import { Player } from '../controller/player/Player';
 import { CommunicationData } from '../controller/CommunicationData';
 import { AccessoryDataAccessor } from '../controller/DatabaseAccessors/AccessoryAccessor';
 import { MapDataAccessor } from '../controller/DatabaseAccessors/MapAccessory';
+import { QuestDataAccessor } from '../controller/DatabaseAccessors/questAccessor';
 
 
 // ログインルーター
@@ -45,6 +46,13 @@ export class loginRouter{
                     case CommunicationData.ReceiveData.LoadingMapMaster.id:{
                         let res : CommunicationData.SendData.LoadingMapMaster = new CommunicationData.SendData.LoadingMapMaster();
                         res.maps = MapDataAccessor.instance.getAll();
+                        res.version = 1;
+                        ws.send(JSON.stringify(res));
+                        break;
+                    }
+                    case CommunicationData.ReceiveData.LoadingQuestMaster.id:{
+                        let res : CommunicationData.SendData.LoadingQuestMaster = new CommunicationData.SendData.LoadingQuestMaster();
+                        res.quests = QuestDataAccessor.instance.getAll();
                         res.version = 1;
                         ws.send(JSON.stringify(res));
                         break;

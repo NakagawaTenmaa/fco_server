@@ -69,7 +69,9 @@ export class QuestDataAccessor implements DatabaseAccessor{
         return this.dataArray_.concat([]);
     }
 
-
+    public getAll() : QuestData[]{
+        return this.dataArray_;
+    }
     private constructor(){
         this.dataArray_ = new Array<QuestData>();
     }
