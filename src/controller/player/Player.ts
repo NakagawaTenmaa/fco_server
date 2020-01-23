@@ -599,8 +599,10 @@ export class Player implements Character{
     public changeMap(_mapId: number){
         if(this.ws_ === null) return;
         this.mapId_ = _mapId;
-
-        this.ws_.send(JSON.stringify(new CommunicationData.SendData.MoveingMapOk()));
+        
+        let res : CommunicationData.SendData.MoveingMapOk = new CommunicationData.SendData.MoveingMapOk();
+        res.mapId = _mapId;
+        this.ws_.send(JSON.stringify(res));
     }
 
     /**
