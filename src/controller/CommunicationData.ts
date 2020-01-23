@@ -1044,7 +1044,7 @@ export namespace CommunicationData{
 		}
 
 		export class MoveingMapExitOther implements Send{
-			public static readonly id : number = 0;
+			public static readonly id : number = 257;
 			public readonly command : number = MoveingMapExitOther.id;
 			public user_id : number;
 
@@ -1054,7 +1054,7 @@ export namespace CommunicationData{
 		}
 
 		export class MoveingMapInOther implements Send {
-			public static readonly id : number = 0;
+			public static readonly id : number = 258;
 			public readonly command : number = MoveingMapInOther.id;
 			public user_id : number;
 			constructor() {
