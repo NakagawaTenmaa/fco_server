@@ -576,10 +576,8 @@ export class CharacterManager{
 
         player.changeMap(_data.map_id);
         player.allReleaseDropInventory();
-
-        let res : CommunicationData.SendData.MoveingMapOk = new CommunicationData.SendData.MoveingMapOk();
-        res.mapId = player.mapId;
-        player.SendToClient(JSON.stringify(res));
+        
+        // 他ユーザーに伝達
     }
 
     /**

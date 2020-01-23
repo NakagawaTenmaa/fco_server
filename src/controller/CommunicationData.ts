@@ -1042,6 +1042,26 @@ export namespace CommunicationData{
 				this.mapId = 0;
 			}
 		}
+
+		export class MoveingMapExitOther implements Send{
+			public static readonly id : number = 0;
+			public readonly command : number = MoveingMapExitOther.id;
+			public user_id : number;
+
+			constructor(){
+				this.user_id = 0;
+			}
+		}
+
+		export class MoveingMapInOther implements Send {
+			public static readonly id : number = 0;
+			public readonly command : number = MoveingMapInOther.id;
+			public user_id : number;
+			constructor() {
+				this.user_id = 0;
+			}
+		}
+
 		/**
 		 * 報酬選択完了
 		 * @export
@@ -2239,6 +2259,18 @@ export namespace CommunicationData{
 				case ReceiveData.LoadingQuestMaster.id:
 				{
 					const data : ReceiveData.LoadingQuestMaster = new ReceiveData.LoadingQuestMaster;
+					data.user_id = parseData.user_id;
+					return data;
+				}
+				case SendData.MoveingMapExitOther.id:
+				{
+					const data : SendData.MoveingMapExitOther = new SendData.MoveingMapExitOther();
+					data.user_id = parseData.user_id;
+					return data;
+				}
+				case SendData.MoveingMapInOther.id:
+				{
+					const data : SendData.MoveingMapInOther = new SendData.MoveingMapInOther();
 					data.user_id = parseData.user_id;
 					return data;
 				}
