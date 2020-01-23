@@ -573,13 +573,18 @@ export class CharacterManager{
     public changeMap(_data: CommunicationData.ReceiveData.MoveingMap){
         const player: Player | undefined = this.FindPlayer(_data.user_id);
         if(player === undefined) return;
-
+        const lastMap : number = player.mapId;
         player.changeMap(_data.map_id);
         player.allReleaseDropInventory();
-
-        let res : CommunicationData.SendData.MoveingMapOk = new CommunicationData.SendData.MoveingMapOk();
-        res.mapId = player.mapId;
-        player.SendToClient(JSON.stringify(res));
+        
+        // 他ユーザーに伝達
+        let exitMapRes : CommunicationData.SendData.MoveingMapExitOther = new CommunicationData.SendData.MoveingMapExitOther();
+        exitMapRes.user_id = player.id;
+        this.SendMapAll(JSON.stringify(exitMapRes), lastMap);
+        
+        let inMapRes   : CommunicationData.SendData.MoveingMapInOther = new CommunicationData.SendData.MoveingMapInOther();
+        inMapRes.user_id = player.id;
+        this.SendMapAll(JSON.stringify(inMapRes), _data.map_id);
     }
 
     /**
