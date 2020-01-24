@@ -19,6 +19,7 @@ import { DropItemDataAccessor } from './../DatabaseAccessors/DropItemAccessor';
 import { UserMaster } from '../../model/userMaster';
 import { InventoryModel } from '../../model/inventoryModel';
 import { AccessoryWearing } from '../../model/accessoryWearingModel';
+import { QuestDataAccessor, QuestData } from '../DatabaseAccessors/questAccessor';
 // import { EnemyDrop } from '../object/enemyDrop';
 // import { EnemyDropModel } from '../../model/enemyDropModel';
 
@@ -574,6 +575,7 @@ export class CharacterManager{
         const player: Player | undefined = this.FindPlayer(_data.user_id);
         if(player === undefined) return;
         const lastMap : number = player.mapId;
+
         player.changeMap(_data.map_id);
         player.allReleaseDropInventory();
         
@@ -723,7 +725,13 @@ export class CharacterManager{
                     const player: Player | undefined = this.FindPlayer(_useSkill.user_id);
                     if(player === undefined) return;
                     player.addDropInventory(data.drop);
-
+                    
+                    if(player.targetId === receiveCharacter.tribeId){
+                        // 討伐完了
+                        let res : CommunicationData.SendData.QuestClear = new CommunicationData.SendData.QuestClear();
+                        player.SendToClient(JSON.stringify(res));
+                        console.log("quest clear  player " + player.name);
+                    }
                 } else if(receiveCharacter instanceof Player){
                     // プレイヤーの時の処理
                 } else console.error("not player and enemy");
@@ -740,6 +748,17 @@ export class CharacterManager{
 //            );
 //            console.log("}");
         }
+    }
+
+    public setQuest(_data: CommunicationData.ReceiveData.QuestOrders){
+        const player: Player | undefined = this.FindPlayer(_data.user_id);
+        const quest: QuestData | undefined = QuestDataAccessor.instance.findById(_data.quest_id);
+
+        if(quest === undefined)  return;
+        if(player === undefined) return;
+
+        player.targetId = quest.targetId;
+        console.log("quest order : player : " + player.id.toString() + "  quest name : " + quest.name);
     }
 
 

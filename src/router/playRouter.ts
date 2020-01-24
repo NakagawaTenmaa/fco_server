@@ -117,6 +117,10 @@ export class playRouter{
                 else if(data instanceof CommunicationData.ReceiveData.GetDropInventory){
                     this.characterManager.getDropInventory(data);
                 }
+                // クエスト受注
+                else if(data instanceof CommunicationData.ReceiveData.QuestOrders){
+                    this.characterManager.setQuest(data);
+                }
 
 
                 else {
