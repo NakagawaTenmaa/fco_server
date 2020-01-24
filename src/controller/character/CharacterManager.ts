@@ -725,7 +725,12 @@ export class CharacterManager{
                     const player: Player | undefined = this.FindPlayer(_useSkill.user_id);
                     if(player === undefined) return;
                     player.addDropInventory(data.drop);
-
+                    
+                    if(player.targetId === receiveCharacter.tribeId){
+                        // 討伐完了
+                        let res : CommunicationData.SendData.QuestClear = new CommunicationData.SendData.QuestClear();
+                        player.SendToClient(JSON.stringify(res));
+                    }
                 } else if(receiveCharacter instanceof Player){
                     // プレイヤーの時の処理
                 } else console.error("not player and enemy");
