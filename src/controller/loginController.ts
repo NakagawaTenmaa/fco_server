@@ -21,7 +21,7 @@ export class loginController{
             if(hash === user.hash) {
                 if(!user.status){
                     // 状態の変更
-                    await UserModel.changeStatus(user.id, 1);
+                    await UserModel.changeStatus(user.id, 0);
                     return user;
                 } else return -1;
             }
