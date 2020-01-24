@@ -730,6 +730,7 @@ export class CharacterManager{
                         // 討伐完了
                         let res : CommunicationData.SendData.QuestClear = new CommunicationData.SendData.QuestClear();
                         player.SendToClient(JSON.stringify(res));
+                        console.log("quest clear  player " + player.name);
                     }
                 } else if(receiveCharacter instanceof Player){
                     // プレイヤーの時の処理
