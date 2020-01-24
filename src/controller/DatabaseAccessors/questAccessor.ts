@@ -68,6 +68,10 @@ export class QuestDataAccessor implements DatabaseAccessor{
         this.dataArray_ = new Array<QuestData>();
     }
 
+    public findById(_id: number): QuestData|undefined {
+        return this.dataArray_.find((_data: QuestData) => { return _data.id === _id; })
+    }
+
     public Find(_id:number) : QuestData|undefined
     public Find(_name:string) : QuestData|undefined
     public Find(_key:number|string) : QuestData|undefined
