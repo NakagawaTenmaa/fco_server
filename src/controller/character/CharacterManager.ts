@@ -758,7 +758,6 @@ export class CharacterManager{
         if(player === undefined) return;
 
         player.targetId = quest.targetId;
-        console.log("quest order : player : " + player.id.toString() + "  quest name : " + quest.name);
     }
 
 
