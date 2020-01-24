@@ -613,9 +613,11 @@ export class Player implements Character{
      * @memberof Player
      */
     public changeAccessory(_pointId: number, _accessoryId: number){
-        const accessoryData : AccessoryData | undefined = AccessoryDataAccessor.instance.findOneById(_accessoryId);
+        let accessoryData : AccessoryData | undefined = AccessoryDataAccessor.instance.findOneById(_accessoryId);
+        if(_accessoryId === 0){ 
+            accessoryData = new AccessoryData(0,'',0,'',0,0,0,0,0,0,0,0,'');
+        }
         if(accessoryData === undefined) return;
-
         this.playerStatus_.ChangeAccessory(accessoryData ,_pointId);
     }
 
