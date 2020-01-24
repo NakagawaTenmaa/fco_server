@@ -1186,6 +1186,14 @@ export namespace CommunicationData{
 				this.accessory_ids = new Array<number>();
 			}
 		}
+
+		export class QuestClear implements Send {
+			public static readonly id : number = 242;
+			readonly command : number = QuestClear.id;
+			constructor(){
+
+			}
+		}
 	
         export type AllTypes = 
         CharacterTransform |
@@ -1212,7 +1220,8 @@ export namespace CommunicationData{
 		InventoryList |
 		DropInventoryList |
 		LoadingMapMaster |
-		LoadingQuestMaster;
+		LoadingQuestMaster |
+		QuestClear;
     }
     /**
      * 受信データ
@@ -1927,6 +1936,18 @@ export namespace CommunicationData{
 			}
 		}
 
+		export class QuestOrders implements Receive {
+			public static readonly id : number = 241;
+			public readonly command : number = QuestOrders.id;
+			public user_id  : number;
+			public quest_id : number;
+			
+			constructor(){
+				this.user_id  = 0;
+				this.quest_id = 0;
+			}
+		}
+
         export type AllTypes = 
         CharacterTransform | 
         PlayerStatus | 
@@ -1948,7 +1969,8 @@ export namespace CommunicationData{
 		GetDropInventory |
 		QuestMasterData | 
 		LoadingMapMaster |
-		LoadingQuestMaster;
+		LoadingQuestMaster |
+		QuestOrders;
     }
 
     export type AllTypes = SendData.AllTypes | ReceiveData.AllTypes;
@@ -2272,6 +2294,18 @@ export namespace CommunicationData{
 				{
 					const data : SendData.MoveingMapInOther = new SendData.MoveingMapInOther();
 					data.user_id = parseData.user_id;
+					return data;
+				}
+				case SendData.QuestClear.id:
+				{
+					const data : SendData.QuestClear = new SendData.QuestClear();
+					return data;
+				}
+				case ReceiveData.QuestOrders.id:
+				{
+					const data : ReceiveData.QuestOrders = new ReceiveData.QuestOrders();
+					data.user_id = parseData.user_id;
+					data.quest_id = parseData.quest_id;
 					return data;
 				}
             }
