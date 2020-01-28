@@ -69,6 +69,10 @@ export class playRouter{
                     let player: Player | undefined = this.characterManager.FindPlayer(data.user_id);
                     if(player === undefined) return;
                     player.modelId = data.model_id;
+
+                    let res: CommunicationData.SendData.SaveModelType = new CommunicationData.SendData.SaveModelType();
+                    res.model_id = player.modelId;
+                    player.SendToClient(JSON.stringify(res));
                     console.log("model id setting user: " + data.user_id.toString() + "/ modelType: " + data.model_id.toString());
                 }
                 // 読み込み完了
