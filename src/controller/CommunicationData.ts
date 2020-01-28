@@ -116,7 +116,9 @@ export namespace CommunicationData{
              * @type {string}
              * @memberof CharacterTransform
              */
-            public name: string;
+			public name: string;
+			
+			public animation : number;
             /**
              * デフォルトコンストラクタ
              * @public
@@ -130,7 +132,8 @@ export namespace CommunicationData{
                 this.y = 0;
                 this.z = 0;
                 this.dir = 0;
-                this.name = "";
+				this.name = "";
+				this.animation = 0;
             }
         }
 
@@ -1256,12 +1259,14 @@ export namespace CommunicationData{
             public x: number;
             public y: number;
             public z: number;
-            public dir: number;
+			public dir: number;
+			public animation : number;
             constructor(){
                 this.x = 0;
                 this.y = 0;
                 this.z = 0;
-                this.dir = 0;
+				this.dir = 0;
+				this.animation = 0;
             }
         }
 
@@ -2004,7 +2009,8 @@ export namespace CommunicationData{
                     data.y = parseData.y - 0;
                     data.z = parseData.z - 0;
                     data.dir = parseData.dir - 0;
-                    data.name = parseData.name;
+					data.name = parseData.name;
+					data.animation = parseData.animation;
                     return data;
                 }
                 case SendData.SimpleDisplayOfCharacter.id:

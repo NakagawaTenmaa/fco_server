@@ -310,6 +310,7 @@ export class CharacterManager{
             sendData.dir = data.dir;
             sendData.user_id = data.user_id;
             sendData.name = user.name;
+            sendData.animation = data.animation;
             isSuccess = this.SendMapAll(JSON.stringify(sendData), user.mapId);
         }
         return isSuccess;
