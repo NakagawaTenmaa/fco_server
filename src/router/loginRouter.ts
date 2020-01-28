@@ -67,13 +67,24 @@ export class loginRouter{
     // 作成の結果報告
     private async resultCreateUser(data: any, ws: any){   
         const result = await this.controller.createUser(data);
-        if(result === 0) {
-            const res = new MakeOk();
-            res.user_id = 0;
-            ws.send(JSON.stringify(res));
-        }
-        else if(result === -1) {
+        if(result === -1) {
             const res = new IsThere();
+            ws.send(JSON.stringify(res));
+        } else {
+            
+            const characterManager: CharacterManager = CharacterManager.instance;
+            let player: Player = new Player();
+
+            player.dbId = result.id;
+            player.Initialize();
+            player.name = result.character_name;
+
+            characterManager.AddCharacter(player);
+
+            const res = new MakeOk();
+            res.user_id = player.id;
+            //res.name = player.name;
+            res.user_id = 0;
             ws.send(JSON.stringify(res));
         }
     }

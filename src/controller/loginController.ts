@@ -4,12 +4,12 @@ import { UserModel } from './../model/userModel'
 // ログインの処理
 export class loginController{
     // ユーザーの作成
-    public async createUser(data: any): Promise<number>{
+    public async createUser(data: any): Promise<any>{
         const user = await UserModel.newUser(data.user_name, data.pass, data.character_name);
         if(!user) return -1;
         UserModel.changeStatus(user.id, 1);
         // 状態の変更
-        return 0;
+        return user;
     }
 
     // ユーザーのログイン (ユーザーID : 正常終了) (-1 : 重複ログイン) (-2 : 間違えてまっせ)
