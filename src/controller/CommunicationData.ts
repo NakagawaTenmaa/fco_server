@@ -1194,6 +1194,15 @@ export namespace CommunicationData{
 
 			}
 		}
+
+		export class SaveModelType implements Send {
+			public static readonly id : number = 718;
+			readonly command : number = SaveModelType.id;
+			model_id: number ;
+			constructor(){
+				this.model_id = 0;
+			}
+		}
 	
         export type AllTypes = 
         CharacterTransform |
@@ -1221,7 +1230,8 @@ export namespace CommunicationData{
 		DropInventoryList |
 		LoadingMapMaster |
 		LoadingQuestMaster |
-		QuestClear;
+		QuestClear |
+		SaveModelType;
     }
     /**
      * 受信データ
@@ -1886,7 +1896,7 @@ export namespace CommunicationData{
 			 * @type {number}
 			 * @memberof {QuestMasterData}
 			 */
-			public static readonly id : number = 713;
+			public static readonly id : number = 714;
 
 			/**
 			 * コマンド識別子
@@ -2306,6 +2316,12 @@ export namespace CommunicationData{
 					const data : ReceiveData.QuestOrders = new ReceiveData.QuestOrders();
 					data.user_id = parseData.user_id;
 					data.quest_id = parseData.quest_id;
+					return data;
+				}
+				case SendData.SaveModelType.id:
+				{
+					const data : SendData.SaveModelType = new SendData.SaveModelType();
+					data.model_id = parseData.model_id;
 					return data;
 				}
             }
