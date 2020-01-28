@@ -72,7 +72,7 @@ export class playRouter{
 
                     let res: CommunicationData.SendData.SaveModelType = new CommunicationData.SendData.SaveModelType();
                     res.model_id = player.modelId;
-                    player.SendToClient(JSON.stringify(res));
+                    ws.send(JSON.stringify(res));
                     console.log("model id setting user: " + data.user_id.toString() + "/ modelType: " + data.model_id.toString());
                 }
                 // 読み込み完了
