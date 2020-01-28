@@ -78,6 +78,7 @@ export class loginRouter{
             player.dbId = result.id;
             player.Initialize();
             player.name = result.character_name;
+            player.webSocket = ws;
 
             characterManager.AddCharacter(player);
 
