@@ -345,6 +345,7 @@ export class CharacterManager{
         res.accessorys = player.getInventory();
         res.wearing_accessory = player.getWearingAccessory();
         res.model_id = player.modelId;
+        console.log(JSON.stringify(res));
         this.SendOne(_characterId, JSON.stringify(res));
         return true;
     }
