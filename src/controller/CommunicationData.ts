@@ -2194,7 +2194,8 @@ export namespace CommunicationData{
                     data.y = parseData.y - 0;
                     data.z = parseData.z - 0;
                     data.dir = parseData.dir - 0;
-                    data.user_id = parseData.user_id - 0;
+					data.user_id = parseData.user_id - 0;
+					data.animation = parseData.animation;
                     return data;
                 }
                 case ReceiveData.LoadCharacter.id:
