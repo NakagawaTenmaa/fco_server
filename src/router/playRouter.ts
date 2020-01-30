@@ -57,10 +57,6 @@ export class playRouter{
                     this.characterManager.ReceiveUseSkill(data);
                 }
                 // セーブデータの読み込み
-                else if(data instanceof CommunicationData.ReceiveData.LoadCharacter){
-                    await this.characterManager.LoadCharacter(ws,data.user_id);
-                }
-                // セーブデータの読み込み
                 else if(data instanceof CommunicationData.ReceiveData.SaveLoadCtoS){
                     await this.characterManager.LoadCharacter(ws,data.user_id);
                 }

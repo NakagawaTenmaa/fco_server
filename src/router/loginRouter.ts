@@ -71,7 +71,7 @@ export class loginRouter{
             const res = new IsThere();
             ws.send(JSON.stringify(res));
         } else {
-            
+            /*
             const characterManager: CharacterManager = CharacterManager.instance;
             let player: Player = new Player();
 
@@ -81,9 +81,10 @@ export class loginRouter{
             player.webSocket = ws;
 
             characterManager.AddCharacter(player);
-
+            */
             const res = new MakeOk();
-            res.user_id = player.id;
+            
+            //res.user_id = player.id;
             //res.name = player.name;
             res.user_id = 0;
             ws.send(JSON.stringify(res));
