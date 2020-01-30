@@ -2350,7 +2350,7 @@ export namespace CommunicationData{
 					const data : SendData.GetParameter = new SendData.GetParameter();
 					data.agi = parseData.agi;
 					data.dex = parseData.dex;
-					data.int = parseData.int;
+					data.intelligence = parseData.intelligence;
 					data.mnd = parseData.mnd;
 					data.str = parseData.str;
 					data.vit = parseData.vit;
