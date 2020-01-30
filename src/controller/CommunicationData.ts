@@ -1201,9 +1201,30 @@ export namespace CommunicationData{
 		export class SaveModelType implements Send {
 			public static readonly id : number = 718;
 			readonly command : number = SaveModelType.id;
-			model_id: number ;
+			public model_id: number ;
 			constructor(){
 				this.model_id = 0;
+			}
+		}
+
+
+		export class GetParameter implements Send {
+			public static readonly id : number = 209;
+			public readonly command : number = GetParameter.id;
+			public str : number;
+			public vit : number;
+			public int : number;
+			public mnd : number;
+			public dex : number;
+			public agi : number;
+			
+			constructor (){
+				this.str = 0;
+				this.vit = 0;
+				this.int = 0;
+				this.mnd = 0;
+				this.dex = 0;
+				this.agi = 0;
 			}
 		}
 	
@@ -1234,7 +1255,8 @@ export namespace CommunicationData{
 		LoadingMapMaster |
 		LoadingQuestMaster |
 		QuestClear |
-		SaveModelType;
+		SaveModelType |
+		GetParameter;
     }
     /**
      * 受信データ
@@ -1281,13 +1303,6 @@ export namespace CommunicationData{
             public type: number = 0;
 
             constructor(){}
-        }
-
-        // セーブデータの読み込み
-        export class LoadCharacter implements Receive{
-            public readonly command: number = 209;
-            public static id = 209;
-            public user_id = 0;
         }
 
         /**
@@ -1963,10 +1978,20 @@ export namespace CommunicationData{
 			}
 		}
 
+
+		export class GetParameter implements Receive {
+			public static readonly id: number = 0;
+			public readonly command : number = GetParameter.id;
+			public user_id : number;
+
+			constructor(){
+				this.user_id = 0;
+			}
+		}
+
         export type AllTypes = 
         CharacterTransform | 
         PlayerStatus | 
-        LoadCharacter | 
         LogoutCharacter | 
         FindOfPlayerCtoS | 
         GetEnemy | 
@@ -1985,7 +2010,8 @@ export namespace CommunicationData{
 		QuestMasterData | 
 		LoadingMapMaster |
 		LoadingQuestMaster |
-		QuestOrders;
+		QuestOrders | 
+		GetParameter;
     }
 
     export type AllTypes = SendData.AllTypes | ReceiveData.AllTypes;
@@ -2198,24 +2224,12 @@ export namespace CommunicationData{
 					data.animation = parseData.animation;
                     return data;
                 }
-                case ReceiveData.LoadCharacter.id:
-                {
-                    const data: ReceiveData.LoadCharacter = new ReceiveData.LoadCharacter();
-                    data.user_id = parseData.user_id - 0;
-                    return data;
-                }
                 case ReceiveData.PlayerStatus.id:
                 {
                     const data: ReceiveData.PlayerStatus = new ReceiveData.PlayerStatus();
                     data.user_id = parseData.user_id - 0;
                     data.target_id = parseData.target_id - 0;
                     data.type = parseData.type - 0;
-                    return data;
-                }
-                case ReceiveData.LoadCharacter.id:
-                {
-                    const data: ReceiveData.LoadCharacter = new ReceiveData.LoadCharacter();
-                    data.user_id = parseData.user_id - 0;
                     return data;
                 }
                 case ReceiveData.LogoutCharacter.id:
@@ -2329,6 +2343,23 @@ export namespace CommunicationData{
 				{
 					const data : SendData.SaveModelType = new SendData.SaveModelType();
 					data.model_id = parseData.model_id;
+					return data;
+				}
+				case SendData.GetParameter.id:
+				{
+					const data : SendData.GetParameter = new SendData.GetParameter();
+					data.agi = parseData.agi;
+					data.dex = parseData.dex;
+					data.int = parseData.int;
+					data.mnd = parseData.mnd;
+					data.str = parseData.str;
+					data.vit = parseData.vit;
+					return data;
+				}
+				case ReceiveData.GetParameter.id:
+				{
+					const data : ReceiveData.GetParameter = new ReceiveData.GetParameter();
+					data.user_id = parseData.user_id;
 					return data;
 				}
             }
