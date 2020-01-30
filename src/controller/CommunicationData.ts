@@ -1213,7 +1213,7 @@ export namespace CommunicationData{
 			public readonly command : number = GetParameter.id;
 			public str : number;
 			public vit : number;
-			public int : number;
+			public intelligence : number;
 			public mnd : number;
 			public dex : number;
 			public agi : number;
@@ -1221,7 +1221,7 @@ export namespace CommunicationData{
 			constructor (){
 				this.str = 0;
 				this.vit = 0;
-				this.int = 0;
+				this.intelligence = 0;
 				this.mnd = 0;
 				this.dex = 0;
 				this.agi = 0;

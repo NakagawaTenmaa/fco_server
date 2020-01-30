@@ -768,7 +768,7 @@ export class CharacterManager{
 
         let res: CommunicationData.SendData.GetParameter = new CommunicationData.SendData.GetParameter();
         res.str = player.status.strength;
-        res.int = player.status.intelligence;
+        res.intelligence = player.status.intelligence;
         res.vit = player.status.vitality;
         res.mnd = player.status.mind;
         res.dex = player.status.dexterity;
