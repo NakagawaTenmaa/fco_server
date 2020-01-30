@@ -121,7 +121,10 @@ export class playRouter{
                 else if(data instanceof CommunicationData.ReceiveData.QuestOrders){
                     this.characterManager.setQuest(data);
                 }
-
+                // ステータスの取得
+                else if(data instanceof CommunicationData.ReceiveData.GetParameter){
+                    this.characterManager.getParameter(data.user_id);
+                }
 
                 else {
                     console.log("none packet data " + data.command.toString());
