@@ -762,6 +762,19 @@ export class CharacterManager{
         player.targetId = quest.targetId;
     }
 
+    public getParameter(_userId: number){
+        const player: Player | undefined = this.FindPlayer(_userId);
+        if(player === undefined) return;
+
+        let res: CommunicationData.SendData.GetParameter = new CommunicationData.SendData.GetParameter();
+        res.str = player.status.strength;
+        res.intelligence = player.status.intelligence;
+        res.vit = player.status.vitality;
+        res.mnd = player.status.mind;
+        res.dex = player.status.dexterity;
+        res.agi = player.status.agility;
+        player.SendToClient(JSON.stringify(res));
+    }
 
     /**
      * プレイヤーの初期化
