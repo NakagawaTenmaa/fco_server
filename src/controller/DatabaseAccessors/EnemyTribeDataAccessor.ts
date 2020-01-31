@@ -14,6 +14,11 @@ import { EnemyModel } from '../../model/enemy';
  * @class EnemyTribeData
  */
 export class EnemyTribeData{
+    // 種族ID
+    private tribeId_: number;
+    public get tribeId(){
+        return this.tribeId_;
+    }
     /**
      * 種族名
      * @private
@@ -239,6 +244,7 @@ export class EnemyTribeData{
      * @memberof EnemyTribeData
      */
     public constructor(
+        _tribeId   : number,
         _tribeName : string,
         _level : number,
         _useSkillId : number,
@@ -252,6 +258,7 @@ export class EnemyTribeData{
         _dexterity : number,
         _agility : number
     ){
+        this.tribeId_ = _tribeId;
         this.tribeName_ = _tribeName;
         this.level_ = _level;
         this.useSkillId_ = _useSkillId;
@@ -316,6 +323,10 @@ export class EnemyTribeDataAccessor implements DatabaseAccessor{
      */
     private constructor(){
         this.dataArray_ = new Array<EnemyTribeData>();
+    }
+
+    public FindById(_id: number) : EnemyTribeData | undefined{
+        return this.dataArray_.find((_data: EnemyTribeData) => { return _data.tribeId === _id; })
     }
 
     /**
@@ -415,6 +426,12 @@ export class EnemyTribeDataAccessor implements DatabaseAccessor{
      * @memberof EnemyTribeDataAccessor
      */
     public GetId(_name:string) : number {
+        const data = this.dataArray_.find((_data: EnemyTribeData) => { return _data.tribeName === _name; })
+        if(data === undefined) return -1;
+
+        return data.tribeId;
+
+        /*
         return this.dataArray_.findIndex(
             function(
                 _data : EnemyTribeData,
@@ -424,5 +441,6 @@ export class EnemyTribeDataAccessor implements DatabaseAccessor{
                 return (_name === _data.tribeName);
             }
         );
+        */
     }
 }

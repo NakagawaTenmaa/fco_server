@@ -134,6 +134,7 @@ export class EnemyTribeStatus implements Status{
      */
     public constructor(){
         this.tribeData_ = new EnemyTribeData(
+            0,
             'None',
             0,
             0,

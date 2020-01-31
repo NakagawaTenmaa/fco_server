@@ -462,8 +462,14 @@ export class Enemy implements Character{
      */
     public ChangeTribe(_tribeKey:number|string) : boolean {
         // データベース情報から読み込み
-        const tribeData:EnemyTribeData|undefined =
-            EnemyTribeDataAccessor.instance.Find(_tribeKey);
+        let tribeData:EnemyTribeData|undefined;
+
+        if(typeof(_tribeKey) === 'number'){  
+            tribeData = EnemyTribeDataAccessor.instance.FindById(_tribeKey);
+        }
+        else if(typeof(_tribeKey) === 'string'){
+            tribeData = EnemyTribeDataAccessor.instance.Find(_tribeKey);
+        }
 
         if(tribeData === undefined){
             if(typeof(_tribeKey) === 'number'){

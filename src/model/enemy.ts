@@ -11,6 +11,7 @@ export class EnemyModel extends BaseModel{
         let enemys: Array<EnemyTribeData> = [];
         enemyModel.forEach((_enemy: any) => {
             enemys.push(new EnemyTribeData(
+                _enemy.id,
                 _enemy.name,
                 0,
                 0,
