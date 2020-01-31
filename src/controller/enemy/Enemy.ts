@@ -628,14 +628,16 @@ export class Enemy implements Character{
         //console.log("enemy skill use. [id:" + this.id.toString() + "]");
         
         
-        if(this.updater.battleState.attackTarget !== undefined) {
-            const player: Player | undefined  = CharacterManager.instance.FindPlayer(this.updater.battleState.attackTarget.id);
+        if(target !== undefined) {
+            console.log('target maru');
+            const player: Player | undefined  = CharacterManager.instance.FindPlayer(target.id);
             if(player !== undefined){
+                console.log('target player', player.isDead);
                 if(player.isDead){
                     const res : CommunicationData.SendData.PlayerDie = new CommunicationData.SendData.PlayerDie();
                     res.user_id = player.id;
                     CharacterManager.instance.SendMapAll(JSON.stringify(res), this.mapId);
-                    console.log('player die : ' , player.id);
+                    console.log(JSON.stringify(res));
                 }
             }
         }
