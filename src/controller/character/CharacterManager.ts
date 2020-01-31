@@ -736,8 +736,9 @@ export class CharacterManager{
                     }
                 } else if(receiveCharacter instanceof Player){
                     // プレイヤーの時の処理
-                    //const.log()
-
+                    console.log('player dee');
+                    data = new CommunicationData.SendData.PlayerDie();
+                    data.user_id = receiveCharacter.id;
                 } else console.error("not player and enemy");
             }
             this.SendMapAll(JSON.stringify(data), receiveCharacter.mapId);
