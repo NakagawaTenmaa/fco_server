@@ -666,7 +666,16 @@ export namespace CommunicationData{
 				this.last_attack_id = 0;
 			}
         }
-        
+		
+		export class PlayerDie implements Send {
+			public static readonly id : number = 223;
+			public readonly command = PlayerDie.id;
+			public user_id : number;
+			constructor(){
+				this.user_id = 0;
+			}
+		}
+
         /**
 		 * 敵のスキル使用申請
 		 * @export
@@ -1256,7 +1265,8 @@ export namespace CommunicationData{
 		LoadingQuestMaster |
 		QuestClear |
 		SaveModelType |
-		GetParameter;
+		GetParameter | 
+		PlayerDie;
     }
     /**
      * 受信データ
@@ -2359,6 +2369,12 @@ export namespace CommunicationData{
 				case ReceiveData.GetParameter.id:
 				{
 					const data : ReceiveData.GetParameter = new ReceiveData.GetParameter();
+					data.user_id = parseData.user_id;
+					return data;
+				}
+				case SendData.PlayerDie.id:
+				{
+					const data : SendData.PlayerDie = new SendData.PlayerDie();
 					data.user_id = parseData.user_id;
 					return data;
 				}

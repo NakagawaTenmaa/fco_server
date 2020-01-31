@@ -84,6 +84,9 @@ export class EnemyBattleOfSkillStandby implements EnemyBattleUpdate{
             this.battle_.enemy.SendUseSkill();
             // スキル硬直ヘ
             this.battle_.updater.ChangeMode(EnemyBattleUpdateMode.SkillRigid);
+
+            
+
             return true;
         }
         return true;

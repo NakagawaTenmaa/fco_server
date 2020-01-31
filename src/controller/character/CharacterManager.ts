@@ -736,6 +736,8 @@ export class CharacterManager{
                     }
                 } else if(receiveCharacter instanceof Player){
                     // プレイヤーの時の処理
+                    //const.log()
+
                 } else console.error("not player and enemy");
             }
             this.SendMapAll(JSON.stringify(data), receiveCharacter.mapId);

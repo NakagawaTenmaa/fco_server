@@ -23,6 +23,7 @@ import { Battlefield } from '../battle/Battlefield'
 import { BattlefieldManager } from '../battle/BattlefieldManager'
 import { EnemyTribeData, EnemyTribeDataAccessor } from '../DatabaseAccessors/EnemyTribeDataAccessor'
 import { CommunicationData } from '../CommunicationData'
+import { Player } from '../player/Player'
 
 /**
  * 敵
@@ -625,6 +626,20 @@ export class Enemy implements Character{
         data.target_id = (target === undefined) ? (0) : (target.id);
 
         //console.log("enemy skill use. [id:" + this.id.toString() + "]");
+        
+        
+        if(this.updater.battleState.attackTarget !== undefined) {
+            const player: Player | undefined  = CharacterManager.instance.FindPlayer(this.updater.battleState.attackTarget.id);
+            if(player !== undefined){
+                if(player.isDead){
+                    const res : CommunicationData.SendData.PlayerDie = new CommunicationData.SendData.PlayerDie();
+                    res.user_id = player.id;
+                    CharacterManager.instance.SendMapAll(JSON.stringify(res), this.mapId);
+                    console.log('player die : ' , player.id);
+                }
+            }
+        }
+
         return CharacterManager.instance.SendMapAll(JSON.stringify(data), this.mapId);
     }
 }
