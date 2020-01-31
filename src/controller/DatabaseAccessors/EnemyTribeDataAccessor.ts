@@ -394,27 +394,26 @@ export class EnemyTribeDataAccessor implements DatabaseAccessor{
      * @memberof EnemyTribeDataAccessor
      */
     public GetRandomID() : number {
-        const getting:number = Math.floor(this.dataArray_.length * Math.random()) + 1;
+        const getting:number = Math.floor(Math.random() * (this.dataArray_.length + 1 - 1) ) + 1 ;
         let id:number = 0;
-        let i:number = 0;
         this.dataArray_.every(
             function(
                 _data : EnemyTribeData,
                 _id : number,
                 _array : EnemyTribeData[]
             ) : boolean {
-                if(i === 0){
-                    id = _id;
+                if(_id === 0){
+                    //id = _data.tribeId;
+
                 }
-                if(i == getting){
-                    id = _id;
+                if(_id == getting){
+                    id = _data.tribeId;
                     return false;
                 }
-                ++i;
                 return true;
             }
         );
-
+        console.log(id);
         return id;
     }
 
