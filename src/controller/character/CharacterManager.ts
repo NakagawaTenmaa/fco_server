@@ -422,9 +422,13 @@ export class CharacterManager{
      */
     public async PlayerLogout(_characterId: number){
         const player = this.FindPlayer(_characterId);
-        if(typeof player === 'undefined') return false;
+        if(player === undefined) return false;
         UserModel.changeStatus(player.dbId, 0);
         await UserMaster.updateModel(player.dbId, player.transform.position.x, player.transform.position.y, player.transform.position.z, player.modelId);
+        
+        console.log(player.getInventory());
+        console.log(player.getWearingAccessory());
+        
         await InventoryModel.updateModel(player.dbId, JSON.stringify(player.getInventory()));
         await AccessoryWearing.updateModel(player.dbId, JSON.stringify(player.getWearingAccessory()));
         this.RemoveCharacter(_characterId);
