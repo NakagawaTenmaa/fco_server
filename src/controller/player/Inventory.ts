@@ -4,14 +4,11 @@ export class Inventory{
     // アイテムの最大数
     private readonly MAX_ITEM: number = 90;
     // アイテム一覧
-    private items: Array<number>;
+    private items: Array<number> = [];
     
     // コンストラクタ
     constructor(){
-        this.items = []
-        for(let i = 0; i < this.MAX_ITEM; i++){
-            this.items.push(0);
-        }
+
     }
 
     // 一覧の取得
@@ -28,16 +25,9 @@ export class Inventory{
     }
 
     // 最後尾にアイテムを追加
-    public addLast(_id: number) : boolean{
-        this.items.forEach((_item: number, index : number) => {
-            if(_item === 0 || _item === -1) {
-                _item = _id;
-                console.log('in item inve: ' , _item);
-                console.log('in item drop: ' , _id);
-                return true;
-            }
-        })
-        return false;
+    public addLast(_id: number) : void{
+        if(_id === undefined || _id === 0) return; 
+        this.items.push(_id);
     }
 
     // アイテムを捨てる
@@ -55,8 +45,6 @@ export class Inventory{
 
     // アイテム一括設定
     public setItems(_items: Array<number>){
-        _items.forEach((_item: number, _index) =>{
-            this.items[_index] = _item;
-        })
+        this.items = _items;
     }
 }
