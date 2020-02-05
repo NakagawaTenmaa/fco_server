@@ -30,7 +30,8 @@ export class Inventory{
     // 最後尾にアイテムを追加
     public addLast(_id: number) : boolean{
         console.log('get accessory : ', _id);
-        this.items.forEach((_item: number) => {
+        this.items.forEach((_item: number, index : number) => {
+            console.log(index.toString() + ":" + _item.toString()) + "item id : " + _id.toString();
             if(_item === 0 || _item === -1) {
                 _item = _id;
                 console.log('in item inve: ' , _item);
