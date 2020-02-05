@@ -12,6 +12,7 @@ export class Inventory{
         for(let i = 0; i < this.MAX_ITEM; i++){
             this.items.push(0);
         }
+        console.log(JSON.stringify(this.items));
     }
 
     // 一覧の取得
@@ -31,7 +32,6 @@ export class Inventory{
     public addLast(_id: number) : boolean{
         console.log('get accessory : ', _id);
         this.items.forEach((_item: number, index : number) => {
-            console.log(index.toString() + ":" + _item.toString()) + "item id : " + _id.toString();
             if(_item === 0 || _item === -1) {
                 _item = _id;
                 console.log('in item inve: ' , _item);
