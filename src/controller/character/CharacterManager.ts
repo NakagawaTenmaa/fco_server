@@ -581,7 +581,9 @@ export class CharacterManager{
         const player: Player | undefined = this.FindPlayer(_data.user_id);
         if(player === undefined) return;
         const lastMap : number = player.mapId;
-
+        
+        player.status.hitPoint = player.status.maxHitPoint;
+        player.status.magicPoint = player.status.maxMagicPoint;
         player.changeMap(_data.map_id);
         player.allReleaseDropInventory();
         
