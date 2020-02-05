@@ -25,9 +25,10 @@ export class Inventory{
     }
 
     // 最後尾にアイテムを追加
-    public addLast(_id: number) : void{
-        if(_id === undefined || _id === 0) return; 
+    public addLast(_id: number) : boolean{
+        if(_id === undefined || _id === 0) return false; 
         this.items.push(_id);
+        return true;
     }
 
     // アイテムを捨てる
