@@ -29,12 +29,15 @@ export class Inventory{
 
     // 最後尾にアイテムを追加
     public addLast(_id: number) : boolean{
+        console.log('get accessory : ', _id);
         this.items.forEach((_item: number) => {
             if(_item !== 0) {
                 _item = _id;
+                console.log('in item inve: ' , _item);
+                console.log('in item drop: ' , _id);
                 return true;
             }
-        })    
+        })
         return false;
     }
 

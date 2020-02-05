@@ -657,6 +657,7 @@ export class Player implements Character{
      * @memberof Player
      */
     public addDropInventory(_accessoryId: number, _index: number = -1) {
+        if(_accessoryId === 0) return;
         if(_index === -1) this.inventory_.addLast(_accessoryId);
         else this.inventory_.add(_accessoryId, _index);
     }
