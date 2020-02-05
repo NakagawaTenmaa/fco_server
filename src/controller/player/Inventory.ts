@@ -2,7 +2,7 @@
 // インベントリ管理用クラス
 export class Inventory{
     // アイテムの最大数
-    private readonly MAX_ITEM: number = 30;
+    private readonly MAX_ITEM: number = 90;
     // アイテム一覧
     private items: Array<number>;
     
@@ -31,7 +31,7 @@ export class Inventory{
     public addLast(_id: number) : boolean{
         console.log('get accessory : ', _id);
         this.items.forEach((_item: number) => {
-            if(_item !== 0) {
+            if(_item === 0 || _item === -1) {
                 _item = _id;
                 console.log('in item inve: ' , _item);
                 console.log('in item drop: ' , _id);
