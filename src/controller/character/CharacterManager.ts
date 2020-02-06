@@ -148,7 +148,12 @@ export class CharacterManager{
                 return isContinued;
             }
         );
-
+        
+        this.playerArray_.forEach((_player: Player) => {
+            if(_player.status.hitPoint < _player.status.maxHitPoint){
+                _player.status.hitPoint += 0.1;
+            }
+        });
         PartyManager.instance.Update();
         BattlefieldManager.instance.Update();
         return isSuccess;
