@@ -729,7 +729,8 @@ export class CharacterManager{
                     const player: Player | undefined = this.FindPlayer(_useSkill.user_id);
                     if(player === undefined) return;
                     player.addDropInventory(data.drop);
-                    
+                    this.SendMapAll(JSON.stringify(data), receiveCharacter.mapId);
+
                     if(player.targetId === receiveCharacter.tribeId){
                         // 討伐完了
                         let res : CommunicationData.SendData.QuestClear = new CommunicationData.SendData.QuestClear();
@@ -738,12 +739,13 @@ export class CharacterManager{
                     }
                 } else if(receiveCharacter instanceof Player){
                     // プレイヤーの時の処理
-                    console.log('player dee');
+                    console.log('player die');
                     data = new CommunicationData.SendData.PlayerDie();
                     data.user_id = receiveCharacter.id;
+                    receiveCharacter.SendToClient(JSON.stringify(data));
                 } else console.error("not player and enemy");
             }
-            this.SendMapAll(JSON.stringify(data), receiveCharacter.mapId);
+            //this.SendMapAll(JSON.stringify(data), receiveCharacter.mapId);
         }
         else{
             console.error("Attack miss");
