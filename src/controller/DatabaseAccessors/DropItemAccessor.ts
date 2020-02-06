@@ -36,11 +36,11 @@ export class DropItemDataAccessor implements DatabaseAccessor {
     }
 
     public randomDropId(_dropTable: number): number {
-        const min: number = 0 ;
-        const max: number = this.dataArray_.length;
-        const index: number = Math.floor(Math.random() * (max + 1 - min)) + min;
         const data: DropItemData | undefined = this.dataArray_.find((_data: DropItemData) => { return _data.id === _dropTable });
         if(data === undefined) return -1;
+        const min: number = 0 ;
+        const max: number = data.items.length;
+        const index: number = Math.floor(Math.random() * (max + 1 - min)) + min;
         return data.items[index];
     }
 }
