@@ -59,7 +59,7 @@ export class EnemyPopAreaManager{
     public ReloadData() : void {
         const this_:EnemyPopAreaManager = this;
 
-        const useIdArray:Array<number> = new Array<number>();
+        const useArray:Array<EnemyPopArea> = new Array<EnemyPopArea>();
         EnemyPopAreaDataAccessor.instance.dataArray.forEach((_data : EnemyPopAreaData) => {
                 if(_data.id in this_.areaArray_){
                     this_.areaArray_[_data.id].ChangeData(_data);
@@ -67,19 +67,10 @@ export class EnemyPopAreaManager{
                 else{
                     this_.areaArray_[_data.id] = new EnemyPopArea(_data);
                 }
-                useIdArray.push(_data.id);
+                useArray.push(new EnemyPopArea(_data));
             }
         );
-
-        this.areaArray_ = this.areaArray_.filter(
-            function (
-                _area : EnemyPopArea,
-                _id : number,
-                _array : EnemyPopArea[]
-            ) : boolean {
-                return (_id in useIdArray);
-            }
-        );
+        this.areaArray_ = useArray;
     }
 
     /**
