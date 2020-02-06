@@ -36,6 +36,10 @@ export class EnemyTribeData{
     public get tribeName() : string {
         return this.tribeName_;
     }
+    private dropId_: number;
+    public get dropId() : number {
+        return this.dropId_;
+    }
     /**
      * レベル
      * @private
@@ -245,6 +249,7 @@ export class EnemyTribeData{
      */
     public constructor(
         _tribeId   : number,
+        _dropId     :number,
         _tribeName : string,
         _level : number,
         _useSkillId : number,
@@ -259,6 +264,7 @@ export class EnemyTribeData{
         _agility : number
     ){
         this.tribeId_ = _tribeId;
+        this.dropId_ = _dropId;
         this.tribeName_ = _tribeName;
         this.level_ = _level;
         this.useSkillId_ = _useSkillId;

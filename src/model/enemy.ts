@@ -12,6 +12,7 @@ export class EnemyModel extends BaseModel{
         enemyModel.forEach((_enemy: any) => {
             enemys.push(new EnemyTribeData(
                 _enemy.id,
+                _enemy.drop_id,
                 _enemy.name,
                 0,
                 0,

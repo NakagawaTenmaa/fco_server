@@ -20,6 +20,7 @@ import { UserMaster } from '../../model/userMaster';
 import { InventoryModel } from '../../model/inventoryModel';
 import { AccessoryWearing } from '../../model/accessoryWearingModel';
 import { QuestDataAccessor, QuestData } from '../DatabaseAccessors/questAccessor';
+import { EnemyTribeDataAccessor, EnemyTribeData } from '../DatabaseAccessors/EnemyTribeDataAccessor';
 // import { EnemyDrop } from '../object/enemyDrop';
 // import { EnemyDropModel } from '../../model/enemyDropModel';
 
@@ -722,7 +723,10 @@ export class CharacterManager{
                 if(receiveCharacter instanceof Enemy){
                     // 敵の時の処理
                     data = new CommunicationData.SendData.EnemyDie();
-                    data.drop = DropItemDataAccessor.instance.randomDropId(1);
+                    const enemyTribe : EnemyTribeData | undefined = EnemyTribeDataAccessor.instance.FindById(receiveCharacter.tribeId);
+                    if(enemyTribe === undefined) data.drop = 0;
+                    else data.drop = DropItemDataAccessor.instance.randomDropId(enemyTribe.dropId);
+                    
                     data.unique_id = receiveCharacter.id;
                     data.damage_value = damageValue;
                     data.last_attack_id = _useSkill.user_id;
