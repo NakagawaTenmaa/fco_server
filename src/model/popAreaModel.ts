@@ -16,6 +16,7 @@ export class PopAreaModel extends BaseModel{
             let popArea: Array<EnemyPopAreaData> = [];
             model.forEach((_popArea: any) => {
                 popArea.push(new EnemyPopAreaData(
+                    _popArea.id,
                     _popArea.map_id,
                     _popArea.x, _popArea.y, _popArea.z,
                     _popArea.poparea,

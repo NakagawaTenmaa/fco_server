@@ -60,19 +60,14 @@ export class EnemyPopAreaManager{
         const this_:EnemyPopAreaManager = this;
 
         const useIdArray:Array<number> = new Array<number>();
-        EnemyPopAreaDataAccessor.instance.dataArray.forEach(
-            function (
-                _data : EnemyPopAreaData,
-                _id : number,
-                _array : EnemyPopAreaData[]
-            ) : void {
-                if(_id in this_.areaArray_){
-                    this_.areaArray_[_id].ChangeData(_data);
+        EnemyPopAreaDataAccessor.instance.dataArray.forEach((_data : EnemyPopAreaData) => {
+                if(_data.id in this_.areaArray_){
+                    this_.areaArray_[_data.id].ChangeData(_data);
                 }
                 else{
-                    this_.areaArray_[_id] = new EnemyPopArea(_data);
+                    this_.areaArray_[_data.id] = new EnemyPopArea(_data);
                 }
-                useIdArray.push(_id);
+                useIdArray.push(_data.id);
             }
         );
 

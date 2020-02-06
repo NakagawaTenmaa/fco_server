@@ -15,6 +15,11 @@ import { EnemyPopAreaManager } from '../enemy/EnemyPopAreaManager';
  * @class EnemyPopAreaData
  */
 export class EnemyPopAreaData{
+    private id_ : number;
+    public get id() : number{
+        return this.id_;
+    }
+
     /**
      * マップID
      * @private
@@ -258,6 +263,7 @@ export class EnemyPopAreaData{
      * @memberof EnemyPopAreaData
      */
     public constructor(
+        _id : number,
         _mapId : number,
         _positionX : number,
         _positionY : number,
@@ -272,6 +278,7 @@ export class EnemyPopAreaData{
         _popEnemy3Id : number,
         _popEnemy3MaxCount : number,
     ){
+        this.id_ = _id;
         this.mapId_ = _mapId;
         this.positionX_ = _positionX;
         this.positionY_ = _positionY;
@@ -357,7 +364,7 @@ export class EnemyPopAreaDataAccessor implements DatabaseAccessor{
      * @memberof EnemyPopAreaDataAccessor
      */
     public Find(_id:number) : EnemyPopAreaData|undefined {
-        return this.dataArray_[_id];
+        return this.dataArray_.find((_data: EnemyPopAreaData) => { return _data.id === _id; })
     }
 
     /**
