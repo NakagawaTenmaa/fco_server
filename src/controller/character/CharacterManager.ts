@@ -157,7 +157,7 @@ export class CharacterManager{
 
     public playerHeel(){
         this.playerArray_.forEach((_player: Player) => {
-            if(_player.status.hitPoint < _player.status.maxHitPoint && _player.isDead){
+            if(_player.status.hitPoint < _player.status.maxHitPoint && !_player.isDead){
                 _player.status.hitPoint += 15;
             }
         });
