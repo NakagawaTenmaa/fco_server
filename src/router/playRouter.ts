@@ -134,6 +134,7 @@ export class playRouter{
     }
 
     public playerHeel(){
+        this.characterManager = CharacterManager.instance;
         this.characterManager.playerHeel();
     }
 
