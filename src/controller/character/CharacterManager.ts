@@ -716,6 +716,7 @@ export class CharacterManager{
                 data.unique_id = receiveCharacter.id;
                 data.status = 0;
                 data.damage_value = damageValue;
+                this.SendMapAll(JSON.stringify(data), receiveCharacter.mapId);
             } else {
                 // 倒れたときの処理
                 if(receiveCharacter instanceof Enemy){
