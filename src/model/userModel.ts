@@ -16,7 +16,11 @@ export class UserModel extends BaseModel{
 
     // ユーザー名の検索
     public static async findUserByName(name: string){
-        return await this.find(["name", name]);
+        const query = "select * from `users` where `name` = ? limit 1";
+        const col = [name];
+        const sql = format(query, col);
+        return await this.myQuery(sql);
+        //return await this.find(["name", name]);
     }
 
     // ログアウト

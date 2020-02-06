@@ -25,13 +25,13 @@ export class loginRouter{
     public loginUpdate(){
         this.wss.on('connection', (ws) => {
             console.log('connection client');
-            ws.on('message', (msg: any) => {
+            ws.on('message',async (msg: any) => {
                 let json = JSON.parse(msg);
                 switch(json.command){
                     // ユーザーの作成
-                    case 101: this.resultCreateUser(json, ws); break;
+                    case 101: await this.resultCreateUser(json, ws); break;
                     // ユーザーのログイン
-                    case 102: this.resultLoginUser(json, ws); break;
+                    case 102: await this.resultLoginUser(json, ws); break;
 
                     // マスターデータの送信
                     case CommunicationData.ReceiveData.LoadingAccessoryMaster.id:{
@@ -71,21 +71,8 @@ export class loginRouter{
             const res = new IsThere();
             ws.send(JSON.stringify(res));
         } else {
-            /*
-            const characterManager: CharacterManager = CharacterManager.instance;
-            let player: Player = new Player();
-
-            player.dbId = result.id;
-            player.Initialize();
-            player.name = result.character_name;
-            player.webSocket = ws;
-
-            characterManager.AddCharacter(player);
-            */
             const res = new MakeOk();
             
-            //res.user_id = player.id;
-            //res.name = player.name;
             res.user_id = 0;
             ws.send(JSON.stringify(res));
         }
