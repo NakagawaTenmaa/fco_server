@@ -83,8 +83,6 @@ export class EnemyPopAreaManager{
         return this.areaArray_.filter(
             function (
                 _area : EnemyPopArea,
-                _id : number,
-                _array : EnemyPopArea[]
             ) : boolean {
                 return _area.IsPopEnemy(_enemyTribeId);
             }
