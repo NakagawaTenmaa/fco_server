@@ -133,6 +133,10 @@ export class playRouter{
         })
     }
 
+    public playerHeel(){
+        this.characterManager.playerHeel();
+    }
+
     /**
      * 終了処理
      * @memberof playRouter

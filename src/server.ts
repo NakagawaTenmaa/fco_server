@@ -17,6 +17,7 @@ async function Root() {
         login.loginUpdate();
         play.playUpdate();
         setInterval(play.characterUpdate, 1000 / 60);
+        setInterval(play.playerHeel, 1000);
         chatUpdate();
 
         // 終了処理

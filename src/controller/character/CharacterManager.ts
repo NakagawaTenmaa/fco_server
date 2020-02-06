@@ -149,14 +149,18 @@ export class CharacterManager{
             }
         );
         
-        this.playerArray_.forEach((_player: Player) => {
-            if(_player.status.hitPoint < _player.status.maxHitPoint){
-                _player.status.hitPoint += 0.1;
-            }
-        });
+ 
         PartyManager.instance.Update();
         BattlefieldManager.instance.Update();
         return isSuccess;
+    }
+
+    public playerHeel(){
+        this.playerArray_.forEach((_player: Player) => {
+            if(_player.status.hitPoint < _player.status.maxHitPoint && _player.isDead){
+                _player.status.hitPoint += 15;
+            }
+        });
     }
 
     /**
