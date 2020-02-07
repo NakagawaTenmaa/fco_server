@@ -564,6 +564,7 @@ export class Enemy implements Character{
         }
 
         this.popArea_ = area;
+        area.OnPopEnemy(this.tribeId);
 
         this.transform.worldMatrix = Matrix4x4.CreateRotationYMatrix(2.0*Math.PI * (Math.random()-0.5));
         {
