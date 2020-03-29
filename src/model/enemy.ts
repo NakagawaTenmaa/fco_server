@@ -21,7 +21,7 @@ export class EnemyModel extends BaseModel{
                 _enemy.mp,
                 _enemy.str,
                 _enemy.vit,
-                _enemy.int,
+                _enemy.intelligence,
                 _enemy.mnd,
                 _enemy.dex,
                 _enemy.agi
