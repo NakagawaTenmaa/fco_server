@@ -3,8 +3,10 @@ services:
     mysql:
       build: ./Docker-Compose/mysql/
       volumes:
-        - ./mysql/db:/docker-entrypoint-initdb.d
-      image: mysql:5.7
+        # 初期データ
+        - ./Docker-Compose/mysql/db:/docker-entrypoint-initdb.d
+        # 永続化
+        - ./Docker-Compose/mysql/db
       environment:
         - MYSQL_ROOT_PASSWORD=root
 
