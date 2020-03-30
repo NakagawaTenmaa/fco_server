@@ -1,9 +1,22 @@
 version: '3'
 services:
     mysql:
-      build: ./mysql/
+      build: ./Docker-Compose/mysql/
       volumes:
         - ./mysql/db:/docker-entrypoint-initdb.d
-      image: fco_mysql
+      image: mysql:5.7
       environment:
         - MYSQL_ROOT_PASSWORD=root
+
+    phpmyadmin:
+      image: phpmyadmin/phpmyadmin
+      environment:
+        - PMA_ARBITRARY=1
+        - PMA_HOST=mysql
+        - PMA_USER=root
+        - PMA_PASSWORD=root
+      links: 
+        - mysql
+      ports:
+        - 8080:80
+      
