@@ -4,9 +4,9 @@ services:
       build: ./Docker-Compose/mysql/
       volumes:
         # 初期データ
-        - ./Docker-Compose/mysql/db:/docker-entrypoint-initdb.d
+        - ./Docker-Compose/mysql/db:/init/docker-entrypoint-initdb.d
         # 永続化
-        - ./Docker-Compose/mysql/db
+        - ./Docker-Compose/mysql/db:/data/lib/mysql
       environment:
         - MYSQL_ROOT_PASSWORD=root
 
